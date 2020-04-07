@@ -11,19 +11,6 @@ def main_handler():
     return main()
 
 
-_ec2_instance_id = None
-def init():
-    global _ec2_instance_id
-    _ec2_instance_id = cw_publisher.get_ec2_instance_id()
-    print('ec2_instance_id=' + str(_ec2_instance_id))
-
-
-@webapp.before_request
-def pre_request_handler():
-    if _ec2_instance_id:
-        cw_publisher.put_http_request_count(count=1, ec2_instance_id=_ec2_instance_id)
-
-
 class GuestWelcomeArgs:
     def __init__(self, username=None, password=None, error_message=None, title='Wellcome to Image Gallery!'):
         self.username = username
