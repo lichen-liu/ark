@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="form" action="/" method="POST">
+    <input type="submit" value="Home">
+</form>
+
+<form class="form" action="/api/delete_photo" method="POST">
+    <input type="submit" name='delete' value="Delete" onclick="return confirm('Do you want to delete {{photo_name}}?')">
+    <input type="hidden" name="photo_id" value={{photo_id}} >
+</form>
+<br>
+<p>{{ photo_name }}</p>
+
+<div class="image_row">
+    <div class="image_container">
+        <div class="title">Original Image - {{original_photo_size}}</div>
+        <img class="image" title={{photo_name}}
+            src="{{ original_photo_url }}" />
+    </div>
+    <div class="image_container">
+        <div class="title">Processed Image - {{rectangled_photo_size}}</div>
+        <img class="image" title={{photo_name}}
+            src="{{ rectangled_photo_url }}" />
+    </div>
+</div>
+
+
+<style>
+    .image_row {
+        position: relative;
+        width: 100%;
+    }
+
+    .image_container {
+        float: left;
+        width: 40%;
+        height: 90%;
+        margin-left: 1%;
+    }
+
+    .title {
+        float: top;
+        height: 10%;
+    }
+
+    .image {
+        float: top;
+        height: 90%;
+        width: 100%;
+        border: 2px solid grey;
+    }
+
+    .image_container:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .form {
+        margin-right: 10px;
+        float: left;
+        position: relative;
+        bottom: 10%;
+    }
+</style>
+{% endblock %}
