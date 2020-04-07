@@ -1,4 +1,5 @@
 # ark
+[Requirements](http://www.cs.toronto.edu/~delara/courses/ece1779/projects/ECE1779-a3.pdf)
 
 
 ## 1.0 Ark App
