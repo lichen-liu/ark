@@ -227,33 +227,3 @@ def delete_directory_content(directory, bucket_name=BUCKET):
 
 def delete_object(key, bucket_name=BUCKET):
     boto3.client('s3').delete_object(Bucket=bucket_name, Key=key)
-
-
-# init()
-# key = 'data/photos/DSCF0034.JP'
-# print('key',key)
-# try:
-#     print('list_bucket_content', list_bucket_content(directory=key, recursive=True))
-# except Exception as e:
-#     print('list_bucket_content')
-
-# try:
-#     print('list_bucket_content', list_bucket_content(directory=key, recursive=False))
-# except Exception as e:
-#     print('list_bucket_content')
-
-# try:
-#     print('get_bucket_content_size', get_bucket_content_size(key=key))
-# except Exception as e:
-#     print('get_bucket_content_size')
-
-# try:
-#     print('is_object_existed', is_object_existed(key=key))
-# except Exception as e:
-#     print('is_object_existed')
-
-
-
-# init()
-# delete_directory_content(directory='')
-# print(list_bucket_content(directory='', recursive=True))
