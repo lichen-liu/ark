@@ -13,7 +13,6 @@ venv\Scripts\activate
 source venv/bin/activate
 pip install Flask
 pip install boto3
-pip install requests
 
 python run_ark_app.py
 ```
