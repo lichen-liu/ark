@@ -3,8 +3,7 @@ import random
 
 from flask import redirect, request, session, abort
 
-from ark_app import main, webapp
-from common_lib import database
+from ark_app import main, webapp, dynamodb
 
 
 @webapp.route('/api/account_actions', methods=['POST'])
@@ -32,7 +31,6 @@ def account_actions_handler():
 # API handler for account register
 def account_register_handler():
     # Get requests
-    # NOT TESTED YET!
     username = request.form.get('username')
     password = request.form.get('password')
 
@@ -41,8 +39,8 @@ def account_register_handler():
     if err_msg:
         abort(406)
     else:
-#        return redirect('/')
         return "Register {} successful!".format(username)
+
 
 @webapp.route('/api/logout', methods=['POST'])
 # Web handler for logout
@@ -52,17 +50,12 @@ def account_logout_handler():
 
 
 def account_is_logged_in():
-    return session.get('username') is not None and session.get('userid') is not None
+    return session.get('username') is not None
 
 
 def account_get_logged_in_username():
     assert(account_is_logged_in())
     return session['username']
-
-
-def account_get_logged_in_userid():
-    assert(account_is_logged_in())
-    return session['userid']
 
 
 def account_register(username, password, rememberme=False):
@@ -87,8 +80,7 @@ def account_register(username, password, rememberme=False):
     # Register the user (business)
     salt = bytes(random.getrandbits(8) for _ in range(4)).hex()
     encrypted_password = account_hash_password(password, salt)
-    error_message = database.create_new_account(
-        username, encrypted_password, salt)
+    error_message = dynamodb.create_new_account(username=username, password_hash=encrypted_password, salt=salt)
     if error_message:
         return error_message
     print('    Successful!')
@@ -109,14 +101,12 @@ def account_login(username, password, rememberme=False):
     print('Login: u=' + username + ' rememberme=' + str(rememberme))
 
     # Validate input (business)
-    userid = account_verify_password(username, password)
-    if userid is None:
+    if not account_verify_password(username, password):
         return 'Error! Username or Password is not correct!'
 
     # Create a session (business)
     assert(not account_is_logged_in())
     session['username'] = username
-    session['userid'] = userid
     session.permanent = rememberme
     print('    Successful!')
 
@@ -134,15 +124,12 @@ def account_logout():
 
 
 def account_verify_password(username, password):
-    '''
-    Return userid if successful; otherwise None
-    '''
-    result = database.get_account_credential(username)
+    result = dynamodb.get_account_credential(username=username)
     if result:
-        userid, encrypted_password, salt = result
+        encrypted_password, salt = result
         if account_hash_password(password, salt) == encrypted_password:
-            return userid
-    return None
+            return True
+    return False
 
 
 def account_hash_password(password, salt):

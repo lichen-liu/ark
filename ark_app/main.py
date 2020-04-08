@@ -1,6 +1,5 @@
 from flask import render_template
-from ark_app import account, webapp, photo
-from common_lib import cw_publisher
+from ark_app import account, webapp
 
 
 @webapp.route('/', methods=['GET', 'POST'])
@@ -38,6 +37,4 @@ def main_guest_welcome(args):
 
 
 def main_user_welcome(args):
-    return render_template(
-        'user_welcome.html', title=args.title, username=account.account_get_logged_in_username(), error_message=args.error_message,
-        thumbnails=photo.get_thumbnails())
+    return 'Logged in'
