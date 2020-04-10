@@ -39,5 +39,3 @@ aws_access_key_id= Your_aws_access_key_id
 aws_secret_access_key= Your_aws_access_key
 aws_session_token= Your_session_token
 ```
-
-To get the above values (key_id, key, token),and for an AWS educate account, it will be at your AWS Educate Account page -> Account Details.
