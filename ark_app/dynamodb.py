@@ -82,6 +82,18 @@ def get_account_credential(dynamodb, username):
 
 
 @dynamodb_operation
+def push_account_archive_request(dynamodb, username, original_url):
+    #TODO
+    pass
+
+
+@dynamodb_operation
+def pop_account_archive_request(dynamodb, username):
+    #TODO
+    pass
+
+
+@dynamodb_operation
 def create_account_table(dynamodb):
     '''
     Return True if successfully created; otherwise False
