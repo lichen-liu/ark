@@ -2,34 +2,59 @@
 {% block content %}
 
 {{error_message if error_message}}
-<br>
-<br>
 
-<form action="/api/logout" method="POST">
-    <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
-</form>
-<br>
-<br>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
 
-<form action="/api/archive_url" method="GET">
-    <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-    <button type="submit" name="action" value="archive_url_submit">Archive</button>
-</form>
+<div class="jumbotron text-center">
+    <h1>Search For Your Achive:</h1>
+    <form action="/api/archive_url" method="GET">
+        <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+        <button type="submit" name="action" value="archive_url_submit">Search</button>
+    </form>
+</div>
+  
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+        <h3>Achive A Webpage </h3>
+    <form action="/api/archive_url" method="GET">
+        <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+        <button type="submit" name="action" value="archive_url_submit">Archive</button>
+    </form>
+    </div>
+    <div class="col-sm-4">
+        <h3>Upload A CSV Of Websites </h3>        
+    </div>
 
-{% if url_screenshot_info %}
-<br>
-<br>
-<br>
-<img src={{url_screenshot_info.screenshot_url}}>
-<br>
-<br>
-<br>
-<p>Query URL: {{url_screenshot_info.query_url}}</p>
-<p>Adjusted URL: {{url_screenshot_info.adjusted_url}}</p>
-<p>Created Username: {{url_screenshot_info.created_username}}</p>
-<p>Created Timestamp: {{url_screenshot_info.created_timestamp}}</p>
-<p>Last Modified Username: {{url_screenshot_info.modified_username}}</p>
-<p>Last Modified Timestamp: {{url_screenshot_info.modified_timestamp}}</p>
-{% endif %}
+    <div class="col-sm-4">
+        <h3>Achive Request Summary</h3>
+        {% if url_screenshot_info %}
+        <br>
+        <br>
+        <br>
+        <img src={{url_screenshot_info.screenshot_url}}>
+        <br>
+        <br>
+        <br>
+        <p>Query URL: {{url_screenshot_info.query_url}}</p>
+        <p>Adjusted URL: {{url_screenshot_info.adjusted_url}}</p>
+        <p>Created Username: {{url_screenshot_info.created_username}}</p>
+        <p>Created Timestamp: {{url_screenshot_info.created_timestamp}}</p>
+        <p>Last Modified Username: {{url_screenshot_info.modified_username}}</p>
+        <p>Last Modified Timestamp: {{url_screenshot_info.modified_timestamp}}</p>
+        {% endif %}
+    </div>
+  </div>
+</div>
+
+</body>
 
 {% endblock %}
