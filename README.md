@@ -30,7 +30,7 @@ url if the url is missing 'HTTP' or 'HTTPS'. Then it creates a formal archive en
 a screenshot for the webpage which is stored to S3. Regardless of whether the above process fails or not,
 the request is moved to arkAccount.responseList for notifying the user.
 
-Flask: Upon user login, responses from arkAccount.responseList are shown. The user then must explicitly 
+Flask: Upon user login, responses from arkAccount.responseList are shown. Users then must explicitly 
 close the notification for each reponse. This will notify the Flask server to remove those responses from
 arkAccount.responseList.
 
