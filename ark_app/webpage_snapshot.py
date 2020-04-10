@@ -16,7 +16,7 @@ import platform
 
 _SUPPORTED_BROWERS = {"chrome", "firefox"}
 _DEFAULT_BROWSER = "chrome"
-class ScreenShoter:
+class Snapshoter:
     def __init__(self):
         def get_default_driver():
             if _DEFAULT_BROWSER == "chrome":
@@ -66,20 +66,21 @@ class ScreenShoter:
         self._driver.set_window_size(1000, self._height)
         return self._driver.get_screenshot_as_png()
 
+
     def get_webpage_inner_html(self):
         #document_html = self._driver.execute_script("return document.documentElement.innerHTML;")
         #body_html = self._driver.execute_script("return document.body.innerHTML;")
         return self._driver.page_source
 
 
-def take_url_webpage_screenshot_as_png(url, screenshoter=ScreenShoter()):
+def take_url_webpage_snapshot(url, snapshoter=Snapshoter()):
     '''
-    Return screenshot image in png format
+    (png, text)
     '''
-    screenshoter.open_url(url)
-    screenshoter.force_render()
+    snapshoter.open_url(url)
+    snapshoter.force_render()
 
-    image = screenshoter.get_screenshot_as_png()
-    text = screenshoter.get_webpage_inner_html() 
+    image = snapshoter.get_screenshot_as_png()
+    text = snapshoter.get_webpage_inner_html() 
 
     return image, text

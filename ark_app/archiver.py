@@ -1,4 +1,4 @@
-from ark_app import webapp, webpage_screenshoter, dynamodb, s3, main, account
+from ark_app import webapp, webpage_snapshot, dynamodb, s3, main, account
 from flask import request
 from bs4 import BeautifulSoup
 
@@ -27,8 +27,7 @@ def archive_url(original_url):
         utc_datetime_str = str(utc_datetime)
         utc_date_str = str(utc_datetime.date())
         username = account.account_get_logged_in_username()
-        is_newly_created = dynamodb.create_new_archive(
-            url=url, date=utc_date_str, username=username, datetime=utc_datetime_str)
+        is_newly_created = dynamodb.create_new_archive(url=url, date=utc_date_str, username=username, datetime=utc_datetime_str)
         if not is_newly_created:
             previous_modified_username, previous_modified_datetime_str = dynamodb.update_archive_info_timestamp(
                 url=url, date=utc_date_str, modified_username=username, modified_datetime=utc_datetime_str)
@@ -38,23 +37,20 @@ def archive_url(original_url):
                 ') by (' + previous_modified_username + ')!'
 
         # Screenshot the url webpage
-        url_webpage_png, url_inner_html= webpage_screenshoter.take_url_webpage_screenshot_as_png(url)
+        url_webpage_png, url_inner_html= webpage_snapshot.take_url_webpage_snapshot(url)
 
         # Save it on archive website
         archive_url = archiveis.capture(url)
 
         # Store the screenshot on S3
-        archive_id, created_username, created_datetime, modified_username, modified_datetime = dynamodb.get_archive_info(
-            url=url, date=utc_date_str)
+        archive_id, created_username, created_datetime, modified_username, modified_datetime = dynamodb.get_archive_info(url=url, date=utc_date_str)
         url_webpage_png_s3_key = s3.WEBPAGE_SCREENSHOT_DIR + archive_id + '.png'
-        s3.upload_file_bytes_object(
-            key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
+        s3.upload_file_bytes_object(key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
 
         # Store the text of the webpage on S3
         url_webpage_text = extract_text(url_inner_html).encode()
         url_weboage_text_s3_key = s3.WEBPAGE_TEXT_DIR + archive_id + '.txt'
         s3.upload_file_bytes_object(key=url_weboage_text_s3_key, file_bytes=url_webpage_text)
-
 
         # TESTING
         # Print the screenshot
@@ -111,6 +107,7 @@ def test_url(url):
             pass
 
     return False
+
 
 def extract_text(raw_html):
     page = BeautifulSoup(raw_html, 'html.parser')
