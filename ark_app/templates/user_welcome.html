@@ -12,7 +12,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 
-<body>
+<body class="body">
 
   <div class="jumbotron text-center">
     <div class="container">
@@ -37,18 +37,8 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-4">
-        <div class="row">
-            <h3>History</h3>
-            <table class="table"></table>
-        </div>
-        <div class="row">
-            <h3>Results</h3>
-        </div>
-       
-        <div class="row">
-            <h3>Pending</h3>
-        </div>
-
+        <h3>History</h3>
+        <table class="table"></table>
       </div>
       <div class="col-sm-4">
         <h3>Calendar</h3>
@@ -72,8 +62,46 @@
         {% endif %}
       </div>
     </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <h3>Results</h3>
+            <div id="gallery_updaing_display">
+                    {% for notification in notifications %}
+                        <div class="notification">
+                            {{notification}} is succesfully processed
+                        </div>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-4">
+            <h3>Pending</h3>
+        </div>
+    </div>
   </div>
 
 </body>
+
+<style>
+        .row {
+            height: 33%;
+            overflow: scroll;
+        }
+        
+        .notification {
+            height: 20%;
+        }
+
+        .container {
+            height: 100%;
+        }
+
+        .body {
+            height: 100vh;
+        }
+</style>
+
 
 {% endblock %}

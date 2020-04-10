@@ -23,8 +23,7 @@ ACCOUNT_TABLE = 'arkAccount'
 ARCHIVE_TABLE = 'arkArchive'
 
 
-# Decorator for connecting to and disconnecting from the database
-def dynamodb_operation(func):
+def dynamodb_resource_operation(func):
     def inner(*args, **kwargs):
         dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
         try:
@@ -34,15 +33,23 @@ def dynamodb_operation(func):
     return inner
 
 
-@dynamodb_operation
+def dynamodb_client_operation(func):
+    def inner(*args, **kwargs):
+        dynamodb = boto3.client('dynamodb', region_name='us-east-1')
+        try:
+            return func(dynamodb, *args, **kwargs)
+        except Exception as e:
+            print('Unexpected exception: ' + str(e))
+    return inner
+
+
+@dynamodb_resource_operation
 def create_new_account(dynamodb, username, password_hash, salt):
     '''
     salt must be a char[8]
     password_hash must be a char[64]
     Return error_message if errored; otherwise None
     '''
-    error_message = None
-
     try:
         dynamodb.Table(ACCOUNT_TABLE).put_item(
             Item={
@@ -54,14 +61,12 @@ def create_new_account(dynamodb, username, password_hash, salt):
         )
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-            error_message = 'Error! ' + username + ' is already registered!'
+            return 'Error! ' + username + ' is already registered!'
         else:
             raise
-    finally:
-        return error_message
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def get_account_credential(dynamodb, username):
     '''
     Return (password_hash, salt) if successful; otherwise None
@@ -81,19 +86,28 @@ def get_account_credential(dynamodb, username):
         return result
 
 
-@dynamodb_operation
+@dynamodb_client_operation
 def push_account_archive_request(dynamodb, username, original_url):
-    #TODO
-    pass
+    dynamodb.update_item(
+        TableName=ACCOUNT_TABLE,
+        Key={
+            'accountId': {'S': username}
+        },
+        UpdateExpression='add archiveRequestList :original_url',
+        ExpressionAttributeValues={
+            ':original_url': {'SS': [original_url]}
+        },
+        ConditionExpression='attribute_exists(accountId)'
+    )
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def pop_account_archive_request(dynamodb, username):
     #TODO
     pass
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def create_account_table(dynamodb):
     '''
     Return True if successfully created; otherwise False
@@ -127,7 +141,7 @@ def create_account_table(dynamodb):
         return True
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def clear_account_table(dynamodb):
     scan = None
     account_table = dynamodb.Table(ACCOUNT_TABLE)
@@ -145,12 +159,12 @@ def clear_account_table(dynamodb):
                 batch.delete_item(Key={'accountId': item['accountId']})
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def delete_table(dynamodb, table):
     dynamodb.Table(table).delete()
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def get_table(dynamodb, table, return_raw=False):
     t = dynamodb.Table(table)
 
@@ -167,7 +181,7 @@ def get_table(dynamodb, table, return_raw=False):
         return list(map(lambda item: tuple(item.values()), data))
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def create_new_archive(dynamodb, url, datetime, username):
     '''
     Create a new archive entry.
@@ -232,7 +246,7 @@ def create_new_archive(dynamodb, url, datetime, username):
     return True
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def get_archive_info(dynamodb, url, datetime):
     '''
     Return (archive_id, username) if found; otherwise None
@@ -253,7 +267,7 @@ def get_archive_info(dynamodb, url, datetime):
         return result
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def create_archive_table(dynamodb):
     '''
     Return True if successfully created; otherwise False
@@ -295,7 +309,7 @@ def create_archive_table(dynamodb):
         return True
 
 
-@dynamodb_operation
+@dynamodb_resource_operation
 def clear_archive_table(dynamodb):
     scan = None
     archive_table = dynamodb.Table(ARCHIVE_TABLE)
