@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="divider">
+    <div class="input_section">
+
+        <form class="logout_section" action="/api/logout" method="POST">
+            Welcome {{username}}
+            <input type="submit" value="Logout"
+                onclick="return confirm('Do you really want to log out?')">
+            <br>
+            <p style="color:red">{{error_message if error_message}}</p>
+        </form>
+
+
+        <form class="upload_section" action="/api/upload" method="POST" enctype="multipart/form-data">
+            Upload your favorate photo here
+            <dl>
+                <p>
+                    <!-- Should filter for only image files -->
+                    <input type="file" name="file" autocomplete="off" required>
+                    <input type="submit" value="Submit">
+                </p>
+            </dl>
+        </form>
+
+        <input type="button" id="update_button" class="gallery_refresh_button" onclick="location.reload()"
+            value="Hit to refresh">
+        </input>
+
+    </div>
+
+    <div class="gallery_section">
+        <div class="gallery_display">
+            <div id="gallery_updaing_display" style="display: flex; flex-wrap: wrap;">
+                {% for thumbnail in thumbnails %}
+                    {% set photo_id_str, photo_name, thumbnail_url = thumbnail %}
+                    <div class="image_container">
+                        <div>
+                            <form target="_blank" action='/api/photo_display' method="POST" width="200">
+                                <input type="image" title={{photo_name}}
+                                    src="{{ thumbnail_url }}"
+                                    value={{photo_name}} width=200>
+                                <!--No need to encode space as %20, photo_id_str = str(int)-->
+                                <input type="hidden" name="photo_id" value={{photo_id_str}} />
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .divider {
+            position:absolute;
+            height: 90%;
+            width: 98%;
+        }
+
+        .input_section {
+            float: top;
+            width: 100%;
+            height: 10%;
+        }
+
+        .logout_section {
+            float: left;
+            position: relative;
+            width: 31%;
+            height: 90%;
+            border: 1px solid;
+            border-radius: 10px 10px 10px 10px;
+            padding: 5px;
+            padding-left: 10px;
+            background-image: url("../static/icons/user_welcome_icon.svg");
+            background-repeat: no-repeat;
+            background-size:contain;
+            background-position: right;
+        }
+
+        .upload_section {
+            float: left;
+            position: relative;
+            width: 31%;
+            height: 90%;
+            border: 1px solid;
+            border-radius: 10px 10px 10px 10px;
+            padding: 5px;
+            padding-left: 10px;
+            background-image: url("../static/icons/upload_icon.svg");
+            background-repeat: no-repeat;
+            background-size:contain;
+            background-position: right;
+        }
+
+        .gallery_refresh_button {
+            float: left;
+            position: relative;
+            width: 31%;
+            height: 100%;
+            border: 1px solid;
+            border-radius: 10px 10px 10px 10px;
+            padding: 5px;
+            padding-left: 10px;
+            box-shadow: 5px 7px #888888;
+            background-image: url("../static/icons/thumbnail_refresh_icon.svg");
+            background-repeat: no-repeat;
+            background-size:contain;
+            background-position: right;
+        }
+
+        .gallery_section {
+            float: top;
+            height: 90%;
+            width: 96%;
+        }
+
+        .image_container {
+            float: left;
+            width: 12.5%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .title {
+            float: top;
+            height: 10%;
+        }
+
+        .image {
+            float: top;
+            height: 90%;
+            width: 100%;
+        }
+
+        .gallery_display {
+            border: 1px solid;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 15px rgba(50, 50, 50, 0.7) inset;
+            height: 90%;
+            margin-top: 10px;
+            padding: 15px;
+            overflow: auto;
+        }
+    </style>
+
+
+    {% endblock %}

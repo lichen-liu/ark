@@ -11,7 +11,7 @@ def main_handler():
 
 
 class GuestWelcomeArgs:
-    def __init__(self, username=None, password=None, error_message=None, title='Wellcome to Image Gallery!'):
+    def __init__(self, username=None, password=None, error_message=None, title='Welcome to Image Gallery!'):
         self.username = username
         self.password = password
         self.error_message = error_message
@@ -19,7 +19,7 @@ class GuestWelcomeArgs:
 
 
 class UserWelcomeArgs:
-    def __init__(self, error_message=None, title='Wellcome to Image Gallery!'):
+    def __init__(self, error_message=None, title='Welcome!'):
         self.error_message = error_message
         self.title = title
 
@@ -32,9 +32,8 @@ def main(guest_welcome_args=GuestWelcomeArgs(), user_welcome_args=UserWelcomeArg
 
 
 def main_guest_welcome(args):
-    return render_template(
-        'guest_welcome.html', title=args.title, username=args.username, password=args.password, error_message=args.error_message)
+    return render_template('guest_welcome.html', title=args.title, username=args.username, password=args.password, error_message=args.error_message)
 
 
 def main_user_welcome(args):
-    return 'Logged in'
+    return render_template('user_welcome.html', title=args.title, username=account.account_get_logged_in_username(), error_message=args.error_message)
