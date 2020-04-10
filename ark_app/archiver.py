@@ -7,30 +7,35 @@ import datetime
 
 @webapp.route('/api/archive_url', methods=['POST'])
 def archive_url_handler():
-    url = adjust_url(request.form.get('archive_url_text'))
+    original_url = request.form.get('archive_url_text')
+    url = adjust_url(original_url)
+    error_message = None
     if test_url(url):
         # Register the url and date to the database
-        utc_date = str(datetime.datetime.utcnow().date())
-        msg = dynamodb.create_new_archive(url=url, date=utc_date, username=account.account_get_logged_in_username())
-        if msg:
-            print(msg)
-            return msg
-    
+        utc_datetime = datetime.datetime.utcnow()
+        utc_datetime_str = str(utc_datetime)
+        utc_date_str = str(utc_datetime.date())
+        is_newly_created = dynamodb.create_new_archive(url=url, date=utc_date_str, username=account.account_get_logged_in_username(), datetime=utc_datetime_str)
+        if not is_newly_created:
+            old_datetime_str = dynamodb.update_archive_info_timestamp(url=url, date=utc_date_str, new_datetime=utc_datetime_str)
+            error_message = 'Successfully rearchived. The archive was already created for url(' + url + ') on (' + old_datetime_str + ')! '
+        
         # Screenshot the url webpage
         url_webpage_png = webpage_screenshoter.take_url_webpage_screenshot_as_png(url)
 
         # Store the screenshot on S3
-        archive_id, _ = dynamodb.get_archive_info(url=url, date=utc_date)
+        archive_id, _, _ = dynamodb.get_archive_info(url=url, date=utc_date_str)
         url_webpage_png_s3_key = archive_id + '.png'
         s3.upload_file_bytes_object(key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
 
         # TESTING
         # Print the screenshot
         screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
-        return main.main(user_welcome_args=main.UserWelcomeArgs(screenshot_url=screenshot_url))
+        return main.main(user_welcome_args=main.UserWelcomeArgs(screenshot_url=screenshot_url, error_message=error_message))
+    else:
+        error_message = 'Invalid URL: ' + original_url
     
-    print('no')
-    return 'no'
+    return main.main(user_welcome_args=main.UserWelcomeArgs(error_message=error_message))
 
 
 def adjust_url(url):
