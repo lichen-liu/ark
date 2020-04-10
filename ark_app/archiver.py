@@ -1,6 +1,7 @@
 from ark_app import webapp, webpage_screenshoter
 from flask import request
 import requests
+import urllib.parse
 
 
 @webapp.route('/api/archive_url', methods=['POST'])
@@ -18,7 +19,18 @@ def archive_url_handler():
 
 
 def adjust_url(url):
-    return url.strip()
+    print('Original URL:', url)
+    url = url.strip()
+    url = url.lower()
+    url_parse = urllib.parse.urlparse(url, scheme='http')
+    if url_parse.netloc == '':
+        url_parse = url_parse._replace(netloc = url_parse.path)
+        url_parse = url_parse._replace(path = '')
+    print(url_parse)
+    url = urllib.parse.urlunparse(url_parse)
+    print('Adjusted URL:', url)
+    return url
+
 
 
 def test_url(url):
