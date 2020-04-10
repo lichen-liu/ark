@@ -67,9 +67,9 @@ class ScreenShoter:
         return self._driver.get_screenshot_as_png()
 
     def get_webpage_inner_html(self):
-        document_html = self._driver.execute_script("return document.documentElement.innerHTML;")
-        body_html = self._driver.execute_script("return document.body.innerHTML;")
-        return str(document_html) + str(body_html)
+        #document_html = self._driver.execute_script("return document.documentElement.innerHTML;")
+        #body_html = self._driver.execute_script("return document.body.innerHTML;")
+        return self._driver.page_source
 
 
 def take_url_webpage_screenshot_as_png(url, screenshoter=ScreenShoter()):
@@ -78,12 +78,8 @@ def take_url_webpage_screenshot_as_png(url, screenshoter=ScreenShoter()):
     '''
     screenshoter.open_url(url)
     screenshoter.force_render()
-    return screenshoter.get_screenshot_as_png()  
 
-def get_pagesource_of_webpage(url, screenshoter=ScreenShoter()):
-    '''
-    Return screenshot image in png format
-    '''
-    screenshoter.open_url(url)
-    screenshoter.force_render()
-    return screenshoter.get_webpage_inner_html() 
+    image = screenshoter.get_screenshot_as_png()
+    text = screenshoter.get_webpage_inner_html() 
+
+    return image, text
