@@ -24,8 +24,8 @@ python run_ark_app.py
 
 
 #### 1.1.2 chromedriver Setup
-Located in `ark_app/chromedrivers`
-Win32: Chrome version 81
+Located in `ark_app/chromedrivers`  
+Win32: Chrome version 81  
 Mac64: Chrome version
 
 
