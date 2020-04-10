@@ -7,4 +7,9 @@
     <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
 </form>
 
+<form action="/api/archive_url" method="POST">
+    <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+    <button type="submit" name="action" value="archive_url_submit">Submit</button>
+</form>
+
 {% endblock %}

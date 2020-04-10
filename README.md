@@ -15,7 +15,7 @@ pip install Flask
 pip install boto3
 pip install Pillow
 pip install selenium
-mv chromedriver venv/bin/.
+cp ark_app/chromedriver venv/bin/.
 
 python run_ark_app.py
 ```
