@@ -15,26 +15,44 @@
 <body>
 
   <div class="jumbotron text-center">
-    <h1>Search For Your Achive:</h1>
-    <form action="/api/archive_url" method="GET">
-      <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-      <button type="submit" name="action" value="archive_url_submit">Search</button>
-    </form>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <h2>Search For Your Achive:</h2>
+          <form action="/api/archive_url" method="GET">
+            <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+            <button type="submit">Search</button>
+          </form>
+        </div>
+        <div class="col-sm-4">
+          <h2>Achive A Webpage </h2>
+          <form action="/api/archive_url" method="GET">
+            <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+            <button type="submit" name="action" value="archive_url_submit">Archive</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-
   <div class="container">
     <div class="row">
       <div class="col-sm-4">
-        <h3>Achive A Webpage </h3>
-        <form action="/api/archive_url" method="GET">
-          <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-          <button type="submit" name="action" value="archive_url_submit">Archive</button>
-        </form>
+        <div class="row">
+            <h3>History</h3>
+            <table class="table"></table>
+        </div>
+        <div class="row">
+            <h3>Results</h3>
+        </div>
+       
+        <div class="row">
+            <h3>Pending</h3>
+        </div>
+
       </div>
       <div class="col-sm-4">
-        <h3>Upload A CSV Of Websites </h3>
+        <h3>Calendar</h3>
       </div>
-
       <div class="col-sm-4">
         <h3>Achive Request Summary</h3>
         {% if url_screenshot_info %}
