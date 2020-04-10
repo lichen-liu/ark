@@ -12,5 +12,3 @@ def archive_url_handler():
 def archive_url(url):
     print(url)
     url_webpage_png = webpage_screenshoter.take_url_webpage_screenshot_as_png(url)
-
-
