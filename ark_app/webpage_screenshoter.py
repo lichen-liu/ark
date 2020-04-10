@@ -5,6 +5,12 @@ from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+import os
+import pathlib
+
+import platform
+
+
 
 
 _SUPPORTED_BROWERS = {"chrome", "firefox"}
@@ -15,7 +21,16 @@ class ScreenShoter:
             if _DEFAULT_BROWSER == "chrome":
                 options = webdriver.ChromeOptions()
                 options.add_argument("--headless")
-                driver = webdriver.Chrome(options=options)
+                
+                chromedrivers_path = os.path.join(str(pathlib.Path(__file__).parent.absolute()), 'chromedrivers')
+                
+                operating_system = platform.system()
+                if operating_system == 'Windows':
+                    chromedriver_path = os.path.join(chromedrivers_path, 'chromedriver.exe')
+                elif operating_system == 'Darwin':
+                    chromedriver_path = os.path.join(chromedrivers_path, 'chromedriver')
+
+                driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
             elif _DEFAULT_BROWSER == "firefox":
                 options = webdriver.FirefoxOptions()
                 options.add_argument("--headless")
