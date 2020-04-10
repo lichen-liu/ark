@@ -8,10 +8,15 @@ import datetime
 @webapp.route('/api/archive_url', methods=['POST'])
 def archive_url_handler():
     original_url = request.form.get('archive_url_text')
-    url = adjust_url(original_url)
+    return archive_url(original_url)
+
+
+def archive_url(original_url):
     error_message = None
-    if test_url(url):
-        # Register the url and date to the database
+
+    url = adjust_url(original_url)
+    if url is not None:
+        # Register the url and date to arkArchive
         utc_datetime = datetime.datetime.utcnow()
         utc_datetime_str = str(utc_datetime)
         utc_date_str = str(utc_datetime.date())
@@ -38,26 +43,38 @@ def archive_url_handler():
     return main.main(user_welcome_args=main.UserWelcomeArgs(error_message=error_message))
 
 
-def adjust_url(url):
-    print('Original URL:', url)
-    url = url.strip()
-    url = url.lower()
-    url_parse = urllib.parse.urlparse(url, scheme='http')
-    if url_parse.netloc == '':
-        url_parse = url_parse._replace(netloc = url_parse.path)
-        url_parse = url_parse._replace(path = '')
-    print(url_parse)
-    url = urllib.parse.urlunparse(url_parse)
-    print('Adjusted URL:', url)
-    return url
+def adjust_url(original_url):
+    '''
+    Return adjusted url if the url is reachable; otherwise None
+    '''
+    print('Original URL:', original_url)
+    preprocessed_url = original_url.strip()
+    preprocessed_url = preprocessed_url.lower()
+
+    working_url = None
+    for url_scheme in ['https', 'http']:
+        url_parse = urllib.parse.urlparse(preprocessed_url, scheme=url_scheme)
+        if url_parse.netloc == '':
+            url_parse = url_parse._replace(netloc = url_parse.path)
+            url_parse = url_parse._replace(path = '')
+
+        candidate_url = urllib.parse.urlunparse(url_parse)
+        is_working = test_url(candidate_url)
+        print('url_scheme='+url_scheme, 'candidate_url='+candidate_url, 'candidate_url_components='+str(url_parse), 'is_working='+str(is_working))
+        if is_working:
+            working_url = candidate_url
+            break
+
+    return working_url
 
 
 def test_url(url):
     '''
     Return True if url is reachable; otherwise False
     '''
+
     try:
-        r = requests.head(url, timeout=2)
+        r = requests.head(url, timeout=5)
         if r.status_code == 200:
             return True
     except Exception:
