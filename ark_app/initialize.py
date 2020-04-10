@@ -12,6 +12,7 @@ def init():
 
     # Create arkAccount Table if necessary
     dynamodb.create_account_table()
+    dynamodb.create_archive_table()
 
     # Create S3 directories if necessary
     s3.create_bucket_if_necessary()

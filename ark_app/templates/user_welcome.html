@@ -12,4 +12,8 @@
     <button type="submit" name="action" value="archive_url_submit">Archive</button>
 </form>
 
+{% if screenshot_url %}
+<img src={{screenshot_url}}>
+{% endif %}
+
 {% endblock %}

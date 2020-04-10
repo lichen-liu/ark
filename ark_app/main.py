@@ -19,9 +19,10 @@ class GuestWelcomeArgs:
 
 
 class UserWelcomeArgs:
-    def __init__(self, error_message=None, title='Welcome!'):
+    def __init__(self, error_message=None, title='Welcome!', screenshot_url=None):
         self.error_message = error_message
         self.title = title
+        self.screenshot_url = screenshot_url
 
 
 def main(guest_welcome_args=GuestWelcomeArgs(), user_welcome_args=UserWelcomeArgs()):
@@ -36,4 +37,4 @@ def main_guest_welcome(args):
 
 
 def main_user_welcome(args):
-    return render_template('user_welcome.html', title=args.title, username=account.account_get_logged_in_username(), error_message=args.error_message)
+    return render_template('user_welcome.html', title=args.title, username=account.account_get_logged_in_username(), error_message=args.error_message, screenshot_url=args.screenshot_url)
