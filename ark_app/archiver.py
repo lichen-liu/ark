@@ -6,6 +6,7 @@ import requests
 import urllib.parse
 import datetime
 import archiveis
+import re
 
 
 @webapp.route('/api/archive_url', methods=['GET', 'POST'])
@@ -51,9 +52,9 @@ def archive_url(original_url):
             key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
 
         # Store the text of the webpage on S3
-        url_webpage_text = extract_text(url_inner_html).encode()
+        url_webpage_text = clean_text(extract_text(url_inner_html)).encode()
         url_weboage_text_s3_key = s3.WEBPAGE_TEXT_DIR + archive_id + '.txt'
-        s3.upload_file_bytes_object(key=url_weboage_text_s3_key, file_bytes=url_webpage_text)
+        #s3.upload_file_bytes_object(key=url_weboage_text_s3_key, file_bytes=url_webpage_text)
 
 
         # TESTING
@@ -114,7 +115,16 @@ def test_url(url):
 
 def extract_text(raw_html):
     page = BeautifulSoup(raw_html, 'html.parser')
-    page_all_divs = page.find_all('div')
+    page_titles = page.find_all('a1')
+    page_paragraphs = page.find_all('p')
+    page_contents = page_titles + page_paragraphs
     
-    texts = [div.getText().strip() for div in page_all_divs]
-    return ' '.join(texts)
+    page_contents = [page_sentence.getText().strip() for page_sentence in page_contents]
+
+    sentences = [sentence for sentence in page_contents if not '\n' in sentence]
+    sentences = [sentence for sentence in sentences if '.' in sentence]
+
+    return ' '.join(sentences)
+
+def clean_text(text):
+    return re.sub(r'[^\w!.]', ' ', text)
