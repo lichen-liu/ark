@@ -11,6 +11,7 @@ import botocore
 
 BUCKET = 'clr-ark'
 WEBPAGE_SCREENSHOT_DIR = 'webpage_screenshot' + '/'
+WEBPAGE_TEXT_DIR = 'webpage_text' + '/'
 
 
 def is_path_s3_directory(key):

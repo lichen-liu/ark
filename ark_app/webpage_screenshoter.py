@@ -5,6 +5,7 @@ from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+
 import os
 import pathlib
 
@@ -65,6 +66,11 @@ class ScreenShoter:
         self._driver.set_window_size(1000, self._height)
         return self._driver.get_screenshot_as_png()
 
+    def get_webpage_inner_html(self):
+        document_html = self._driver.execute_script("return document.documentElement.innerHTML;")
+        body_html = self._driver.execute_script("return document.body.innerHTML;")
+        return str(document_html) + str(body_html)
+
 
 def take_url_webpage_screenshot_as_png(url, screenshoter=ScreenShoter()):
     '''
@@ -73,3 +79,11 @@ def take_url_webpage_screenshot_as_png(url, screenshoter=ScreenShoter()):
     screenshoter.open_url(url)
     screenshoter.force_render()
     return screenshoter.get_screenshot_as_png()  
+
+def get_pagesource_of_webpage(url, screenshoter=ScreenShoter()):
+    '''
+    Return screenshot image in png format
+    '''
+    screenshoter.open_url(url)
+    screenshoter.force_render()
+    return screenshoter.get_webpage_inner_html() 

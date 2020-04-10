@@ -1,5 +1,7 @@
 from ark_app import webapp, webpage_screenshoter, dynamodb, s3, main, account
 from flask import request
+from bs4 import BeautifulSoup
+
 import requests
 import urllib.parse
 import datetime
@@ -31,12 +33,17 @@ def archive_url(original_url):
             error_message = 'Successfully rearchived. The archive was already created for url(' + url + ') on (' + previous_modified_datetime_str + ') by (' + previous_modified_username + ')!'
         
         # Screenshot the url webpage
-        url_webpage_png = webpage_screenshoter.take_url_webpage_screenshot_as_png(url)
+        url_webpage_png, url_inner_html= webpage_screenshoter.take_url_webpage_screenshot_as_png(url)
 
         # Store the screenshot on S3
         archive_id, created_username, created_datetime, modified_username, modified_datetime = dynamodb.get_archive_info(url=url, date=utc_date_str)
         url_webpage_png_s3_key = s3.WEBPAGE_SCREENSHOT_DIR + archive_id + '.png'
         s3.upload_file_bytes_object(key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
+
+        url_webpage_text = extract_text(url_inner_html).encode()
+        url_weboage_text_s3_key = s3.WEBPAGE_TEXT_DIR + archive_id + '.txt'
+        s3.upload_file_bytes_object(key=url_weboage_text_s3_key, file_bytes=url_webpage_text)
+
 
         # TESTING
         # Print the screenshot
@@ -92,3 +99,10 @@ def test_url(url):
             pass
 
     return False
+
+def extract_text(raw_html):
+    page = BeautifulSoup(raw_html, 'html.parser')
+    page_all_divs = page.find_all('div')
+    
+    texts = [div.getText().strip() for div in page_all_divs]
+    return ' '.join(texts)
