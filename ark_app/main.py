@@ -20,14 +20,12 @@ class GuestWelcomeArgs:
 
 class UserWelcomeArgs:
     class UrlArchiveInfo:
-        def __init__(self, archivemd_url=None, screenshot_url=None, query_url=None, adjusted_url=None, created_timestamp=None, modified_timestamp=None, created_username=None, modified_username=None):
+        def __init__(self, archivemd_url=None, screenshot_url=None, query_url=None, adjusted_url=None, created_timestamp=None, created_username=None):
             self.screenshot_url = screenshot_url
             self.query_url = query_url
             self.adjusted_url = adjusted_url
             self.created_timestamp = created_timestamp
-            self.modified_timestamp = modified_timestamp
             self.created_username = created_username
-            self.modified_username = modified_username
             self.archivemd_url = archivemd_url
 
     def __init__(self, error_message=None, title='Welcome!', url_screenshot_info=None):
