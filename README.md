@@ -69,3 +69,13 @@ aws_access_key_id= Your_aws_access_key_id
 aws_secret_access_key= Your_aws_access_key
 aws_session_token= Your_session_token
 ```
+
+
+### 1.4 Management Script
+
+
+#### 1.4.1 Helper
+Manage DynamoDB and S3 contents locally.
+```
+python ark_app/helper.py --help
+```

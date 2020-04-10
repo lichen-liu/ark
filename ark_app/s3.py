@@ -19,7 +19,7 @@ def is_path_s3_directory(key):
     return True
 
 
-def get_s3_path_in_string(key, bucket_name):
+def get_s3_path_in_string(key, bucket_name=BUCKET):
     return 's3://' + bucket_name +'/' + key
 
 
