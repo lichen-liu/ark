@@ -19,10 +19,21 @@ class GuestWelcomeArgs:
 
 
 class UserWelcomeArgs:
-    def __init__(self, error_message=None, title='Welcome!', screenshot_url=None):
+    class UrlScreenshotInfo:
+        def __init__(self, screenshot_url=None, query_url=None, adjusted_url=None, created_timestamp=None, modified_timestamp=None, created_username=None, modified_username=None):
+            self.screenshot_url = screenshot_url
+            self.query_url = query_url
+            self.adjusted_url = adjusted_url
+            self.created_timestamp = created_timestamp
+            self.modified_timestamp = modified_timestamp
+            self.created_username = created_username
+            self.modified_username = modified_username
+
+    
+    def __init__(self, error_message=None, title='Welcome!', url_screenshot_info=None):
         self.error_message = error_message
         self.title = title
-        self.screenshot_url = screenshot_url
+        self.url_screenshot_info = url_screenshot_info
 
 
 def main(guest_welcome_args=GuestWelcomeArgs(), user_welcome_args=UserWelcomeArgs()):
@@ -37,4 +48,4 @@ def main_guest_welcome(args):
 
 
 def main_user_welcome(args):
-    return render_template('user_welcome.html', title=args.title, username=account.account_get_logged_in_username(), error_message=args.error_message, screenshot_url=args.screenshot_url)
+    return render_template('user_welcome.html', title=args.title, username=account.account_get_logged_in_username(), error_message=args.error_message, url_screenshot_info=args.url_screenshot_info)

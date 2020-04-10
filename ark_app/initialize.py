@@ -11,9 +11,13 @@ def init():
     print('INITIALIZE')
 
     # Create arkAccount Table if necessary
-    dynamodb.create_account_table()
-    dynamodb.create_archive_table()
+    if dynamodb.create_account_table():
+        print('Created DynamoDB Table', dynamodb.ACCOUNT_TABLE)
+    if dynamodb.create_archive_table():
+        print('Created DynamoDB Table', dynamodb.ARCHIVE_TABLE)
 
     # Create S3 directories if necessary
-    s3.create_bucket_if_necessary()
-    s3.create_directory_if_necessary(directory=s3.WEBPAGE_SCREENSHOT_DIR)
+    if s3.create_bucket_if_necessary():
+        print('Created S3 Bucket', s3.BUCKET)
+    if s3.create_directory_if_necessary(directory=s3.WEBPAGE_SCREENSHOT_DIR):
+        print('Created S3 Directory', s3.WEBPAGE_SCREENSHOT_DIR)

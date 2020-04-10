@@ -19,8 +19,8 @@ def print_dynamodb_response(response):
     print(json.dumps(response, indent=4, cls=DecimalEncoder))
 
 
-_ACCOUNT_TABLE = 'arkAccount'
-_ARCHIVE_TABLE = 'arkArchive'
+ACCOUNT_TABLE = 'arkAccount'
+ARCHIVE_TABLE = 'arkArchive'
 
 
 # Decorator for connecting to and disconnecting from the database
@@ -44,7 +44,7 @@ def create_new_account(dynamodb, username, password_hash, salt):
     error_message = None
 
     try:
-        dynamodb.Table(_ACCOUNT_TABLE).put_item(
+        dynamodb.Table(ACCOUNT_TABLE).put_item(
             Item={
                 'accountId': username,
                 'passwordHash': password_hash,
@@ -68,7 +68,7 @@ def get_account_credential(dynamodb, username):
     '''
     result = None
 
-    response = dynamodb.Table(_ACCOUNT_TABLE).get_item(
+    response = dynamodb.Table(ACCOUNT_TABLE).get_item(
         Key={
             'accountId': username
         }
@@ -88,7 +88,7 @@ def create_account_table(dynamodb):
     '''
     try:
         dynamodb.create_table(
-            TableName=_ACCOUNT_TABLE,
+            TableName=ACCOUNT_TABLE,
             KeySchema=[
                 {
                     'AttributeName': 'accountId',
@@ -118,7 +118,7 @@ def create_account_table(dynamodb):
 @dynamodb_operation
 def clear_account_table(dynamodb):
     scan = None
-    account_table = dynamodb.Table(_ACCOUNT_TABLE)
+    account_table = dynamodb.Table(ACCOUNT_TABLE)
     with account_table.batch_writer() as batch:
         while scan is None or 'LastEvaluatedKey' in scan:
             if scan is not None and 'LastEvaluatedKey' in scan:
@@ -162,7 +162,7 @@ def create_new_archive(dynamodb, url, date, username, datetime):
     It is consisted of 2 items: main, archiveId. archiveId item is simply to make sure uniqueness of archiveId.
     Return True if new archive is created; False if the archive is already existed
     '''
-    archive_table = dynamodb.Table(_ARCHIVE_TABLE)
+    archive_table = dynamodb.Table(ARCHIVE_TABLE)
 
     # Check whether (url, date) exists
     try:
@@ -170,8 +170,10 @@ def create_new_archive(dynamodb, url, date, username, datetime):
             Item={
                 'archiveUrl': url,
                 'archiveDate': date,
-                'accountId': username,
-                'archiveDatetime': datetime
+                'createdAccountId': username,
+                'createdDatetime': datetime,
+                'modifiedAccountId': username,
+                'modifiedDatetime': datetime
             },
             ConditionExpression='attribute_not_exists(archiveUrl) OR attribute_not_exists(archiveDate)'
         )
@@ -224,11 +226,11 @@ def create_new_archive(dynamodb, url, date, username, datetime):
 @dynamodb_operation
 def get_archive_info(dynamodb, url, date):
     '''
-    Return (archive_id, username, datetime) if found; otherwise None
+    Return (archive_id, created_username, created_datetime, modified_username, modified_datetime) if found; otherwise None
     '''
     result = None
 
-    response = dynamodb.Table(_ARCHIVE_TABLE).get_item(
+    response = dynamodb.Table(ARCHIVE_TABLE).get_item(
         Key={
             'archiveUrl': url,
             'archiveDate': date
@@ -238,39 +240,40 @@ def get_archive_info(dynamodb, url, date):
     if response:
         item = response.get('Item')
         if item:
-            result = (item['archiveId'], item['accountId'], item['archiveDatetime'])
+            result = (item['archiveId'], item['createdAccountId'], item['createdDatetime'], item['modifiedAccountId'], item['modifiedDatetime'])
         return result
 
 
 @dynamodb_operation
-def update_archive_info_timestamp(dynamodb, url, date, new_datetime):
+def update_archive_info_timestamp(dynamodb, url, date, modified_username, modified_datetime):
     '''
-    Return the old timestamp(datetime) if updated successfully; None if entry is not existed yet
+    Return the (previous modified_username, previous modified_timestamp(datetime)) if updated successfully; None if entry is not existed yet
     '''
     
-    old_timestamp = None
+    previous_modified = None
     try:
-        response = dynamodb.Table(_ARCHIVE_TABLE).update_item(
+        response = dynamodb.Table(ARCHIVE_TABLE).update_item(
             Key={
                 'archiveUrl': url,
                 'archiveDate': date
             },
-            UpdateExpression='set archiveDatetime = :d',
+            UpdateExpression='set modifiedAccountId = :a, modifiedDatetime = :d',
             ExpressionAttributeValues={
-                ':d': new_datetime
+                ':a': modified_username,
+                ':d': modified_datetime
             },
             ConditionExpression='attribute_exists(archiveUrl) AND attribute_exists(archiveDate)',
             ReturnValues='UPDATED_OLD'
         )
 
-        old_timestamp = response['Attributes']['archiveDatetime']
+        previous_modified = (response['Attributes']['modifiedAccountId'], response['Attributes']['modifiedDatetime'])
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
             pass
         else:
             raise
     finally:
-        return old_timestamp
+        return previous_modified
 
 
 @dynamodb_operation
@@ -280,7 +283,7 @@ def create_archive_table(dynamodb):
     '''
     try:
         dynamodb.create_table(
-            TableName=_ARCHIVE_TABLE,
+            TableName=ARCHIVE_TABLE,
             KeySchema=[
                 {
                     'AttributeName': 'archiveUrl',
@@ -318,7 +321,7 @@ def create_archive_table(dynamodb):
 @dynamodb_operation
 def clear_archive_table(dynamodb):
     scan = None
-    archive_table = dynamodb.Table(_ARCHIVE_TABLE)
+    archive_table = dynamodb.Table(ARCHIVE_TABLE)
     with archive_table.batch_writer() as batch:
         while scan is None or 'LastEvaluatedKey' in scan:
             if scan is not None and 'LastEvaluatedKey' in scan:

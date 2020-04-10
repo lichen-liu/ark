@@ -32,9 +32,13 @@ def is_bucket_existed(bucket_name=BUCKET):
 
 
 def create_bucket_if_necessary(bucket_name=BUCKET):
+    '''
+    Return True if created successfuly; False otherwise
+    '''
     if not is_bucket_existed(bucket_name):
-        print('Creating bucket', bucket_name, '!')
         boto3.client('s3').create_bucket(Bucket=bucket_name)
+        return True
+    return False
 
 
 def list_bucket_content(bucket_name=BUCKET, directory='', recursive=True):
@@ -145,11 +149,15 @@ def is_object_existed(key, bucket_name=BUCKET):
 
 
 def create_directory_if_necessary(directory, bucket_name=BUCKET):
+    '''
+    Return True if created successfuly; False otherwise
+    '''
     assert(is_path_s3_directory(directory))
 
     if not is_object_existed(key=directory, bucket_name=bucket_name):
-        print('Creating directory', get_s3_path_in_string(key=directory, bucket_name=bucket_name) , '!')
         boto3.client('s3').put_object(Bucket=bucket_name, Key=directory)
+        return True
+    return False
 
 
 def upload_file_bytes_object(key, file_bytes, bucket_name=BUCKET):
