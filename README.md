@@ -13,6 +13,9 @@ venv\Scripts\activate
 source venv/bin/activate
 pip install Flask
 pip install boto3
+pip install Pillow
+pip install selenium
+mv chromedriver venv/bin/.
 
 python run_ark_app.py
 ```
