@@ -11,30 +11,31 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
+
 <body>
 
-<div class="jumbotron text-center">
+  <div class="jumbotron text-center">
     <h1>Search For Your Achive:</h1>
     <form action="/api/archive_url" method="GET">
-        <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-        <button type="submit" name="action" value="archive_url_submit">Search</button>
+      <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+      <button type="submit" name="action" value="archive_url_submit">Search</button>
     </form>
-</div>
-  
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-        <h3>Achive A Webpage </h3>
-    <form action="/api/archive_url" method="GET">
-        <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-        <button type="submit" name="action" value="archive_url_submit">Archive</button>
-    </form>
-    </div>
-    <div class="col-sm-4">
-        <h3>Upload A CSV Of Websites </h3>        
-    </div>
+  </div>
 
-    <div class="col-sm-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <h3>Achive A Webpage </h3>
+        <form action="/api/archive_url" method="GET">
+          <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+          <button type="submit" name="action" value="archive_url_submit">Archive</button>
+        </form>
+      </div>
+      <div class="col-sm-4">
+        <h3>Upload A CSV Of Websites </h3>
+      </div>
+
+      <div class="col-sm-4">
         <h3>Achive Request Summary</h3>
         {% if url_screenshot_info %}
         <br>
@@ -46,14 +47,15 @@
         <br>
         <p>Query URL: {{url_screenshot_info.query_url}}</p>
         <p>Adjusted URL: {{url_screenshot_info.adjusted_url}}</p>
+        <p>Archive.md URL: {{url_screenshot_info.archivemd_url}}</p>
         <p>Created Username: {{url_screenshot_info.created_username}}</p>
         <p>Created Timestamp: {{url_screenshot_info.created_timestamp}}</p>
         <p>Last Modified Username: {{url_screenshot_info.modified_username}}</p>
         <p>Last Modified Timestamp: {{url_screenshot_info.modified_timestamp}}</p>
         {% endif %}
+      </div>
     </div>
   </div>
-</div>
 
 </body>
 

@@ -19,8 +19,8 @@ class GuestWelcomeArgs:
 
 
 class UserWelcomeArgs:
-    class UrlScreenshotInfo:
-        def __init__(self, screenshot_url=None, query_url=None, adjusted_url=None, created_timestamp=None, modified_timestamp=None, created_username=None, modified_username=None):
+    class UrlArchiveInfo:
+        def __init__(self, archivemd_url=None, screenshot_url=None, query_url=None, adjusted_url=None, created_timestamp=None, modified_timestamp=None, created_username=None, modified_username=None):
             self.screenshot_url = screenshot_url
             self.query_url = query_url
             self.adjusted_url = adjusted_url
@@ -28,8 +28,8 @@ class UserWelcomeArgs:
             self.modified_timestamp = modified_timestamp
             self.created_username = created_username
             self.modified_username = modified_username
+            self.archivemd_url = archivemd_url
 
-    
     def __init__(self, error_message=None, title='Welcome!', url_screenshot_info=None):
         self.error_message = error_message
         self.title = title
