@@ -9,11 +9,8 @@ import botocore
 - file name can be the same as directory. But directory must end with '/', whereas file must not
 '''
 
-BUCKET = 'ece1779'
-ROOT_DIR = 'data' + '/'
-PHOTOS_DIR = ROOT_DIR + 'photos' + '/'
-THUMBNAILS_DIR = ROOT_DIR + 'thumbnails' + '/'
-RECTANGLES_DIR = ROOT_DIR + 'rectangles' + '/'
+BUCKET = 'clr-ark'
+WEBPAGE_SCREENSHOT_DIR = 'webpage_screenshot' + '/'
 
 
 def is_path_s3_directory(key):
@@ -37,7 +34,7 @@ def is_bucket_existed(bucket_name=BUCKET):
 def create_bucket_if_necessary(bucket_name=BUCKET):
     if not is_bucket_existed(bucket_name):
         print('Creating bucket', bucket_name, '!')
-        boto3.client('s3').create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': 'us-east-1'})
+        boto3.client('s3').create_bucket(Bucket=bucket_name)
 
 
 def list_bucket_content(bucket_name=BUCKET, directory='', recursive=True):
@@ -153,13 +150,6 @@ def create_directory_if_necessary(directory, bucket_name=BUCKET):
     if not is_object_existed(key=directory, bucket_name=bucket_name):
         print('Creating directory', get_s3_path_in_string(key=directory, bucket_name=bucket_name) , '!')
         boto3.client('s3').put_object(Bucket=bucket_name, Key=directory)
-
-
-def create_directories_if_necessary(bucket_name=BUCKET):
-    create_directory_if_necessary(directory=ROOT_DIR, bucket_name=bucket_name)
-    create_directory_if_necessary(directory=PHOTOS_DIR, bucket_name=bucket_name)
-    create_directory_if_necessary(directory=THUMBNAILS_DIR, bucket_name=bucket_name)
-    create_directory_if_necessary(directory=RECTANGLES_DIR, bucket_name=bucket_name)
 
 
 def upload_file_bytes_object(key, file_bytes, bucket_name=BUCKET):
