@@ -14,7 +14,7 @@ The behaviour of the application follows the following two rules:
 2. If searching for archives from today, return if found, archive it otherwise. Supports forcefully re-archiving 
 for today's snapshot.
 
-Currently: users must login to be able to use the application.
+Currently: users must login to be able to use the application.  
 Planning: users that are not logged in can only do searchings, but not any archivings.
 
 
