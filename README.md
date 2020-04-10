@@ -52,7 +52,8 @@ pip install boto3
 pip install Pillow
 pip install selenium
 pip install requests
-pip install archiveis 
+pip install archiveis
+pip install bs4
 
 python run_ark_app.py
 ```

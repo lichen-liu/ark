@@ -21,3 +21,5 @@ def init():
         print('Created S3 Bucket', s3.BUCKET)
     if s3.create_directory_if_necessary(directory=s3.WEBPAGE_SCREENSHOT_DIR):
         print('Created S3 Directory', s3.get_s3_path_in_string(s3.WEBPAGE_SCREENSHOT_DIR))
+    if s3.create_directory_if_necessary(directory=s3.WEBPAGE_TEXT_DIR):
+        print('Created S3 Directory', s3.get_s3_path_in_string(s3.WEBPAGE_TEXT_DIR))

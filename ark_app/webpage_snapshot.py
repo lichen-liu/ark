@@ -5,6 +5,7 @@ from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+
 import os
 import pathlib
 
@@ -15,7 +16,7 @@ import platform
 
 _SUPPORTED_BROWERS = {"chrome", "firefox"}
 _DEFAULT_BROWSER = "chrome"
-class ScreenShoter:
+class Snapshoter:
     def __init__(self):
         def get_default_driver():
             if _DEFAULT_BROWSER == "chrome":
@@ -66,10 +67,20 @@ class ScreenShoter:
         return self._driver.get_screenshot_as_png()
 
 
-def take_url_webpage_screenshot_as_png(url, screenshoter=ScreenShoter()):
+    def get_webpage_inner_html(self):
+        #document_html = self._driver.execute_script("return document.documentElement.innerHTML;")
+        #body_html = self._driver.execute_script("return document.body.innerHTML;")
+        return self._driver.page_source
+
+
+def take_url_webpage_snapshot(url, snapshoter=Snapshoter()):
     '''
-    Return screenshot image in png format
+    (png, text)
     '''
-    screenshoter.open_url(url)
-    screenshoter.force_render()
-    return screenshoter.get_screenshot_as_png()  
+    snapshoter.open_url(url)
+    snapshoter.force_render()
+
+    image = snapshoter.get_screenshot_as_png()
+    text = snapshoter.get_webpage_inner_html() 
+
+    return image, text
