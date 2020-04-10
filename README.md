@@ -6,6 +6,9 @@
 
 
 ### 1.1 Local
+
+
+#### 1.1.1 Python Setup
 Use: Python 3.7.3
 ```
 python -m venv venv
@@ -19,7 +22,15 @@ pip install selenium
 python run_ark_app.py
 ```
 
-Then set ~/.aws/credentials following this format:
+
+#### 1.1.2 chromedriver Setup
+Located in `ark_app/chromedrivers`
+Win32: Chrome version 81
+Mac64: Chrome version
+
+
+#### 1.1.3 AWS Credential Setup
+Set ~/.aws/credentials following this format:
 
 ```
 [default]
