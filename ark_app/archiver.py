@@ -80,13 +80,15 @@ def adjust_url(original_url):
 def test_url(url):
     '''
     Return True if url is reachable; otherwise False
+    Try head request first; if failed, then try get request
     '''
 
-    try:
-        r = requests.head(url, timeout=5)
-        if r.status_code == 200:
-            return True
-    except Exception:
-        pass
+    for request_func in [requests.head, requests.get]:
+        try:
+            r = request_func(url, timeout=5)
+            if r.status_code == 200:
+                return True
+        except Exception:
+            pass
 
     return False

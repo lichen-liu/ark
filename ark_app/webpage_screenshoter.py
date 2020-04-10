@@ -57,7 +57,8 @@ class ScreenShoter:
         #driver.set_window_size(1000, height - 700)
         #driver.execute_script("window.scrollTo(0, 700)")
         #driver.execute_script("window.scrollTo(0, 0)")
-        #time.sleep(10)
+        # import time
+        # time.sleep(10)
     
 
     def get_screenshot_as_png(self):
