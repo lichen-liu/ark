@@ -69,8 +69,6 @@ def take_url_webpage_screenshot_as_png(url, screenshoter=ScreenShoter()):
     '''
     Return screenshot image in png format
     '''
-    url = url.strip()
-
     screenshoter.open_url(url)
     screenshoter.force_render()
     return screenshoter.get_screenshot_as_png()  

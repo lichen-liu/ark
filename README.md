@@ -18,6 +18,7 @@ pip install Flask
 pip install boto3
 pip install Pillow
 pip install selenium
+pip install requests
 
 python run_ark_app.py
 ```
