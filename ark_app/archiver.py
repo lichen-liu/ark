@@ -14,10 +14,14 @@ default_browser = "chrome"
 default_path = "."
 default_image_format = ".png"
 
+#This should be the s3 trigger function
 def archive_webpages_handler():
     archive_webpages()
 
 def archive_webpages():
+    #Process s3 trigger event
+    #Take_screen_shots(...)
+    #Send screenshots to s3
 
 
 def get_default_driver():
