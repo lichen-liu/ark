@@ -1,5 +1,4 @@
-from ark_app import webapp, webpage_snapshot, dynamodb, s3, main, account, url_util, searcher, archive_lambda
-from flask import request, redirect
+from ark_app import webpage_snapshot, dynamodb, s3, url_util, searcher
 from bs4 import BeautifulSoup
 import datetime
 import archiveis
@@ -8,16 +7,12 @@ import re
 
 def archive_url(original_url, username):
     '''
-    Return (error_response, success_response).
-    # XOR check, only one response can be valid
-    assert (error_response is None) != (success_response is None)
+    Return error_message if failed; otherwise None.
     '''
     assert dynamodb.pop_account_archive_request_by(
         list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST, username=username, original_url=original_url)
     
     error_message = None
-    error_response = None
-    success_response = None
 
     url = url_util.adjust_url(original_url)
     if url is not None:
@@ -32,7 +27,7 @@ def archive_url(original_url, username):
             print('Unexpected exception: ' + str(e))
             initial_archive_md_url = None
 
-        is_newly_created = dynamodb.create_new_archive(url=url, datetime=utc_datetime_str, username=account.account_get_logged_in_username(), archive_md_url=initial_archive_md_url)
+        is_newly_created = dynamodb.create_new_archive(url=url, datetime=utc_datetime_str, username=username, archive_md_url=initial_archive_md_url)
         if is_newly_created:
             # Screenshot the url webpage
             url_webpage_png, _url_inner_html = webpage_snapshot.take_url_webpage_snapshot(url)
@@ -46,27 +41,14 @@ def archive_url(original_url, username):
             # url_webpage_text = clean_text(extract_text(url_inner_html)).encode()
             # url_weboage_text_s3_key = s3.WEBPAGE_TEXT_DIR + archive_id + '.txt'
             #s3.upload_file_bytes_object(key=url_weboage_text_s3_key, file_bytes=url_webpage_text)
-
-            # TESTING
-            # Print the screenshot
-            _, _, date_strs = searcher.search_archive_by_url_datetimes(original_url) or (None, None, None)
-            success_response = main.main(
-                user_welcome_args=main.UserWelcomeArgs(error_message=error_message,
-                                                       url_archive_info=searcher.UrlArchiveInfo(query_url=original_url, proper_url=url, created_datetime=utc_datetime_str),
-                                                       date_strs=date_strs))
         else:
             error_message = 'Error: The archive was already created for url(' + url + ') on (' + utc_datetime_str + ')!'
     else:
         dynamodb.push_account_archive_request(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST,
-                                              username=account.account_get_logged_in_username(), original_url=original_url)
+                                              username=username, original_url=original_url)
         error_message = 'Invalid URL: ' + original_url
 
-    if error_message:
-        error_response = main.main(user_welcome_args=main.UserWelcomeArgs(error_message=error_message))
-        
-    # XOR check, only one message can be valid
-    assert (error_response is None) != (success_response is None) 
-    return (error_response, success_response)
+    return error_message
 
 
 def extract_text(raw_html):

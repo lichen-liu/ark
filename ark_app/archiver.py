@@ -1,9 +1,5 @@
-from ark_app import webapp, webpage_snapshot, dynamodb, s3, main, account, url_util, searcher, archive_lambda
+from ark_app import webapp, dynamodb, main, account, url_util, archive_lambda, searcher
 from flask import request, redirect
-from bs4 import BeautifulSoup
-import datetime
-import archiveis
-import re
 
 
 RUNNING_LOCALLY = True
@@ -26,12 +22,21 @@ def archive_url_handler():
 
     dynamodb.push_account_archive_request(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST,
                                           username=account.account_get_logged_in_username(), original_url=original_url)
-    
-    error_response, success_response = archive_lambda.archive_url(original_url=original_url, username=account.account_get_logged_in_username())
-    # XOR check, only one response can be valid
-    assert (error_response is None) != (success_response is None)
+
+    # Only for local
+    error_message = archive_lambda.archive_url(original_url=original_url, username=account.account_get_logged_in_username())
 
     if RUNNING_LOCALLY:
-        return error_response if error_response else success_response
+        if error_message:
+            return main.main(user_welcome_args=main.UserWelcomeArgs(error_message=error_message))
+        else:
+            result = searcher.search_archive_by_url_datetimes(original_url)
+            assert result
+            proper_url, datetime, date_strs = result
+            return main.main(
+                user_welcome_args=main.UserWelcomeArgs(
+                    error_message=error_message,
+                    url_archive_info=searcher.UrlArchiveInfo(
+                        query_url=original_url, proper_url=proper_url, created_datetime=datetime), date_strs=date_strs))  
     else:
-        return error_response if error_response else redirect('/')
+        return redirect('/')
