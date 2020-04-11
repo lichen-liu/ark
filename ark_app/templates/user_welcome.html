@@ -10,8 +10,44 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-</head>
 
+  <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+  rel = "stylesheet">
+  <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+</head>
+<script>
+  var valid_dates = {{ dates_with_archives | tojson | safe}};
+
+         $(function() {
+            $( "#datepicker-5" ).datepicker({
+               beforeShowDay : function (date) {
+                 
+                 var dateYear = date.getFullYear();
+                 var dateMonth = date.getMonth();
+                 var dateDay = date.getDate();
+
+                 var found = false;
+                 for (index = 0; index < valid_dates.length; ++index) {
+                      valid_date = valid_dates[index]
+
+                      spitted_date = valid_date.split("-")
+
+                      if(parseInt(spitted_date[0], 10) == dateYear){
+                        if(parseInt(spitted_date[1], 10) - 1 == dateMonth){
+                          if(parseInt(spitted_date[2], 10) == dateDay){
+                            return [true];
+                        }
+                      }
+                    }
+                  } 
+
+                  return [false];
+               }
+            });
+         });
+</script>
 <body class="body">
     <form action="/api/logout" method="POST">
         <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
@@ -39,78 +75,31 @@
     </div>
 
     <div class="col">
-            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                <div class="title_div">
-                  <h3>Success</h3>
-                </div>
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th>URL</th>
-                        <th>Date</th>
-                        <th>Link</th>
-                      </tr>
-                    </thead>
-                    {% for item in success_list %}
-                    <tbody>
-                      <td>{{item.query_url}}</td>
-                      <td>{{item.created_timestamp}}</td>
-                      <td>
-                        <form action="/api/archive_url" method="GET">
-                          <button type="submit" id="archive_url_text" name="archive_url_text"
-                            value={{item.query_url}}>Go</button>
-                        </form>
-                      </td>
-                    </tbody>
-                    {% endfor %}
-                </table>
-            </div>
-
-            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                    <div class="title_div">
-                      <h3>Pending</h3>
-                    </div>
-                    <table class="table">
-                            <thead>
-                              <tr>
-                                <th>URL</th>
-                              </tr>
-                            </thead>
-                            {% if pending_list %}
-                            {% for item in pending_list %}
-                            <tbody>
-                              <td>{{item}}</td>
-                            </tbody>
-                            {% endfor %}
-                            {% endif %}
-                          </table>
-                </div>
-
-
-            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                    <div class="title_div">
-                      <h3>Failed</h3>
-                    </div>
-                    <table class="table">
-                            <thead>
-                              <tr>
-                                <th>URL</th>
-                              </tr>
-                            </thead>
-                            {% if failed_list %}
-                            {% for item in failed_list %}
-                            <tbody>
-                              <td>{{item}}</td>
-                            </tbody>
-                            {% endfor %}
-                            {% endif %}
-                          </table>
-                </div>
+  
     </div>
     
-    <div class="col">
+    <div class="col66p">
 
-            <h3 class="calender_title" >Calendar ({{time_stamp_type}})</h3>
+        <div class="image_content">
+            <h3 class= "webpage_image_title" >Achive Request Summary</h3>
+            {% if url_archive_info %}
+            <div class="title_div">
+                <p>Webpage Info:<p>
+            </div>
+            <p>Query URL: {{url_archive_info.query_url}}</p>
+            <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
+            <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
+          <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
+
+            <div class="title_div">
+              <p>Webpage Screenshot:<p>
+            </p>
+          </div>
+            <img class = "webpage_image" src={{url_archive_info.screenshot_url}}>
+            {% endif %}
+        </div>
+
+          <!--  <h3 class="calender_title" >Calendar ({{time_stamp_type}})</h3>
             <div class="calender_content">
                 {% set count = namespace(value=1) %}
                 {% for timestamp in timestamp_with_archives %}
@@ -120,27 +109,90 @@
                     </form>
                 {% set count.value = count.value + 1 %}
                 {% endfor %}
-            </div>
-
+            </div> -->
     </div>
 
-    <div class="col">
-        <div class="image_content">
-            <h3 class= "webpage_image_title" >Achive Request Summary</h3>
-            {% if url_archive_info %}
-            <div class="title_div">
-              <p>Webpage Screenshot:<p>
-            </p>div>
-            <img class = "webpage_image" src={{url_archive_info.screenshot_url}}>
-            <div class="title_div">
-                <p>Webpage Info:<p>
-            </div>
-            <p>Query URL: {{url_archive_info.query_url}}</p>
-            <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
-            <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
-        <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
-            {% endif %}
+    <div class="col33p">
+
+        <div class="title_div" >
+          <h3>Search By Date</h3>
         </div>
+        <div class="date_section">
+        <p>Enter Date: <input type = "text" id = "datepicker-5"></p>
+        </div>
+       
+
+        <div class="title_div">
+            <h3>Success</h3>
+        </div>
+
+        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+          
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>URL</th>
+                    <th>Date</th>
+                    <th>Link</th>
+                  </tr>
+                </thead>
+                {% for item in success_list %}
+                <tbody>
+                  <td>{{item.query_url}}</td>
+                  <td>{{item.created_timestamp}}</td>
+                  <td>
+                    <form action="/api/archive_url" method="GET">
+                      <button type="submit" id="archive_url_text" name="archive_url_text"
+                        value={{item.query_url}}>Go</button>
+                    </form>
+                  </td>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="title_div">
+            <h3>Pending</h3>
+        </div>
+
+        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+            
+                <table class="table">
+                        <thead>
+                          <tr>
+                            <th>URL</th>
+                          </tr>
+                        </thead>
+                        {% if pending_list %}
+                        {% for item in pending_list %}
+                        <tbody>
+                          <td>{{item}}</td>
+                        </tbody>
+                        {% endfor %}
+                        {% endif %}
+                      </table>
+            </div>
+
+            <div class="title_div">
+                <h3>Failed</h3>
+            </div>
+        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                
+                <table class="table">
+                        <thead>
+                          <tr>
+                            <th>URL</th>
+                          </tr>
+                        </thead>
+                        {% if failed_list %}
+                        {% for item in failed_list %}
+                        <tbody>
+                          <td>{{item}}</td>
+                        </tbody>
+                        {% endfor %}
+                        {% endif %}
+                      </table>
+          </div>
     </div>
 
 
@@ -150,11 +202,23 @@
 
 <style>
 
-.col {
+.jumbotron {
+  margin-bottom: 10px;
+}
+
+.col66p {
         float:left;
         height: 100%;
-        width: 33%
-    }
+        margin-left: 1%;
+        width: 63%
+        }
+
+.col33p {
+        float:left;
+        height: 100%;
+        width: 33%;
+        margin-left: 1%;
+        }
 
   .container {
     height: 100%; 
@@ -189,13 +253,13 @@
         }
 
         .webpage_image_title {
-            height: 14%;
+            height: 7%;
             padding: 5px;
             background-color: #dddddd 
         }
 
         .webpage_image_content {
-            height: 40%;
+            height: 80%;
             overflow: scroll;
         }
 
@@ -206,15 +270,20 @@
 
         .my-custom-scrollbar {
             position: relative;
-            height: 33%;
+            height: 25%;
             overflow: auto;
         }
+
+        .date_section {
+          height: 15%;
+        }
+
         .table-wrapper-scroll-y {
             display: block;
         }
 
         .image_content {
-          height: 50%;
+          height: 100%;
           width: 100%;
         }
 
@@ -224,6 +293,7 @@
         }
 
         .title_div {
+            height: 7%;
             background-color: #dddddd;
             padding: 5px;
         }

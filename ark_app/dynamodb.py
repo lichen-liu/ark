@@ -319,42 +319,76 @@ def get_archive_info(dynamodb, url, datetime):
 
 @dynamodb_client_operation
 def search_archive_by_url(dynamodb, url, by_date=None):
-    '''
-    TODO: use LastEvaluatedKey to load all
+    '''Get Primary Sort Keys by filtering the Primary Range Key(url)
+    
     by_date = datetime.date(), search only for this date
-    Get Primary Sort Keys by the Primary Range Key - url
-    [datetime]
+    [datetime], sorted from latest to oldest
     '''
-    if by_date:
-        response = dynamodb.query(
-            TableName=ARCHIVE_TABLE,
-            KeyConditionExpression='archiveUrl = :url and begins_with(archiveDatetime, :by_date)',
-            ExpressionAttributeValues={
-                ':url': {'S': url},
-                ':by_date': {'S': str(by_date)}
-            },
-            ProjectionExpression='archiveDatetime'
-        )
-    else:
-        response = dynamodb.query(
-            TableName=ARCHIVE_TABLE,
-            KeyConditionExpression='archiveUrl = :url',
-            ExpressionAttributeValues={
-                ':url': {'S': url}
-            },
-            ProjectionExpression='archiveDatetime'
-        )
-    if response:
+    result = list()
+    response = None
+
+    while response is None or 'LastEvaluatedKey' in response:
+        if response is not None and 'LastEvaluatedKey' in response:
+            if by_date:
+                response = dynamodb.query(
+                    TableName=ARCHIVE_TABLE,
+                    KeyConditionExpression='archiveUrl = :url and begins_with(archiveDatetime, :by_date)',
+                    ExpressionAttributeValues={
+                        ':url': {'S': url},
+                        ':by_date': {'S': str(by_date)}
+                    },
+                    ProjectionExpression='archiveDatetime',
+                    ScanIndexForward=False,
+                    ExclusiveStartKey=response['LastEvaluatedKey']
+                )
+            else:
+                response = dynamodb.query(
+                    TableName=ARCHIVE_TABLE,
+                    KeyConditionExpression='archiveUrl = :url',
+                    ExpressionAttributeValues={
+                        ':url': {'S': url}
+                    },
+                    ProjectionExpression='archiveDatetime',
+                    ScanIndexForward=False,
+                    ExclusiveStartKey=response['LastEvaluatedKey']
+                )
+        else:
+            if by_date:
+                response = dynamodb.query(
+                    TableName=ARCHIVE_TABLE,
+                    KeyConditionExpression='archiveUrl = :url and begins_with(archiveDatetime, :by_date)',
+                    ExpressionAttributeValues={
+                        ':url': {'S': url},
+                        ':by_date': {'S': str(by_date)}
+                    },
+                    ProjectionExpression='archiveDatetime',
+                    ScanIndexForward=False
+                )
+            else:
+                response = dynamodb.query(
+                    TableName=ARCHIVE_TABLE,
+                    KeyConditionExpression='archiveUrl = :url',
+                    ExpressionAttributeValues={
+                        ':url': {'S': url}
+                    },
+                    ProjectionExpression='archiveDatetime',
+                    ScanIndexForward=False
+                )
+    
         items = response.get('Items')
-        return list(map(lambda item: item['archiveDatetime']['S'], items))
+        result.extend(map(lambda item: item['archiveDatetime']['S'], items))
+    
+    return result
 
 
 @dynamodb_client_operation
-def search_archive_by_username(dynamodb, username):
+def search_archive_by_username(dynamodb, username, num_latest_archive=None):
     '''
-    TODO: use LastEvaluatedKey to load all
-    [(url, datetime)]
+    if num_latest_archive is None, return all matching archives
+    [(url, datetime)], sorted from latest to oldest
     '''
+    result = list()
+    response = None
 
     response = dynamodb.query(
         TableName=ARCHIVE_TABLE,
@@ -363,11 +397,14 @@ def search_archive_by_username(dynamodb, username):
         ExpressionAttributeValues={
             ':username': {'S': username}
         },
-        ProjectionExpression='archiveUrl, archiveDatetime'
+        ProjectionExpression='archiveUrl, archiveDatetime',
+        ScanIndexForward=False
     )
-    if response:
-        items = response.get('Items')
-        return list(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+
+    items = response.get('Items')
+    result.extend(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+
+    return result
 
 
 @dynamodb_resource_operation
@@ -397,7 +434,7 @@ def create_archive_table(dynamodb):
                             'KeyType': 'HASH'
                         },
                         {
-                            'AttributeName': 'archiveUrl',
+                            'AttributeName': 'archiveDatetime',
                             'KeyType': 'RANGE'
                         },
                     ],
