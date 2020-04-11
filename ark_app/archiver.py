@@ -49,9 +49,8 @@ def archive_url(original_url):
                 key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
 
             # Store the text of the webpage on S3
-            url_webpage_text = clean_text(
-                extract_text(url_inner_html)).encode()
-            url_weboage_text_s3_key = s3.WEBPAGE_TEXT_DIR + archive_id + '.txt'
+            # url_webpage_text = clean_text(extract_text(url_inner_html)).encode()
+            # url_weboage_text_s3_key = s3.WEBPAGE_TEXT_DIR + archive_id + '.txt'
             #s3.upload_file_bytes_object(key=url_weboage_text_s3_key, file_bytes=url_webpage_text)
 
             # TESTING
