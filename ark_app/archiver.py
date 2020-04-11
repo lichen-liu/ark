@@ -64,7 +64,7 @@ def archive_url(original_url):
             _, _, date_strs = searcher.search_archive_by_url_datetimes(original_url) or (None, None, None)
             return main.main(
                 user_welcome_args=main.UserWelcomeArgs(error_message=error_message,
-                                                       url_archive_info=searcher.UrlArchiveInfo(query_url=original_url, proper_url=url, created_timestamp=utc_datetime_str),
+                                                       url_archive_info=searcher.UrlArchiveInfo(query_url=original_url, proper_url=url, created_datetime=utc_datetime_str),
                                                        date_strs=date_strs))
         else:
             error_message = 'Error: The archive was already created for url(' + url + ') on (' + utc_datetime_str + ')!'

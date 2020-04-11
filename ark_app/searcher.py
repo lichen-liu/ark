@@ -1,17 +1,18 @@
-from ark_app import dynamodb, url_util, s3, main, account
+from ark_app import dynamodb, url_util, s3, main, account, utility
 import datetime
 from flask import request, redirect
 from ark_app import webapp
 
 
 class UrlArchiveInfo:
-    def __init__(self, proper_url, created_timestamp, query_url=None):
+    def __init__(self, proper_url, created_datetime, query_url=None):
         self.query_url = query_url if query_url else proper_url
 
         self.proper_url = proper_url
-        self.created_timestamp = created_timestamp
+        self.created_datetime = created_datetime
+        self.created_date = str(utility.iso_datetime_str_2_datetime(self.created_datetime).date())
 
-        archive_id, self.created_username, self.archive_md_url = dynamodb.get_archive_info(url=self.proper_url, datetime=self.created_timestamp)
+        archive_id, self.created_username, self.archive_md_url = dynamodb.get_archive_info(url=self.proper_url, datetime=self.created_datetime)
         url_webpage_png_s3_key = s3.WEBPAGE_SCREENSHOT_DIR + archive_id + '.png'
         self.screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
 
@@ -31,28 +32,43 @@ def search_archive_by_url_datetimes_handler():
         original_url = request.args.get('url_text')
         selected_date = request.args.get('selected_date') 
         selected_datetime = request.args.get('selected_datetime')
+
+    if not url_util.precheck_url(original_url):
+        return main.main(user_welcome_args=main.UserWelcomeArgs(error_message='Invalid URL: ' + (original_url if original_url else '')))
     
     if selected_date is not None:
-        print(selected_date)
-
-        selected_date = datetime.datetime.strptime(selected_date, '%m/%d/%Y').date()
-        proper_url, latest_datetime_str, datetime_strs = search_archive_by_url_datetimes(original_url, by_date = selected_date) or (None,None,None)
+        selected_date = utility.iso_date_str_2_date(selected_date)
+        result = search_archive_by_url_datetimes(original_url, by_date = selected_date)
+        if result is None:
+            return main.main(user_welcome_args=main.UserWelcomeArgs(
+                error_message=original_url + ' is not archived on ' + selected_date,
+                prefill_url_text=original_url))
+        
+        proper_url, latest_datetime_str, datetime_strs = result
         return main.main(user_welcome_args=main.UserWelcomeArgs(
-            url_archive_info=UrlArchiveInfo(proper_url=proper_url, created_timestamp=latest_datetime_str, query_url=original_url),
+            url_archive_info=UrlArchiveInfo(proper_url=proper_url, created_datetime=latest_datetime_str, query_url=original_url),
             datetime_strs = datetime_strs))
     elif selected_datetime is not None:
-        print(selected_datetime)
-        #Get rid of  
-        #selected_datetime = selected_datetime.split(".")[0]
-        #selected_datetime = datetime.datetime.strptime(selected_datetime, '%Y-%m-%d %H:%M:%S')
-        proper_url, latest_datetime_str, datetime_strs = search_archive_by_url_datetimes(original_url, by_datetime = selected_datetime)
+        result = search_archive_by_url_datetimes(original_url, by_datetime = selected_datetime)
+        if result is None:
+            return main.main(user_welcome_args=main.UserWelcomeArgs(
+                error_message=original_url + ' is not archived on ' + selected_datetime,
+                prefill_url_text=original_url))
+        
+        proper_url, latest_datetime_str, datetime_strs = result
         return main.main(user_welcome_args=main.UserWelcomeArgs(
-            url_archive_info=UrlArchiveInfo(proper_url=proper_url, created_timestamp=latest_datetime_str, query_url=original_url),
+            url_archive_info=UrlArchiveInfo(proper_url=proper_url, created_datetime=latest_datetime_str, query_url=original_url),
             datetime_strs = datetime_strs))
     else :
-        proper_url, latest_datetime_str, date_strs = search_archive_by_url_datetimes(original_url) or (None,None,None)
+        result = search_archive_by_url_datetimes(original_url)
+        if result is None:
+            return main.main(user_welcome_args=main.UserWelcomeArgs(
+                error_message=original_url + ' is not archived yet',
+                prefill_url_text=original_url))
+        
+        proper_url, latest_datetime_str, date_strs = result
         return main.main(user_welcome_args=main.UserWelcomeArgs(
-            url_archive_info=UrlArchiveInfo(proper_url=proper_url, created_timestamp=latest_datetime_str, query_url=original_url),
+            url_archive_info=UrlArchiveInfo(proper_url=proper_url, created_datetime=latest_datetime_str, query_url=original_url),
             date_strs = date_strs))
 
 
@@ -64,7 +80,7 @@ def search_archive_by_exact_handler():
     exact_proper_url = request.args.get('proper_url')
     exact_datetime = request.args.get('datetime')
     print('exact_proper_url', exact_proper_url, 'exact_datetime', exact_datetime)
-    return main.main(user_welcome_args=main.UserWelcomeArgs(url_archive_info=UrlArchiveInfo(proper_url=exact_proper_url, created_timestamp=exact_datetime)))
+    return main.main(user_welcome_args=main.UserWelcomeArgs(url_archive_info=UrlArchiveInfo(proper_url=exact_proper_url, created_datetime=exact_datetime)))
 
 
 @webapp.route('/api/search_all_archives_by_current_user', methods=['GET'])
@@ -89,7 +105,7 @@ def search_archive_by_url_datetimes(original_url, by_date=None, by_datetime=None
         if datetime_strs is None or len(datetime_strs) == 0:
             return None
         lastest_datetime_str = datetime_strs[0]
-        date_strs = list({str(datetime.datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S.%f').date()) for datetime_str in datetime_strs})
+        date_strs = list({str(utility.iso_datetime_str_2_datetime(datetime_str).date()) for datetime_str in datetime_strs})
         return (url, lastest_datetime_str, date_strs)
     elif by_date is not None and by_datetime is None:
         # Date as constraint, return list of datetimes

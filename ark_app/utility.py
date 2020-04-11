@@ -1,4 +1,5 @@
 import os
+import datetime
 
 
 def convert_bytes_to_human_readable(num):
@@ -43,3 +44,11 @@ def combine_files(src_files, dst_file):
             with open(src_file, 'rb') as fin:
                 fout.write(fin.read())
     print(str(len(src_files)) + ' files were combined into ' + dst_file + '.')
+
+
+def iso_datetime_str_2_datetime(datetime_str):
+    return datetime.datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S.%f')
+
+
+def iso_date_str_2_date(date_str):
+    return datetime.datetime.strptime(date_str, '%Y-%m-%d').date()

@@ -59,12 +59,13 @@ class StatsInfo:
 
 
 class UserWelcomeArgs:
-    def __init__(self, error_message=None, title='Welcome!', url_archive_info = None,show_all_user_archive_list=False, date_strs = [], datetime_strs = []):
+    def __init__(self, error_message=None, prefill_url_text = None, title='Welcome!', url_archive_info = None,show_all_user_archive_list=False, date_strs = [], datetime_strs = []):
         '''
         url_archive_info = searcher.UrlArchiveInfo
         '''
 
         self.error_message = error_message
+        self.prefill_url_text = prefill_url_text
         self.title = title
         self.username = account.account_get_logged_in_username()
         self.url_archive_info = url_archive_info
@@ -103,6 +104,7 @@ def main_guest_welcome(args):
 
 def main_user_welcome(args):
     return render_template('user_welcome.html', title=args.title, error_message=args.error_message,
+    prefill_url_text=args.prefill_url_text,
     url_archive_info=args.url_archive_info, stats_info=args.stats_info,
     username=args.username,
     user_archive_list_pair=(args.show_all_user_archive_list, args.user_archive_list),

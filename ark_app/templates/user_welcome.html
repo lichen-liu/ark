@@ -19,7 +19,7 @@
 
 </head>
 <script>
-  function RefreshDatepicker(valid_dates) {
+  function InitializeDatepicker(valid_dates) {
     $(function () {
       $("#datepicker-5").datepicker({
         beforeShowDay: function (date) {
@@ -44,13 +44,14 @@
           }
 
           return [false];
-        }
+        },
+        dateFormat: "yy-mm-dd"
       });
     });
   }
 
   var valid_dates = {{ dates_with_archives | tojson | safe }};
-  RefreshDatepicker(valid_dates);
+  InitializeDatepicker(valid_dates);
 </script>
 
 <body class="body">
@@ -62,7 +63,15 @@
         <font size="14"><b>Ark</b></font>
       </p>
       <form action="/api/search_or_archive_url" method="GET">
-        <input type="text" width=60 placeholder="URL" id="url_text" name="url_text">
+        {% if url_archive_info %}
+        {% set value = url_archive_info.query_url %}
+        {% elif prefill_url_text %}
+        {% set value = prefill_url_text %}
+        {% else %}
+        {% set value = None %}
+        {% endif %}
+        <input type="text" width=60 placeholder="URL" id="url_text" name="url_text" value="{{value if value}}">
+
         <p class="w3-padding-16">
           <button class="w3-button w3-black" type="submit" name="action" value="search_url_submit">Search</button>
           <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Archive</button>
@@ -102,7 +111,7 @@
         </div>
         <p>Query URL: {{url_archive_info.query_url}}</p>
         <p>Proper URL: {{url_archive_info.proper_url}}</p>
-        <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
+        <p>Created Timestamp: {{url_archive_info.created_datetime}}</p>
         <p>Created Username: {{url_archive_info.created_username}}</p>
         <p>Archive.md URL: {{url_archive_info.archive_md_url}}</p>
 
@@ -150,8 +159,8 @@
       </div>
       <div class="date_section">
         <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
-          <input type="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
-          <input style="float:left" type="text" name="selected_date" id="datepicker-5">
+          <input type="hidden" name="url_text" value="{{url_archive_info.query_url}}">
+          <input style="float:left" type="text" name="selected_date" id="datepicker-5" value="{{url_archive_info.created_date if url_archive_info}}">
           <input style="float:left" type="submit" value="Confirm">
         </form>
         <script>
@@ -166,11 +175,19 @@
         <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDateTime()" method="POST">
           <select id="selected_datetime_id" name="selected_datetime" class="datetime_dropdown">
             {% if datetime_with_archives%}
+            <!-- In search_by_datetime mode, show all available options, select the datetime that's currently printing as default if possible -->
             {%for datetime_str in datetime_with_archives%}
+            {% if url_archive_info and url_archive_info.created_datetime == datetime_str %}
+            <option value="{{datetime_str}}" selected="selected">{{datetime_str}}</option>
+            {% else %}
             <option value="{{datetime_str}}">{{datetime_str}}</option>
-            {% endfor %}
             {% endif %}
-            <input type="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
+            {% endfor %}
+            {% elif url_archive_info %}
+            <!-- In other mode, show and select the datetime that's currently printing as default if possible -->
+            <option value="{{url_archive_info.created_datetime}}" selected="selected">{{url_archive_info.created_datetime}}</option>
+            {% endif %}
+            <input type="hidden" name="url_text" value="{{url_archive_info.query_url}}">
           </select>
           <input style="float:left" type="submit" value="Confirm">
         </form>
