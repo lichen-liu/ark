@@ -17,6 +17,7 @@ def archive_url_handler():
         original_url = request.args.get('archive_url_text')
 
     dynamodb.push_account_archive_request(username=account.account_get_logged_in_username(), original_url=original_url)
+    assert dynamodb.pop_account_archive_request(username=account.account_get_logged_in_username(), original_url=original_url)
     return archive_url(original_url)
 
 

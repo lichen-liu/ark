@@ -101,10 +101,32 @@ def push_account_archive_request(dynamodb, username, original_url):
     )
 
 
-@dynamodb_resource_operation
-def pop_account_archive_request(dynamodb, username):
-    #TODO
-    pass
+@dynamodb_client_operation
+def pop_account_archive_request(dynamodb, username, original_url):
+    '''
+    username, original_url should be retrieved via lambda event
+    Return True if successfully found and deleted original_url; return False otherwise
+    '''
+    try:
+        dynamodb.update_item(
+            TableName=ACCOUNT_TABLE,
+            Key={
+                'accountId': {'S': username}
+            },
+            UpdateExpression='delete archiveRequestList :original_urls',
+            ExpressionAttributeValues={
+                ':original_urls': {'SS': [original_url]},
+                ':original_url': {'S': original_url}
+            },
+            ConditionExpression='attribute_exists(accountId) AND attribute_exists(archiveRequestList) AND contains(archiveRequestList, :original_url)'
+        )
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            return False
+        else:
+            raise
+    
+    return True
 
 
 @dynamodb_resource_operation
