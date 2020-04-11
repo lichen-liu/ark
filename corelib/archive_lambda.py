@@ -1,4 +1,4 @@
-from ark_app import webpage_snapshot, dynamodb, s3, url_util
+from corelib import webpage_snapshot, dynamodb, s3, url_util
 from bs4 import BeautifulSoup
 import datetime
 import archiveis

@@ -3,7 +3,8 @@ import random
 
 from flask import redirect, request, session, abort
 
-from ark_app import main, webapp, dynamodb
+from ark_app import main, webapp
+from corelib import dynamodb
 
 
 @webapp.route('/api/account_actions', methods=['POST'])

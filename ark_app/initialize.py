@@ -1,6 +1,4 @@
-import os
-
-from ark_app import webapp, main, dynamodb, s3
+from corelib import dynamodb, s3
 
 
 def init():

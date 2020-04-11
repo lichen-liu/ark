@@ -4,7 +4,7 @@ import shutil
 import os
 import argparse
 import time
-import dynamodb, utility, s3
+from corelib import dynamodb, utility, s3
 
 
 def wait_for_countdown(seconds):

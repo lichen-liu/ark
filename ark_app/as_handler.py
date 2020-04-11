@@ -1,6 +1,7 @@
-from ark_app import webapp, dynamodb, main, account, url_util, archive_lambda, s3, utility
+from ark_app import webapp, main, account
 from flask import request, redirect
 import datetime
+from corelib import dynamodb, url_util, archive_lambda, s3, utility
 
 
 RUNNING_LOCALLY = True

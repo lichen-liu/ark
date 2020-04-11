@@ -1,5 +1,6 @@
 from flask import render_template, redirect, request
-from ark_app import account, webapp, dynamodb
+from ark_app import account, webapp
+from corelib import dynamodb
 
 
 @webapp.route('/', methods=['GET', 'POST'])
