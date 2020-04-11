@@ -390,19 +390,37 @@ def search_archive_by_username(dynamodb, username, num_latest_archive=None):
     result = list()
     response = None
 
-    response = dynamodb.query(
-        TableName=ARCHIVE_TABLE,
-        IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
-        KeyConditionExpression='archiveAccountId = :username',
-        ExpressionAttributeValues={
-            ':username': {'S': username}
-        },
-        ProjectionExpression='archiveUrl, archiveDatetime',
-        ScanIndexForward=False
-    )
+    while response is None or 'LastEvaluatedKey' in response:
+        if response is not None and 'LastEvaluatedKey' in response:
+            response = dynamodb.query(
+                TableName=ARCHIVE_TABLE,
+                IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
+                KeyConditionExpression='archiveAccountId = :username',
+                ExpressionAttributeValues={
+                    ':username': {'S': username}
+                },
+                ProjectionExpression='archiveUrl, archiveDatetime',
+                ScanIndexForward=False,
+                ExclusiveStartKey=response['LastEvaluatedKey']
+            )
+        else:
+            response = dynamodb.query(
+                TableName=ARCHIVE_TABLE,
+                IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
+                KeyConditionExpression='archiveAccountId = :username',
+                ExpressionAttributeValues={
+                    ':username': {'S': username}
+                },
+                ProjectionExpression='archiveUrl, archiveDatetime',
+                ScanIndexForward=False
+            )
 
-    items = response.get('Items')
-    result.extend(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+        items = response.get('Items')
+        result.extend(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+
+        if num_latest_archive:
+            if len(result) >= num_latest_archive:
+                return result[:num_latest_archive]
 
     return result
 
