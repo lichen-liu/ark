@@ -30,16 +30,14 @@ class GuestWelcomeArgs:
 class StatsInfo:
     class SiteInfo:
         def __init__(self):
-            self.num_unique_archived_url = str('N/A')
-            self.num_archives = str('N/A')
-            self.num_users = str('N/A')
-            self.num_contributing_users = str('N/A')
+            self.estimated_num_archives = str(dynamodb.get_estimated_num_archives())
+            self.estimated_num_users = str(dynamodb.get_estimated_num_users())
     
     class UserInfo:
         def __init__(self):
-            _username = account.account_get_logged_in_username()
-            self.num_unique_archived_url = str('N/A')
-            self.num_archives = str('N/A')
+            archives = dynamodb.search_archive_by_username(username=account.account_get_logged_in_username())
+            self.num_unique_archived_url = str(len(set(next(zip(*archives)))))
+            self.num_archives = str(len(archives))
 
     def __init__(self):
         self.site = self.SiteInfo()

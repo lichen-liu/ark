@@ -528,3 +528,22 @@ def clear_archive_table(dynamodb):
 
             for item in scan['Items']:
                 batch.delete_item(Key={'archiveUrl': item['archiveUrl'], 'archiveDatetime': item['archiveDatetime']})
+
+
+@dynamodb_client_operation
+def get_estimated_num_archives(dynamodb):
+    '''
+    The number of items in the specified table. DynamoDB updates this value approximately every six hours. Recent changes might not be reflected in this value.
+    '''
+    response = dynamodb.describe_table(TableName=ARCHIVE_TABLE)
+    # A single archive entry occupies two rows
+    return int(response['Table']['ItemCount'] / 2)
+
+
+@dynamodb_client_operation
+def get_estimated_num_users(dynamodb):
+    '''
+    The number of items in the specified table. DynamoDB updates this value approximately every six hours. Recent changes might not be reflected in this value.
+    '''
+    response = dynamodb.describe_table(TableName=ACCOUNT_TABLE)
+    return response['Table']['ItemCount']
