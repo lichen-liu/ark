@@ -33,7 +33,7 @@ class UserWelcomeArgs:
         self.title = title
         self.username = account.account_get_logged_in_username()
         self.url_archive_info = url_archive_info
-        self.success_list = archiver.give_me_success_list(10)
+        self.success_list = dynamodb.search_archive_by_username(username=self.username, num_latest_archive=10)
         self.pending_list = dynamodb.get_account_archive_request_list(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST, username=self.username)
         self.failed_list = dynamodb.get_account_archive_request_list(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST, username=self.username)
 
@@ -57,4 +57,5 @@ def main_user_welcome(args):
     return render_template('user_welcome.html', title=args.title, error_message=args.error_message,
     url_archive_info=args.url_archive_info,
     username=args.username,
-    success_list=args.success_list, pending_list=args.pending_list, failed_list=args.failed_list,  timestamp_with_archives = ["2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019"], time_stamp_type = "year", dates_with_archives = ["2020-09-01","2020-09-02"])
+    success_list=args.success_list, pending_list=args.pending_list, failed_list=args.failed_list, 
+    timestamp_with_archives = ["2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019"], time_stamp_type = "year", dates_with_archives = ["2020-09-01","2020-09-02"])

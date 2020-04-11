@@ -81,7 +81,7 @@
     <div class="col66p">
 
         <div class="image_content">
-            <h3 class= "webpage_image_title" >Achive Request Summary</h3>
+            <h3 class= "webpage_image_title" >Achive Search Result</h3>
             {% if url_archive_info %}
             <div class="title_div">
                 <p>Webpage Info:<p>
@@ -133,21 +133,32 @@
                   <tr>
                     <th>URL</th>
                     <th>Date</th>
-                    <th>Link</th>
+                    <th>Archive Again</th>
+                    <th>View</th>
                   </tr>
                 </thead>
+                {% if success_list %}
                 {% for item in success_list %}
                 <tbody>
-                  <td>{{item.query_url}}</td>
-                  <td>{{item.created_timestamp}}</td>
+                  {% set url, datetime = item%}
+                  <td>{{url}}</td>
+                  <td>{{datetime}}</td>
                   <td>
                     <form action="/api/archive_url" method="GET">
                       <button type="submit" id="archive_url_text" name="archive_url_text"
-                        value={{item.query_url}}>Go</button>
+                        value={{url}}>Archive</button>
                     </form>
+                  </td>
+                  <td>
+                    EMPTY
+                    <!-- <form action="/api/archive_url" method="GET">
+                      <button type="submit" id="archive_url_text" name="archive_url_text"
+                        value={{url}}>Archive Again</button>
+                    </form> -->
                   </td>
                 </tbody>
                 {% endfor %}
+                {% endif %}
             </table>
         </div>
 

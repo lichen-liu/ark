@@ -138,6 +138,9 @@ def pop_account_archive_request_by(dynamodb, list_name, username, original_url):
 
 @dynamodb_resource_operation
 def get_account_archive_request_list(dynamodb, list_name, username):
+    '''
+    Return [original_url] if found; otherwise None
+    '''
     try:
         response=dynamodb.Table(ACCOUNT_TABLE).get_item(
             Key={
@@ -145,10 +148,9 @@ def get_account_archive_request_list(dynamodb, list_name, username):
             },
             ProjectionExpression=list_name
         )
-        if response:
-            item = response.get('Item')
-            if item:
-                return item[list_name]
+        item = response.get('Item')
+        if item:
+            return item[list_name]
 
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
