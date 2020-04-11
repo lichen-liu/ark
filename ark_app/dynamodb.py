@@ -314,6 +314,37 @@ def get_archive_info(dynamodb, url, datetime):
         return result
 
 
+@dynamodb_client_operation
+def search_archive_by_url(dynamodb, url, by_date=None):
+    '''
+    by_date = datetime.date()
+    Get Primary Sort Keys by the Primary Range Key - url
+    [datetime]
+    '''
+    if by_date:
+        response = dynamodb.query(
+            TableName=ARCHIVE_TABLE,
+            KeyConditionExpression='archiveUrl = :url and begins_with(archiveDatetime, :by_date)',
+            ExpressionAttributeValues={
+                ':url': {'S': url},
+                ':by_date': {'S': str(by_date)}
+            },
+            ProjectionExpression='archiveDatetime'
+        )
+    else:
+        response = dynamodb.query(
+            TableName=ARCHIVE_TABLE,
+            KeyConditionExpression='archiveUrl = :url',
+            ExpressionAttributeValues={
+                ':url': {'S': url}
+            },
+            ProjectionExpression='archiveDatetime'
+        )
+    if response:
+        items = response.get('Items')
+        return list(map(lambda item: item['archiveDatetime']['S'], items))
+
+
 @dynamodb_resource_operation
 def create_archive_table(dynamodb):
     '''
