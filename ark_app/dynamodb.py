@@ -86,14 +86,18 @@ def get_account_credential(dynamodb, username):
         return result
 
 
+ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST = 'archivePendingRequestList'
+ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST = 'archiveFailedRequestList'
+
+
 @dynamodb_client_operation
-def push_account_archive_request(dynamodb, username, original_url):
+def push_account_archive_request(dynamodb, list_name, username, original_url):
     dynamodb.update_item(
         TableName=ACCOUNT_TABLE,
         Key={
             'accountId': {'S': username}
         },
-        UpdateExpression='add archiveRequestList :original_url',
+        UpdateExpression='add ' + list_name + ' :original_url',
         ExpressionAttributeValues={
             ':original_url': {'SS': [original_url]}
         },
@@ -101,10 +105,31 @@ def push_account_archive_request(dynamodb, username, original_url):
     )
 
 
-@dynamodb_resource_operation
-def pop_account_archive_request(dynamodb, username):
-    #TODO
-    pass
+@dynamodb_client_operation
+def pop_account_archive_request_by(dynamodb, list_name, username, original_url):
+    '''
+    Return True if successfully found and deleted original_url; return False otherwise
+    '''
+    try:
+        dynamodb.update_item(
+            TableName=ACCOUNT_TABLE,
+            Key={
+                'accountId': {'S': username}
+            },
+            UpdateExpression='delete ' + list_name + ' :original_urls',
+            ExpressionAttributeValues={
+                ':original_urls': {'SS': [original_url]},
+                ':original_url': {'S': original_url}
+            },
+            ConditionExpression='attribute_exists(accountId) AND attribute_exists(' + list_name + ') AND contains(' + list_name + ', :original_url)'
+        )
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            return False
+        else:
+            raise
+    
+    return True
 
 
 @dynamodb_resource_operation
