@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html>
 
 {{error_message if error_message}}
 
@@ -11,95 +11,132 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-  <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
-  rel = "stylesheet">
-  <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
 </head>
 <script>
   var valid_dates = {{ dates_with_archives | tojson | safe}};
 
-         $(function() {
-            $( "#datepicker-5" ).datepicker({
-               beforeShowDay : function (date) {
-                 
-                 var dateYear = date.getFullYear();
-                 var dateMonth = date.getMonth();
-                 var dateDay = date.getDate();
+  $(function () {
+    $("#datepicker-5").datepicker({
+      beforeShowDay: function (date) {
 
-                 var found = false;
-                 for (index = 0; index < valid_dates.length; ++index) {
-                      valid_date = valid_dates[index]
+        var dateYear = date.getFullYear();
+        var dateMonth = date.getMonth();
+        var dateDay = date.getDate();
 
-                      spitted_date = valid_date.split("-")
+        var found = false;
+        for (index = 0; index < valid_dates.length; ++index) {
+          valid_date = valid_dates[index]
 
-                      if(parseInt(spitted_date[0], 10) == dateYear){
-                        if(parseInt(spitted_date[1], 10) - 1 == dateMonth){
-                          if(parseInt(spitted_date[2], 10) == dateDay){
-                            return [true];
-                        }
-                      }
-                    }
-                  } 
+          spitted_date = valid_date.split("-")
 
-                  return [false];
-               }
-            });
-         });
+          if (parseInt(spitted_date[0], 10) == dateYear) {
+            if (parseInt(spitted_date[1], 10) - 1 == dateMonth) {
+              if (parseInt(spitted_date[2], 10) == dateDay) {
+                return [true];
+              }
+            }
+          }
+        }
+
+        return [false];
+      }
+    });
+  });
 </script>
+
 <body class="body">
-    <form action="/api/logout" method="POST">
-        <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
-    </form>
+  <!-- Header -->
+  <!-- <div class="w3-opacity w3-display-container w3-content w3-wide"> -->
 
-    <div class="jumbotron text-center">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-4">
-                  <h2>Search For Your Achive:</h2>
-                  <form action="/api/archive_url" method="GET">
-                    <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-                    <button type="submit">Search</button>
-                  </form>
-                </div>
-                <div class="col-sm-4">
-                  <h2>Achive A Webpage </h2>
-                  <form action="/api/archive_url" method="GET">
-                    <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-                    <button type="submit" name="action" value="archive_url_submit">Archive</button>
-                  </form>
-                </div>
-              </div>
-            </div>
+  <!-- <span class="w3-button w3-xxlarge w3-white w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></span> -->
+  <!-- <div class="w3-clear"></div> -->
+  <!-- <img class="w3-image" src="../static/icons/library.jpeg" height="800">
+    <header class="w3-center w3-margin-top w3-center">
+      <h1><b>Ark</b></h1> -->
+  <!-- <p><b>A template made by w3.css for photographers.</b></p> -->
+  <!-- <form action="/api/archive_url" method="GET">
+        <input type="text" width=60 placeholder="URL" id="archive_url_text" name="archive_url_text">
+        <p class="w3-padding-16">
+          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Archive</button>
+          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Search</button>
+        </p>
+      </form>
+    </header>
+  </div>
+   -->
+  <header class="w3-opacity w3-display-container w3-content w3-wide" style="max-width:2500px;" id="home">
+    <img class="w3-image" src="../static/icons/library_long.jpeg" height="400">
+    <div class="w3-display-middle w3-margin-top w3-center">
+      <!-- <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>BR</b></span> <span class="w3-hide-small w3-text-light-grey">Architects</span></h1> -->
+      <p>
+        <font size="14"><b>Ark</b></font>
+      </p>
+      <form action="/api/archive_url" method="GET">
+        <input type="text" width=60 placeholder="URL" id="archive_url_text" name="archive_url_text">
+        <p class="w3-padding-16">
+          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Archive</button>
+          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Search</button>
+        </p>
+      </form>
     </div>
-
-    <div class="col">
-  
-    </div>
-    
-    <div class="col66p">
-
-        <div class="image_content">
-            <h3 class= "webpage_image_title" >Achive Request Summary</h3>
-            {% if url_archive_info %}
-            <div class="title_div">
-                <p>Webpage Info:<p>
-            </div>
-            <p>Query URL: {{url_archive_info.query_url}}</p>
-            <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
-            <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
-          <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
-
-            <div class="title_div">
-              <p>Webpage Screenshot:<p>
-            </p>
-          </div>
-            <img class = "webpage_image" src={{url_archive_info.screenshot_url}}>
-            {% endif %}
+  </header>
+  <form action="/api/logout" method="POST">
+    <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
+  </form>
+  <!-- <div class="jumbotron text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <h2>Search For Your Achive:</h2>
+          <form action="/api/archive_url" method="GET">
+            <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+            <button type="submit">Search</button>
+          </form>
         </div>
+        <div class="col-sm-4">
+          <h2>Achive A Webpage </h2>
+          <form action="/api/archive_url" method="GET">
+            <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+            <button type="submit" name="action" value="archive_url_submit">Archive</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> -->
 
-          <!--  <h3 class="calender_title" >Calendar ({{time_stamp_type}})</h3>
+  <div class="col">
+
+  </div>
+
+  <div class="col66p">
+
+    <div class="image_content">
+      <h3 class="webpage_image_title">Achive Request Summary</h3>
+      {% if url_archive_info %}
+      <div class="title_div">
+        <p>Webpage Info:<p>
+      </div>
+      <p>Query URL: {{url_archive_info.query_url}}</p>
+      <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
+      <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
+      <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
+
+      <div class="title_div">
+        <p>Webpage Screenshot:<p>
+          </p>
+      </div>
+      <img class="webpage_image" src={{url_archive_info.screenshot_url}}>
+      {% endif %}
+    </div>
+
+    <!--  <h3 class="calender_title" >Calendar ({{time_stamp_type}})</h3>
             <div class="calender_content">
                 {% set count = namespace(value=1) %}
                 {% for timestamp in timestamp_with_archives %}
@@ -110,90 +147,89 @@
                 {% set count.value = count.value + 1 %}
                 {% endfor %}
             </div> -->
+  </div>
+
+  <div class="col33p">
+
+    <div class="title_div">
+      <h3>Search By Date</h3>
+    </div>
+    <div class="date_section">
+      <p>Enter Date: <input type="text" id="datepicker-5"></p>
     </div>
 
-    <div class="col33p">
 
-        <div class="title_div" >
-          <h3>Search By Date</h3>
-        </div>
-        <div class="date_section">
-        <p>Enter Date: <input type = "text" id = "datepicker-5"></p>
-        </div>
-       
-
-        <div class="title_div">
-            <h3>Success</h3>
-        </div>
-
-        <div class="table-wrapper-scroll-y my-custom-scrollbar">
-          
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th>URL</th>
-                    <th>Date</th>
-                    <th>Link</th>
-                  </tr>
-                </thead>
-                {% for item in success_list %}
-                <tbody>
-                  <td>{{item.query_url}}</td>
-                  <td>{{item.created_timestamp}}</td>
-                  <td>
-                    <form action="/api/archive_url" method="GET">
-                      <button type="submit" id="archive_url_text" name="archive_url_text"
-                        value={{item.query_url}}>Go</button>
-                    </form>
-                  </td>
-                </tbody>
-                {% endfor %}
-            </table>
-        </div>
-
-        <div class="title_div">
-            <h3>Pending</h3>
-        </div>
-
-        <div class="table-wrapper-scroll-y my-custom-scrollbar">
-            
-                <table class="table">
-                        <thead>
-                          <tr>
-                            <th>URL</th>
-                          </tr>
-                        </thead>
-                        {% if pending_list %}
-                        {% for item in pending_list %}
-                        <tbody>
-                          <td>{{item}}</td>
-                        </tbody>
-                        {% endfor %}
-                        {% endif %}
-                      </table>
-            </div>
-
-            <div class="title_div">
-                <h3>Failed</h3>
-            </div>
-        <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                
-                <table class="table">
-                        <thead>
-                          <tr>
-                            <th>URL</th>
-                          </tr>
-                        </thead>
-                        {% if failed_list %}
-                        {% for item in failed_list %}
-                        <tbody>
-                          <td>{{item}}</td>
-                        </tbody>
-                        {% endfor %}
-                        {% endif %}
-                      </table>
-          </div>
+    <div class="title_div">
+      <h3>Success</h3>
     </div>
+
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Date</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        {% for item in success_list %}
+        <tbody>
+          <td>{{item.query_url}}</td>
+          <td>{{item.created_timestamp}}</td>
+          <td>
+            <form action="/api/archive_url" method="GET">
+              <button type="submit" id="archive_url_text" name="archive_url_text" value={{item.query_url}}>Go</button>
+            </form>
+          </td>
+        </tbody>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="title_div">
+      <h3>Pending</h3>
+    </div>
+
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>URL</th>
+          </tr>
+        </thead>
+        {% if pending_list %}
+        {% for item in pending_list %}
+        <tbody>
+          <td>{{item}}</td>
+        </tbody>
+        {% endfor %}
+        {% endif %}
+      </table>
+    </div>
+
+    <div class="title_div">
+      <h3>Failed</h3>
+    </div>
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>URL</th>
+          </tr>
+        </thead>
+        {% if failed_list %}
+        {% for item in failed_list %}
+        <tbody>
+          <td>{{item}}</td>
+        </tbody>
+        {% endfor %}
+        {% endif %}
+      </table>
+    </div>
+  </div>
 
 
   </div>
@@ -201,103 +237,104 @@
 </body>
 
 <style>
-
-.jumbotron {
-  margin-bottom: 10px;
-}
-
-.col66p {
-        float:left;
-        height: 100%;
-        margin-left: 1%;
-        width: 63%
-        }
-
-.col33p {
-        float:left;
-        height: 100%;
-        width: 33%;
-        margin-left: 1%;
-        }
-
-  .container {
-    height: 100%; 
+  .jumbotron {
+    margin-bottom: 10px;
   }
 
-        .body {
-            height: 100vh;
-        }
+  .col66p {
+    float: left;
+    height: 100%;
+    margin-left: 1%;
+    width: 63%
+  }
 
-        .calender_title {
-            height: 7%;
-            padding: 5px;
-            background-color: #dddddd 
-        }
-        .calender_content {
-            height: 80%;
-            overflow: scroll;
-        }
-        .calender_form {
-            float: left;
-        }
-        .calender_date_submit {
-            background: none!important;
-            border: none;
-            padding: 0!important;
-            /*optional*/
-            font-family: arial, sans-serif;
-            /*input has OS specific font-family*/
-            color: #069;
-            text-decoration: underline;
-            cursor: pointer;
-        }
+  .col33p {
+    float: left;
+    height: 100%;
+    width: 33%;
+    margin-left: 1%;
+  }
 
-        .webpage_image_title {
-            height: 7%;
-            padding: 5px;
-            background-color: #dddddd 
-        }
+  .container {
+    height: 100%;
+  }
 
-        .webpage_image_content {
-            height: 80%;
-            overflow: scroll;
-        }
+  .body {
+    height: 100vh;
+  }
 
-        .webpage_image {
-            height: 100%;
-            width: 100%;
-        }
+  .calender_title {
+    height: 7%;
+    padding: 5px;
+    background-color: #dddddd
+  }
 
-        .my-custom-scrollbar {
-            position: relative;
-            height: 25%;
-            overflow: auto;
-        }
+  .calender_content {
+    height: 80%;
+    overflow: scroll;
+  }
 
-        .date_section {
-          height: 15%;
-        }
+  .calender_form {
+    float: left;
+  }
 
-        .table-wrapper-scroll-y {
-            display: block;
-        }
+  .calender_date_submit {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 
-        .image_content {
-          height: 100%;
-          width: 100%;
-        }
+  .webpage_image_title {
+    height: 7%;
+    padding: 5px;
+    background-color: #dddddd
+  }
 
-        .webpage_image {
-            height: 50%;
-            width: 50%;
-        }
+  .webpage_image_content {
+    height: 80%;
+    overflow: scroll;
+  }
 
-        .title_div {
-            height: 7%;
-            background-color: #dddddd;
-            padding: 5px;
-        }
+  .webpage_image {
+    height: 100%;
+    width: 100%;
+  }
+
+  .my-custom-scrollbar {
+    position: relative;
+    height: 25%;
+    overflow: auto;
+  }
+
+  .date_section {
+    height: 15%;
+  }
+
+  .table-wrapper-scroll-y {
+    display: block;
+  }
+
+  .image_content {
+    height: 100%;
+    width: 100%;
+  }
+
+  .webpage_image {
+    height: 50%;
+    width: 50%;
+  }
+
+  .title_div {
+    height: 7%;
+    background-color: #dddddd;
+    padding: 5px;
+  }
 </style>
 
-
-{% endblock %}
+</html>
