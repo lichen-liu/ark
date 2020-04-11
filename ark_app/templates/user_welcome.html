@@ -12,7 +12,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 
-<body>
+<body class="body">
     <form action="/api/logout" method="POST">
         <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
     </form>
@@ -40,7 +40,9 @@
 
     <div class="col">
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                <h3>Success</h3>
+                <div class="title_div">
+                  <h3>Success</h3>
+                </div>
                 <table class="table">
                     <thead>
                       <tr>
@@ -65,7 +67,9 @@
             </div>
 
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                    <h3>Pending</h3>
+                    <div class="title_div">
+                      <h3>Pending</h3>
+                    </div>
                     <table class="table">
                             <thead>
                               <tr>
@@ -84,7 +88,9 @@
 
 
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                    <h3>Failed</h3>
+                    <div class="title_div">
+                      <h3>Failed</h3>
+                    </div>
                     <table class="table">
                             <thead>
                               <tr>
@@ -122,10 +128,15 @@
         <div class="image_content">
             <h3 class= "webpage_image_title" >Achive Request Summary</h3>
             {% if url_archive_info %}
+            <div class="title_div">
+              <p>Webpage Screenshot:<p>
+            </p>div>
             <img class = "webpage_image" src={{url_archive_info.screenshot_url}}>
+            <div class="title_div">
+                <p>Webpage Info:<p>
+            </div>
             <p>Query URL: {{url_archive_info.query_url}}</p>
             <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
-            <p>Created Username: {{url_archive_info.created_username}}</p>
             <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
         <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
             {% endif %}
@@ -154,7 +165,9 @@
         }
 
         .calender_title {
-            height: 20%;
+            height: 7%;
+            padding: 5px;
+            background-color: #dddddd 
         }
         .calender_content {
             height: 80%;
@@ -162,7 +175,6 @@
         }
         .calender_form {
             float: left;
-            height: 20%;
         }
         .calender_date_submit {
             background: none!important;
@@ -177,7 +189,9 @@
         }
 
         .webpage_image_title {
-            height: 20%;
+            height: 14%;
+            padding: 5px;
+            background-color: #dddddd 
         }
 
         .webpage_image_content {
@@ -192,7 +206,7 @@
 
         .my-custom-scrollbar {
             position: relative;
-            height: 240px;
+            height: 33%;
             overflow: auto;
         }
         .table-wrapper-scroll-y {
@@ -207,6 +221,11 @@
         .webpage_image {
             height: 50%;
             width: 50%;
+        }
+
+        .title_div {
+            background-color: #dddddd;
+            padding: 5px;
         }
 </style>
 
