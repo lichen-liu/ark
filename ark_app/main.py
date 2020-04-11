@@ -57,4 +57,4 @@ def main_user_welcome(args):
     return render_template('user_welcome.html', title=args.title, error_message=args.error_message,
     url_archive_info=args.url_archive_info,
     username=args.username,
-    success_list=args.success_list, pending_list=args.pending_list, failed_list=args.failed_list,  timestamp_with_archives = ["2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019"], time_stamp_type = "year")
+    success_list=args.success_list, pending_list=args.pending_list, failed_list=args.failed_list,  timestamp_with_archives = ["2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019"], time_stamp_type = "year", dates_with_archives = ["2020-09-01","2020-09-02"])
