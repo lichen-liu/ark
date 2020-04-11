@@ -8,6 +8,8 @@ import re
 
 @webapp.route('/api/archive_url', methods=['GET', 'POST'])
 def archive_url_handler():
+    print('archive_url_handler')
+
     if not account.account_is_logged_in():
         return redirect('/')
 
