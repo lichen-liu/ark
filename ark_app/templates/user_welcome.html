@@ -20,9 +20,8 @@
 
 </head>
 <script>
-    var valid_dates = {{ dates_with_archives | tojson | safe }};
-
-    $(function () {
+    function RefreshDatepicker(valid_dates){
+        $(function () {
         $("#datepicker-5").datepicker({
             beforeShowDay: function (date) {
 
@@ -49,10 +48,14 @@
             }
         });
     });
+    }
+
+    var valid_dates = {{ dates_with_archives | tojson | safe }};
+    RefreshDatepicker(valid_dates);
 </script>
 
 <body class="body">
-    <header class="w3-opacity w3-display-container w3-content w3-wide" style="max-width:2500px;" id="home">
+    <header class="w3-opacity w3-display-container w3-content w3-wide header" style="max-width:2500px;" id="home">
         <img class="w3-image" src="../static/icons/library_long.jpeg" height="400">
         <div class="w3-display-middle w3-margin-top w3-center">
             <!-- <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>BR</b></span> <span class="w3-hide-small w3-text-light-grey">Architects</span></h1> -->
@@ -70,12 +73,6 @@
             </form>
         </div>
     </header>
-    <form action="/api/logout" method="POST">
-        <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
-    </form>
-    <form action="/" method="POST">
-        <input type="submit" value="Home">
-    </form>
 
     <div class="col">
 
@@ -105,14 +102,25 @@
             </div>
             {% elif stats_info %}
             <div class="image_content">
-                <h3 class="webpage_image_title">Welcome to Ark</h3>
-                <div class="title_div">
+                <div class="webpage_image_title">
+
+                <h3 class="user_control_form" style="float:left;">Welcome to Ark</h3>
+                <form class="user_control_form" action="/api/logout" method="POST">
+                    <input class="w3-button w3-black" type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
+                </form>
+                <form class="user_control_form" action="/" method="POST">
+                    <input class="w3-button w3-black" type="submit" value="Home">
+                </form>
+
+                </div>
+
+                <div class="small_title_div">
                     <p>Ark Site Info:<p>
                 </div>
                 <p>Estimated Number Archives: {{stats_info.site.estimated_num_archives}}</p>
                 <p>Estimated Number Users: {{stats_info.site.estimated_num_users}}</p>
 
-                <div class="title_div">
+                <div class="small_title_div">
                     <p>Your Contribution:<p>
                 </div>
                 <p>Number Unique Archived URLs: {{stats_info.user.num_unique_archived_url}}</p>
@@ -128,19 +136,28 @@
                 <h3>Search By Date</h3>
             </div>
             <div class="date_section">
-                <form action='/api/decrease_pool'>
-                    <p>Enter Date: <input type="text" id="datepicker-5"></p>
-                    <input type="submit" value="Confirm">
+                <form action="/api/search_archive_by_url_datetimes" method="POST">
+                    <input type="hidden" name="url" value="{{url_archive_info.proper_url}}">
+                    <input style="float:left" hint="Enter Date" type="text" name="selected_date" id="datepicker-5">
+                    <input style="float:left" type="submit" value="Confirm">
+                </form>
+                <form action="/api/search_archive_by_url_datetimes" method="POST">
+                    <select class="datetime_dropdown" onchange="this.form.submit()">
+                        {%for datetime_str in datetime_with_archives%}
+                            <option name="selected_datetime" value="{{datetime_str}}">{{datetime_str}}</option>
+                        {% endfor %}
+                        <input type ="hidden" name="url" value="{{url_archive_info.proper_url}}">
+                    </select>
                 </form>
             </div>
 
-
             <div class="title_div">
-                <h3>Failed</h3>
+                <h3 class="user_control_form" style="float:left;"> Failed</h3>
+                <form class="user_control_form" action="/api/clear_failed_message" method="POST">
+                    <button class="w3-button w3-black" type="submit">Clear</button>
+                </form>
             </div>
-            <form action="/api/clear_failed_message" method="POST">
-                <button type="submit">Clear</button>
-            </form>
+           
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
                 <table class="table">
                     <thead>
@@ -171,16 +188,17 @@
             {% set show_all_user_archive_list, user_archive_list = user_archive_list_pair %}
             <div class="title_div">
                 {% if show_all_user_archive_list %}
-                <h3>Your {{user_archive_list | length}} Archives</h3>
+                <h3 class="user_control_form" style="float:left;">Your {{user_archive_list | length}} Archives</h3>
                 {% else %}
-                <h3>Your {{user_archive_list | length}} Latest Archives</h3>
+                <h3 class="user_control_form" style="float:left;">Your {{user_archive_list | length}} Latest Archives</h3>
+                {% endif %}
+                {% if not show_all_user_archive_list %}
+                <form class="user_control_form" action="/api/search_all_archives_by_current_user" method="GET">
+                    <button class="w3-button w3-black" type="submit">Show All</button>
+                </form>
                 {% endif %}
             </div>
-            {% if not show_all_user_archive_list %}
-            <form action="/api/search_all_archives_by_current_user" method="GET">
-                <button type="submit">Show All</button>
-            </form>
-            {% endif %}
+    
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
                 <table class="table">
                     <thead>
@@ -300,7 +318,8 @@
     .webpage_image_title {
         height: 7%;
         padding: 5px;
-        background-color: #dddddd
+        margin-bottom: 1%;
+        background-color: #dddddd;
     }
 
     .webpage_image_content {
@@ -334,6 +353,26 @@
 
     .title_div {
         height: 7%;
+        background-color: #dddddd;
+        padding: 5px;
+    }
+
+    .user_control_form {
+        float: right;
+        margin-left: 1%;
+        
+    }
+
+    .datetime_dropdown {
+        width: 70%;
+    }
+
+    .header {
+        margin-bottom: 1%;
+    }
+
+    .small_title_div {
+        height: 3.5%;
         background-color: #dddddd;
         padding: 5px;
     }

@@ -22,15 +22,28 @@ def search_archive_by_url_datetimes_handler():
         return redirect('/')
 
     url = request.form.get('url')
-    calender_date = request.form.get('calender_date') #can rename it to 'exact_date'
-    precise_date = request.form.get('precise_date') #can rename it to 'exact_datetime'
+    selected_date = request.form.get('selected_date') #can rename it to 'exact_date'
+    selected_datetime = request.form.get('selected_datetime') #can rename it to 'exact_datetime'
     
-    if calender_date is not None :
-        search_archive_by_url_datetimes(url, by_date = calender_date)
-    elif precise_date is not None :
-        search_archive_by_url_datetimes(url, by_datetime = precise_date)
+    if selected_date is not None :
+        lastest_datetime_str, archive_info, datetime_strs = search_archive_by_url_datetimes(url, by_date = selected_date) or (None,None,None)
+        return main.main(user_welcom_args=main.UserWelcomeArgs(url_archive_info=archive_info,
+            datetime_strs = datetime_strs,
+            proper_url=exact_proper_url, 
+            created_timestamp=exact_datetime))
+
+    elif selected_datetime is not None :
+        lastest_datetime_str, archive_info, datetime_strs = search_archive_by_url_datetimes(url, by_datetime = selected_datetime)
+        return main.main(user_welcom_args=main.UserWelcomeArgs(url_archive_info=archive_info,
+            datetime_strs = datetime_strs,
+            proper_url=exact_proper_url, 
+            created_timestamp=exact_datetime))
     else :
-        search_archive_by_url_datetimes(url)
+        latest_datetime_str, archive_info, date_strs = search_archive_by_url_datetimes(url) or (None,None,None)
+        return main.main(user_welcom_args=main.UserWelcomeArgs(url_archive_info=archive_info,
+            date_strs = date_strs,
+            proper_url=exact_proper_url, 
+            created_timestamp=exact_datetime))
 
 
 @webapp.route('/api/search_archive_by_exact', methods=['GET'])

@@ -44,7 +44,7 @@ class StatsInfo:
 
 
 class UserWelcomeArgs:
-    def __init__(self, error_message=None, title='Welcome!', url_archive_info=None, show_all_user_archive_list=False):
+    def __init__(self, error_message=None, title='Welcome!', url_archive_info = None,show_all_user_archive_list=False, date_strs = ["2020-05-05"], datetime_strs = ["datetime1","datetime2"]):
         '''
         url_archive_info = searcher.UrlArchiveInfo
         '''
@@ -53,6 +53,8 @@ class UserWelcomeArgs:
         self.title = title
         self.username = account.account_get_logged_in_username()
         self.url_archive_info = url_archive_info
+        self.date_strs = date_strs
+        self.datetime_strs = datetime_strs
         
         self.stats_info = None
         if self.url_archive_info is None:
@@ -89,5 +91,6 @@ def main_user_welcome(args):
     url_archive_info=args.url_archive_info, stats_info=args.stats_info,
     username=args.username,
     user_archive_list_pair=(args.show_all_user_archive_list, args.user_archive_list),
-    pending_list=args.pending_list, failed_list=args.failed_list,
-    timestamp_with_archives = ["2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019"], time_stamp_type = "year", dates_with_archives = ["2020-09-01","2020-09-02"])
+    pending_list=args.pending_list, failed_list=args.failed_list, 
+    dates_with_archives = args.date_strs,
+    datetime_with_archives = args.datetime_strs)
