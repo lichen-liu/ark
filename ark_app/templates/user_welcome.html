@@ -1,160 +1,169 @@
 <!DOCTYPE html>
 <html>
 
-{{error_message if error_message}}
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
 </head>
 <script>
-    function RefreshDatepicker(valid_dates){
-        $(function () {
-        $("#datepicker-5").datepicker({
-            beforeShowDay: function (date) {
+  function RefreshDatepicker(valid_dates) {
+    $(function () {
+      $("#datepicker-5").datepicker({
+        beforeShowDay: function (date) {
 
-                var dateYear = date.getFullYear();
-                var dateMonth = date.getMonth();
-                var dateDay = date.getDate();
+          var dateYear = date.getFullYear();
+          var dateMonth = date.getMonth();
+          var dateDay = date.getDate();
 
-                var found = false;
-                for (index = 0; index < valid_dates.length; ++index) {
-                    valid_date = valid_dates[index]
+          var found = false;
+          for (index = 0; index < valid_dates.length; ++index) {
+            valid_date = valid_dates[index]
 
-                    spitted_date = valid_date.split("-")
+            spitted_date = valid_date.split("-")
 
-                    if (parseInt(spitted_date[0], 10) == dateYear) {
-                        if (parseInt(spitted_date[1], 10) - 1 == dateMonth) {
-                            if (parseInt(spitted_date[2], 10) == dateDay) {
-                                return [true];
-                            }
-                        }
-                    }
+            if (parseInt(spitted_date[0], 10) == dateYear) {
+              if (parseInt(spitted_date[1], 10) - 1 == dateMonth) {
+                if (parseInt(spitted_date[2], 10) == dateDay) {
+                  return [true];
                 }
-
-                return [false];
+              }
             }
-        });
-    });
-    }
+          }
 
-    var valid_dates = {{ dates_with_archives | tojson | safe }};
-    RefreshDatepicker(valid_dates);
+          return [false];
+        }
+      });
+    });
+  }
+
+  var valid_dates = {{ dates_with_archives | tojson | safe }};
+  RefreshDatepicker(valid_dates);
 </script>
 
 <body class="body">
-    <header class="w3-opacity w3-display-container w3-content w3-wide header" style="max-width:2500px;" id="home">
-        <img class="w3-image" src="../static/icons/library_long.jpeg" height="400">
-        <div class="w3-display-middle w3-margin-top w3-center">
-            <!-- <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>BR</b></span> <span class="w3-hide-small w3-text-light-grey">Architects</span></h1> -->
-            <p>
-                <font size="14"><b>Ark</b></font>
-            </p>
-            <form action="/api/archive_url" method="GET">
-                <input type="text" width=60 placeholder="URL" id="archive_url_text" name="archive_url_text">
-                <p class="w3-padding-16">
-                    <button class="w3-button w3-black" type="submit" name="action"
-                        value="archive_url_submit">Archive</button>
-                    <button class="w3-button w3-black" type="submit" name="action"
-                        value="archive_url_submit">Search</button>
-                </p>
-            </form>
-        </div>
-    </header>
+  <header class="w3-opacity w3-display-container w3-content w3-wide header" style="max-width:2500px;" id="home">
+    <img class="w3-image" src="../static/icons/library_long.jpeg" height="400">
+    <div class="w3-display-middle w3-margin-top w3-center">
+      <!-- <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>BR</b></span> <span class="w3-hide-small w3-text-light-grey">Architects</span></h1> -->
+      <p>
+        <font size="14"><b>Ark</b></font>
+      </p>
+      <form action="/api/archive_url" method="GET">
+        <input type="text" width=60 placeholder="URL" id="archive_url_text" name="archive_url_text">
+        <p class="w3-padding-16">
+          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Archive</button>
+          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Search</button>
+        </p>
+      </form>
+    </div>
+  </header>
+  {% if error_message %}
+  <h3>
+    <p class="text-danger">
+      {{error_message}}
+    </p>
+  </h3>
 
-    <div class="col">
+  {% endif %}
+  <!-- {{error_message if error_message}} -->
+  <!-- <div class="col">
+  </div> -->
+
+  <div class="col99p">
+
+    <div class="col66p">
+      {% if url_archive_info %}
+      <div class="image_content">
+        <div class="webpage_image_title">
+          <h3 class="user_control_form" style="float:left;">Achive Search Result</h3>
+          <form class="user_control_form" action="/api/logout" method="POST">
+            <input class="w3-button w3-black" type="submit" value="Logout"
+              onclick="return confirm('{{ username }}, you are logging out!');">
+          </form>
+          <form class="user_control_form" action="/" method="POST">
+            <input class="w3-button w3-black" type="submit" value="Home">
+          </form>
+        </div>
+        <div class="title_div">
+          <p>Webpage Info:<p>
+        </div>
+        <p>Query URL: {{url_archive_info.query_url}}</p>
+        <p>Proper URL: {{url_archive_info.proper_url}}</p>
+        <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
+        <p>Created Username: {{url_archive_info.created_username}}</p>
+        <p>Archive.md URL: {{url_archive_info.archive_md_url}}</p>
+
+        <div class="title_div">
+          <p>Webpage Screenshot:<p>
+            </p>
+        </div>
+        <img class="webpage_image" src={{url_archive_info.screenshot_url}}>
+
+      </div>
+      {% elif stats_info %}
+      <div class="image_content">
+        <div class="webpage_image_title">
+          <h3 class="user_control_form" style="float:left;">Welcome to Ark</h3>
+          <form class="user_control_form" action="/api/logout" method="POST">
+            <input class="w3-button w3-black" type="submit" value="Logout"
+              onclick="return confirm('{{ username }}, you are logging out!');">
+          </form>
+          <form class="user_control_form" action="/" method="POST">
+            <input class="w3-button w3-black" type="submit" value="Home">
+          </form>
+
+        </div>
+
+        <div class="small_title_div">
+          <p>Ark Site Info:<p>
+        </div>
+        <p>Estimated Number Archives: {{stats_info.site.estimated_num_archives}}</p>
+        <p>Estimated Number Users: {{stats_info.site.estimated_num_users}}</p>
+
+        <div class="small_title_div">
+          <p>Your Contribution:<p>
+        </div>
+        <p>Number Unique Archived URLs: {{stats_info.user.num_unique_archived_url}}</p>
+        <p>Number Archives: {{stats_info.user.num_archives}}</p>
+      </div>
+      {% endif %}
 
     </div>
 
-    <div class="col99p">
+    <div class="col33p">
 
-        <div class="col66p">
-            {% if url_archive_info %}
-            <div class="image_content">
-                <h3 class="webpage_image_title">Achive Search Result</h3>
-                <div class="title_div">
-                    <p>Webpage Info:<p>
-                </div>
-                <p>Query URL: {{url_archive_info.query_url}}</p>
-                <p>Proper URL: {{url_archive_info.proper_url}}</p>
-                <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
-                <p>Created Username: {{url_archive_info.created_username}}</p>
-                <p>Archive.md URL: {{url_archive_info.archive_md_url}}</p>
-
-                <div class="title_div">
-                    <p>Webpage Screenshot:<p>
-                        </p>
-                </div>
-                <img class="webpage_image" src={{url_archive_info.screenshot_url}}>
-                
-            </div>
-            {% elif stats_info %}
-            <div class="image_content">
-                <div class="webpage_image_title">
-
-                <h3 class="user_control_form" style="float:left;">Welcome to Ark</h3>
-                <form class="user_control_form" action="/api/logout" method="POST">
-                    <input class="w3-button w3-black" type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
-                </form>
-                <form class="user_control_form" action="/" method="POST">
-                    <input class="w3-button w3-black" type="submit" value="Home">
-                </form>
-
-                </div>
-
-                <div class="small_title_div">
-                    <p>Ark Site Info:<p>
-                </div>
-                <p>Estimated Number Archives: {{stats_info.site.estimated_num_archives}}</p>
-                <p>Estimated Number Users: {{stats_info.site.estimated_num_users}}</p>
-
-                <div class="small_title_div">
-                    <p>Your Contribution:<p>
-                </div>
-                <p>Number Unique Archived URLs: {{stats_info.user.num_unique_archived_url}}</p>
-                <p>Number Archives: {{stats_info.user.num_archives}}</p>
-            </div>
-            {% endif %}
-
-        </div>
-
-        <div class="col33p">
-
-            <div class="title_div">
-                <h3>Search By Date</h3>
-            </div>
-            <p>Url:{% if url_archive_info.proper_url %} 
-                        {{url_archive_info.proper_url}} 
-                    {% else %} 
-                        Please Search Or Archive an url first
-                    {% endif %}<p>
-            <div class="date_section">
-                <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
-                    <input type="hidden" name="url" value="{{url_archive_info.proper_url}}">
-                    <input style="float:left" type="text" name="selected_date" id="datepicker-5">
-                    <input style="float:left" type="submit" value="Confirm">
-                </form>
-                <script>
-                    function validateDate(){
-                        if(document.getElementById('datepicker-5').value){
-                            return true;
-                        }
-                        return false;
+      <div class="title_div">
+        <h3>Search By Date</h3>
+      </div>
+      <div class="date_section">
+            <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
+                <input type="hidden" name="url" value="{{url_archive_info.proper_url}}">
+                <input style="float:left" type="text" name="selected_date" id="datepicker-5">
+                <input style="float:left" type="submit" value="Confirm">
+            </form>
+            <script>
+                function validateDate(){
+                    if(document.getElementById('datepicker-5').value){
+                        return true;
                     }
-                </script>
-                <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDateTime()" method="POST">
+                    return false;
+                }
+            </script>
+
+          <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDateTime()" method="POST">
                     <select id="selected_datetime_id" name="selected_datetime" class="datetime_dropdown">
                         {% if datetime_with_archives%}
                             {%for datetime_str in datetime_with_archives%}
@@ -165,8 +174,7 @@
                     </select>
                     <input style="float:left" type="submit" value="Confirm">
                 </form>
-            </div>
-            <script>
+                <script>
                     function validateDateTime(){
                         if(document.getElementById('selected_datetime_id').value){
                             return true;
@@ -174,231 +182,245 @@
                         return false;
                     }
                 </script>
-            <div class="title_div">
-                <h3 class="user_control_form" style="float:left;"> Failed</h3>
-                <form class="user_control_form" action="/api/clear_failed_message" method="POST">
-                    <button class="w3-button w3-black" type="submit">Clear</button>
-                </form>
-            </div>
-           
-            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>URL</th>
-                            <th>Retry</th>
-                        </tr>
-                    </thead>
-                    {% if failed_list %}
-                    {% for item in failed_list %}
-                    <tbody>
-                        <td>{{item}}</td>
-                        <td>
-                            <form action="/api/archive_url" method="GET">
-                                <button type="submit" id="archive_url_text" name="archive_url_text"
-                                  value={{item}}>Retry</button>
-                            </form>
-                        </td>
-                    </tbody>
-                    {% endfor %}
-                    {% endif %}
-                </table>
-            </div>
-            <br>
-            <br>
+
+      </div>
+
+      <div class="title_div">
+        <h3 class="user_control_form" style="float:left;"> Failed</h3>
+        <form class="user_control_form" action="/api/clear_failed_message" method="POST">
+          <button class="w3-button w3-black" type="submit">Clear</button>
+        </form>
+      </div>
+
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>URL</th>
+              <th>Retry</th>
+            </tr>
+          </thead>
+          {% if failed_list %}
+          {% for item in failed_list %}
+          <tbody>
+            <td>{{item}}</td>
+            <td>
+              <form action="/api/archive_url" method="GET">
+                <button type="submit" id="archive_url_text" name="archive_url_text" value={{item}}>Retry</button>
+              </form>
+            </td>
+          </tbody>
+          {% endfor %}
+          {% endif %}
+        </table>
+      </div>
+      <br>
+      <br>
 
 
-            {% set show_all_user_archive_list, user_archive_list = user_archive_list_pair %}
-            <div class="title_div">
-                {% if show_all_user_archive_list %}
-                <h3 class="user_control_form" style="float:left;">Your {{user_archive_list | length}} Archives</h3>
-                {% else %}
-                <h3 class="user_control_form" style="float:left;">Your {{user_archive_list | length}} Latest Archives</h3>
-                {% endif %}
-                {% if not show_all_user_archive_list %}
-                <form class="user_control_form" action="/api/search_all_archives_by_current_user" method="GET">
-                    <button class="w3-button w3-black" type="submit">Show All</button>
-                </form>
-                {% endif %}
-            </div>
-    
-            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>URL</th>
-                            <th>Date</th>
-                            <th>View</th>
-                        </tr>
-                    </thead>
-                    {% for item in user_archive_list %}
-                    <tbody>
-                        {% set url, datetime = item%}
-                        <td>{{url}}</td>
-                        <td>{{datetime}}</td>
-                        <td>
-                            <form action="/api/search_archive_by_exact" method="GET">
-                            <button type="submit">View</button>
-                            <input type="hidden" name="proper_url" value="{{url}}"/>
-                            <input type="hidden" name="datetime" value="{{datetime}}"/>
-                            </form>
-                        </td>
-                    </tbody>
-                    {% endfor %}
-                </table>
-            </div>
-            <br>
-            <br>
+      {% set show_all_user_archive_list, user_archive_list = user_archive_list_pair %}
+      <div class="title_div">
+        {% if show_all_user_archive_list %}
+        <h3 class="user_control_form" style="float:left;">Your {{user_archive_list | length}} Archives</h3>
+        {% else %}
+        <h3 class="user_control_form" style="float:left;">Your {{user_archive_list | length}} Latest Archives</h3>
+        {% endif %}
+        {% if not show_all_user_archive_list %}
+        <form class="user_control_form" action="/api/search_all_archives_by_current_user" method="GET">
+          <button class="w3-button w3-black" type="submit">Show All</button>
+        </form>
+        {% endif %}
+      </div>
+
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <!-- <table class="table"> -->
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th style="width: 45%">URL</th>
+              <th style="width: 25%">Date</th>
+              <th style="width: 25%">View</th>
+            </tr>
+          </thead>
+          {% for item in user_archive_list %}
+          <tbody>
+            {% set url, datetime = item%}
+            <td>{{url}}</td>
+            <td>{{datetime}}</td>
+            <td>
+              <form action="/api/search_archive_by_exact" method="GET">
+                <button type="submit">View</button>
+                <input type="hidden" name="proper_url" value="{{url}}" />
+                <input type="hidden" name="datetime" value="{{datetime}}" />
+              </form>
+            </td>
+          </tbody>
+          {% endfor %}
+        </table>
+      </div>
+      <br>
+      <br>
 
 
-            <div class="title_div">
-                <h3>Pending</h3>
-            </div>
-            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>URL</th>
-                        </tr>
-                    </thead>
-                    {% if pending_list %}
-                    {% for item in pending_list %}
-                    <tbody>
-                        <td>{{item}}</td>
-                    </tbody>
-                    {% endfor %}
-                    {% endif %}
-                </table>
-            </div>
-
-        </div>
+      <div class="title_div">
+        <h3>Pending</h3>
+      </div>
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>URL</th>
+            </tr>
+          </thead>
+          {% if pending_list %}
+          {% for item in pending_list %}
+          <tbody>
+            <td>{{item}}</td>
+          </tbody>
+          {% endfor %}
+          {% endif %}
+        </table>
+      </div>
 
     </div>
+
+  </div>
 
 </body>
 
 <style>
-    .jumbotron {
-        margin-bottom: 10px;
-    }
+  .jumbotron {
+    margin-bottom: 10px;
+  }
 
-    .col99p {
-        float: left;
-        height: 100%;
-        margin-left: 1%;
-        width: 99%
-    }
+  .col99p {
+    float: left;
+    height: 100%;
+    margin-left: 1%;
+    width: 99%
+  }
 
-    .col66p {
-        float: left;
-        height: 100%;
-        margin-left: 1%;
-        width: 63%
-    }
+  .col66p {
+    float: left;
+    height: 100%;
+    margin-left: 1%;
+    width: 63%
+  }
 
-    .col33p {
-        float: left;
-        height: 100%;
-        width: 33%;
-        margin-left: 1%;
-    }
+  .col33p {
+    float: left;
+    height: 100%;
+    width: 33%;
+    margin-left: 1%;
+  }
 
-    .container {
-        height: 100%;
-    }
+  .container {
+    height: 100%;
+  }
 
-    .body {
-        height: 100vh;
-    }
+  .body {
+    height: 100vh;
+  }
 
-    .calender_title {
-        height: 7%;
-        padding: 5px;
-        background-color: #dddddd
-    }
+  .calender_title {
+    height: 7%;
+    padding: 5px;
+    background-color: #dddddd
+  }
 
-    .calender_content {
-        height: 80%;
-        overflow: scroll;
-    }
+  .calender_content {
+    height: 80%;
+    overflow: scroll;
+  }
 
-    .calender_form {
-        float: left;
-    }
+  .calender_form {
+    float: left;
+  }
 
-    .calender_date_submit {
-        background: none !important;
-        border: none;
-        padding: 0 !important;
-        /*optional*/
-        font-family: arial, sans-serif;
-        /*input has OS specific font-family*/
-        color: #069;
-        text-decoration: underline;
-        cursor: pointer;
-    }
+  .calender_date_submit {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 
-    .webpage_image_title {
-        height: 7%;
-        padding: 5px;
-        margin-bottom: 1%;
-        background-color: #dddddd;
-    }
+  .webpage_image_title {
+    height: 7%;
+    padding: 5px;
+    margin-bottom: 1%;
+    background-color: #dddddd;
+  }
 
-    .webpage_image_content {
-        height: 80%;
-        overflow: scroll;
-    }
+  .webpage_image_content {
+    height: 80%;
+    overflow: scroll;
+  }
 
-    .webpage_image {
-        width: 100%;
-        border-style: groove;
-    }
+  .webpage_image {
+    width: 100%;
+    border-style: groove;
+  }
 
-    .my-custom-scrollbar {
-        position: relative;
-        height: 25%;
-        overflow: auto;
-    }
+  .my-custom-scrollbar {
+    position: relative;
+    height: 25%;
+    overflow: auto;
+  }
 
-    .date_section {
-        height: 15%;
-    }
+  .date_section {
+    height: 15%;
+  }
 
-    .table-wrapper-scroll-y {
-        display: block;
-    }
+  .table-wrapper-scroll-y {
+    display: block;
+    /* overflow: auto; */
+  }
 
-    .image_content {
-        height: 100%;
-        width: 100%;
-    }
+  /* .table {
+    max-width: none;
+    table-layout: fixed;
+    word-wrap: break-word;
+  }*/
 
-    .title_div {
-        height: 7%;
-        background-color: #dddddd;
-        padding: 5px;
-    }
+  .table th {
+    max-width: 30%;
+  }
 
-    .user_control_form {
-        float: right;
-        margin-left: 1%;
-        
-    }
+  .image_content {
+    height: 100%;
+    width: 100%;
+  }
 
-    .datetime_dropdown {
-        width: 70%;
-    }
+  .title_div {
+    height: 7%;
+    background-color: #dddddd;
+    padding: 5px;
+  }
 
-    .header {
-        margin-bottom: 1%;
-    }
+  .user_control_form {
+    float: right;
+    margin-left: 1%;
 
-    .small_title_div {
-        height: 3.5%;
-        background-color: #dddddd;
-        padding: 5px;
-    }
+  }
+
+  .datetime_dropdown {
+    width: 70%;
+  }
+
+  .header {
+    margin-bottom: 1%;
+  }
+
+  .small_title_div {
+    height: 3.5%;
+    background-color: #dddddd;
+    padding: 5px;
+  }
 </style>
 
 </html>
