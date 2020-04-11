@@ -59,15 +59,19 @@ def archive_url(original_url):
 
             # TESTING
             # Print the screenshot
+            _, _, date_strs = searcher.search_archive_by_url_datetimes(original_url) or (None, None, None)
             return main.main(
                 user_welcome_args=main.UserWelcomeArgs(error_message=error_message,
-                                                       url_archive_info=searcher.UrlArchiveInfo(query_url=original_url, proper_url=url, created_timestamp=utc_datetime_str)))
+                                                       url_archive_info=searcher.UrlArchiveInfo(query_url=original_url, proper_url=url, created_timestamp=utc_datetime_str),
+                                                       date_strs=date_strs))
         else:
             error_message = 'Error: The archive was already created for url(' + url + ') on (' + utc_datetime_str + ')!'
     else:
         dynamodb.push_account_archive_request(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST,
                                               username=account.account_get_logged_in_username(), original_url=original_url)
         error_message = 'Invalid URL: ' + original_url
+
+        
 
     return main.main(user_welcome_args=main.UserWelcomeArgs(error_message=error_message))
 

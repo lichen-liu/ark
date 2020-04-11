@@ -44,7 +44,7 @@ class StatsInfo:
 
 
 class UserWelcomeArgs:
-    def __init__(self, error_message=None, title='Welcome!', url_archive_info = None,show_all_user_archive_list=False, date_strs = ["2020-05-05"], datetime_strs = ["datetime1","datetime2"]):
+    def __init__(self, error_message=None, title='Welcome!', url_archive_info = None,show_all_user_archive_list=False, date_strs = [], datetime_strs = []):
         '''
         url_archive_info = searcher.UrlArchiveInfo
         '''

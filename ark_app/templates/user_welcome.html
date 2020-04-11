@@ -135,22 +135,45 @@
             <div class="title_div">
                 <h3>Search By Date</h3>
             </div>
+            <p>Url:{% if url_archive_info.proper_url %} 
+                        {{url_archive_info.proper_url}} 
+                    {% else %} 
+                        Please Search Or Archive an url first
+                    {% endif %}<p>
             <div class="date_section">
-                <form action="/api/search_archive_by_url_datetimes" method="POST">
+                <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
                     <input type="hidden" name="url" value="{{url_archive_info.proper_url}}">
-                    <input style="float:left" hint="Enter Date" type="text" name="selected_date" id="datepicker-5">
+                    <input style="float:left" type="text" name="selected_date" id="datepicker-5">
                     <input style="float:left" type="submit" value="Confirm">
                 </form>
-                <form action="/api/search_archive_by_url_datetimes" method="POST">
-                    <select class="datetime_dropdown" onchange="this.form.submit()">
-                        {%for datetime_str in datetime_with_archives%}
-                            <option name="selected_datetime" value="{{datetime_str}}">{{datetime_str}}</option>
-                        {% endfor %}
+                <script>
+                    function validateDate(){
+                        if(document.getElementById('datepicker-5').value){
+                            return true;
+                        }
+                        return false;
+                    }
+                </script>
+                <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDateTime()" method="POST">
+                    <select id="selected_datetime_id" name="selected_datetime" class="datetime_dropdown">
+                        {% if datetime_with_archives%}
+                            {%for datetime_str in datetime_with_archives%}
+                                <option value="{{datetime_str}}">{{datetime_str}}</option>
+                            {% endfor %}
+                        {% endif %}
                         <input type ="hidden" name="url" value="{{url_archive_info.proper_url}}">
                     </select>
+                    <input style="float:left" type="submit" value="Confirm">
                 </form>
             </div>
-
+            <script>
+                    function validateDateTime(){
+                        if(document.getElementById('selected_datetime_id').value){
+                            return true;
+                        }
+                        return false;
+                    }
+                </script>
             <div class="title_div">
                 <h3 class="user_control_form" style="float:left;"> Failed</h3>
                 <form class="user_control_form" action="/api/clear_failed_message" method="POST">
