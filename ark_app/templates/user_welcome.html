@@ -72,22 +72,15 @@
             <thead>
               <tr>
                 <th>URL</th>
-                <th>Date</th>
-                <th>Link</th>
               </tr>
             </thead>
+            {% if pending_list %}
             {% for item in pending_list %}
             <tbody>
-              <td>{{item.query_url}}</td>
-              <td>{{item.created_timestamp}}</td>
-              <td>
-                <form action="/api/archive_url" method="GET">
-                  <button type="submit" id="archive_url_text" name="archive_url_text"
-                    value={{item.query_url}}>Go</button>
-                </form>
-              </td>
+              <td>{{item}}</td>
             </tbody>
             {% endfor %}
+            {% endif %}
           </table>
         </div>
         <h3>Failed</h3>
@@ -96,22 +89,15 @@
             <thead>
               <tr>
                 <th>URL</th>
-                <th>Date</th>
-                <th>Link</th>
               </tr>
             </thead>
+            {% if failed_list %}
             {% for item in failed_list %}
             <tbody>
-              <td>{{item.query_url}}</td>
-              <td>{{item.created_timestamp}}</td>
-              <td>
-                <form action="/api/archive_url" method="GET">
-                  <button type="submit" id="archive_url_text" name="archive_url_text"
-                    value={{item.query_url}}>Go</button>
-                </form>
-              </td>
+              <td>{{item}}</td>
             </tbody>
             {% endfor %}
+            {% endif %}
           </table>
         </div>
       </div>
@@ -120,20 +106,20 @@
       </div>
       <div class="col-sm-4">
         <h3>Achive Request Summary</h3>
-        {% if url_screenshot_info %}
+        {% if url_archive_info %}
         <br>
         <br>
         <br>
-        <img src={{url_screenshot_info.screenshot_url}}>
+        <img src={{url_archive_info.screenshot_url}}>
         <br>
         <br>
         <br>
-        <p>Query URL: {{url_screenshot_info.query_url}}</p>
-        <p>Adjusted URL: {{url_screenshot_info.adjusted_url}}</p>
-        <p>Created Username: {{url_screenshot_info.created_username}}</p>
-        <p>Created Timestamp: {{url_screenshot_info.created_timestamp}}</p>
+        <p>Query URL: {{url_archive_info.query_url}}</p>
+        <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
+        <p>Created Username: {{url_archive_info.created_username}}</p>
+        <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
         <br>
-        <p>Archive.md URL: {{url_screenshot_info.archivemd_url}}</p>
+        <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
         {% endif %}
       </div>
     </div>

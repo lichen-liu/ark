@@ -58,10 +58,10 @@ def archive_url(original_url):
             screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
             return main.main(
                 user_welcome_args=main.UserWelcomeArgs(error_message=error_message,
-                                                       url_screenshot_info=main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url=archivemd_url,
-                                                                                                               screenshot_url=screenshot_url, query_url=original_url, adjusted_url=url,
-                                                                                                               created_timestamp=utc_datetime_str, created_username=username
-                                                                                                               )))
+                                                       url_archive_info=main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url=archivemd_url,
+                                                                                                            screenshot_url=screenshot_url, query_url=original_url, adjusted_url=url,
+                                                                                                            created_timestamp=utc_datetime_str, created_username=username
+                                                                                                            )))
         else:
             error_message = 'Error: The archive was already created for url(' + \
                 url + ') on (' + utc_datetime_str + ')!'
@@ -144,30 +144,6 @@ def give_me_success_list(num=3):
     for i in range(num):
         result.append(main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url='success_{}.com'.format(str(i)),
                                                           screenshot_url='a', query_url='success_{}.com'.format(str(i)), adjusted_url='c',
-                                                          created_timestamp=str(datetime.datetime.utcnow()), created_username=account.account_get_logged_in_username()
-                                                          ))
-    return result
-
-
-def give_me_pending_list(num=3):
-    'Return a list of main.UserWelcomeArgs.UrlArchiveInfo'
-
-    result = []
-    for i in range(num):
-        result.append(main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url='pending_{}.com'.format(str(i)),
-                                                          screenshot_url='a', query_url='pending_{}.com'.format(str(i)), adjusted_url='c',
-                                                          created_timestamp=str(datetime.datetime.utcnow()), created_username=account.account_get_logged_in_username()
-                                                          ))
-    return result
-
-
-def give_me_failed_list(num=3):
-    'Return a list of main.UserWelcomeArgs.UrlArchiveInfo'
-
-    result = []
-    for i in range(num):
-        result.append(main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url='failed_{}.com'.format(str(i)),
-                                                          screenshot_url='a', query_url='failed_{}.com'.format(str(i)), adjusted_url='c',
                                                           created_timestamp=str(datetime.datetime.utcnow()), created_username=account.account_get_logged_in_username()
                                                           ))
     return result
