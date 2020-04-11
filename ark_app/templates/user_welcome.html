@@ -62,10 +62,10 @@
         <font size="14"><b>Ark</b></font>
       </p>
       <form action="/api/archive_url" method="GET">
-        <input type="text" width=60 placeholder="URL" id="archive_url_text" name="archive_url_text">
+        <input type="text" width=60 placeholder="URL" id="url_text" name="url_text">
         <p class="w3-padding-16">
           <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Archive</button>
-          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Search</button>
+          <button class="w3-button w3-black" type="submit" name="action" value="search_url_submit">Search</button>
         </p>
       </form>
     </div>
@@ -150,7 +150,7 @@
       </div>
       <div class="date_section">
             <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
-                <input type="hidden" name="url" value="{{url_archive_info.proper_url}}">
+                <input type="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
                 <input style="float:left" type="text" name="selected_date" id="datepicker-5">
                 <input style="float:left" type="submit" value="Confirm">
             </form>
@@ -170,7 +170,7 @@
                                 <option value="{{datetime_str}}">{{datetime_str}}</option>
                             {% endfor %}
                         {% endif %}
-                        <input type ="hidden" name="url" value="{{url_archive_info.proper_url}}">
+                        <input type ="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
                     </select>
                     <input style="float:left" type="submit" value="Confirm">
                 </form>

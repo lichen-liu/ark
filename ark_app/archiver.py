@@ -12,9 +12,9 @@ def archive_url_handler():
         return redirect('/')
 
     if request.method == 'POST':
-        original_url = request.form.get('archive_url_text')
+        original_url = request.form.get('url_text')
     elif request.method == 'GET':
-        original_url = request.args.get('archive_url_text')
+        original_url = request.args.get('url_text')
 
     if not url_util.precheck_url(original_url):
         return main.main(user_welcome_args=main.UserWelcomeArgs(error_message='Invalid URL: ' + (original_url if original_url else '')))

@@ -1,5 +1,5 @@
-from flask import render_template, redirect
-from ark_app import account, webapp, dynamodb, searcher
+from flask import render_template, redirect, request
+from ark_app import account, webapp, dynamodb, searcher, archiver
 
 
 @webapp.route('/', methods=['GET', 'POST'])
@@ -16,6 +16,21 @@ def main_clear_failed_message_handler():
         dynamodb.clear_account_archive_request_by(
             list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST, username=account.account_get_logged_in_username())
     return redirect('/')
+
+
+@webapp.route('/api/search_or_archive_url', methods=['POST', 'GET'])
+def main_search_or_archive_url():
+    if request.method == 'POST':
+        action = request.form.get('action')
+    elif request.method == 'GET':
+        action = request.args.get('action')
+    
+    if action == 'archive_url_submit':
+        return archiver.archive_url_handler()
+    elif action == 'search_url_submit':
+        return searcher.search_archive_by_url_datetimes_handler()
+    else:
+        assert False
 
 
 class GuestWelcomeArgs:

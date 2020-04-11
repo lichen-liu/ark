@@ -21,9 +21,14 @@ def search_archive_by_url_datetimes_handler():
     if not account.account_is_logged_in():
         return redirect('/')
 
-    url = request.form.get('url')
-    selected_date = request.form.get('selected_date') 
-    selected_datetime = request.form.get('selected_datetime')
+    if request.method == 'POST':
+        url = request.form.get('url_text')
+        selected_date = request.form.get('selected_date') 
+        selected_datetime = request.form.get('selected_datetime')
+    elif request.method == 'GET':
+        url = request.args.get('url_text')
+        selected_date = request.args.get('selected_date') 
+        selected_datetime = request.args.get('selected_datetime')
     
     if selected_date is not None :
         selected_date = datetime.datetime.strptime(selected_date, '%m/%d/%Y').date()
