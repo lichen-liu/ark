@@ -36,9 +36,9 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
     else:
         assert False
 
-print(search_url_archive_by_date(original_url='https://www.google.ca'))
-print('\n')
-print(search_url_archive_by_date(original_url='https://www.google.ca', by_date=datetime.date(2020, 4, 10)))
-print('\n')
-print(search_url_archive_by_date(original_url='https://www.google.ca', by_datetime=datetime.datetime(2020, 4, 10, 23,11,48,192893)))
-print('\n')
+# print(search_url_archive_by_date(original_url='https://www.google.ca'))
+# print('\n')
+# print(search_url_archive_by_date(original_url='https://www.google.ca', by_date=datetime.date(2020, 4, 10)))
+# print('\n')
+# print(search_url_archive_by_date(original_url='https://www.google.ca', by_datetime=datetime.datetime(2020, 4, 10, 23,11,48,192893)))
+# print('\n')
