@@ -1,5 +1,5 @@
 from flask import render_template
-from ark_app import account, webapp, archiver, dynamodb
+from ark_app import account, webapp, archiver, dynamodb, s3
 
 
 @webapp.route('/', methods=['GET', 'POST'])
@@ -20,13 +20,16 @@ class GuestWelcomeArgs:
 
 class UserWelcomeArgs:
     class UrlArchiveInfo:
-        def __init__(self, archivemd_url=None, screenshot_url=None, query_url=None, adjusted_url=None, created_timestamp=None, created_username=None):
-            self.screenshot_url = screenshot_url
-            self.query_url = query_url
-            self.adjusted_url = adjusted_url
+        def __init__(self, proper_url, created_timestamp, query_url=None):
+            self.query_url = query_url if query_url else proper_url
+
+            self.proper_url = proper_url
             self.created_timestamp = created_timestamp
-            self.created_username = created_username
-            self.archivemd_url = archivemd_url
+
+            archive_id, self.created_username, self.archive_md_url = dynamodb.get_archive_info(url=self.proper_url, datetime=self.created_timestamp)
+            url_webpage_png_s3_key = s3.WEBPAGE_SCREENSHOT_DIR + archive_id + '.png'
+            self.screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
+
 
     def __init__(self, error_message=None, title='Welcome!', url_archive_info=None):
         self.error_message = error_message

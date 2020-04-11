@@ -234,7 +234,7 @@ def get_table(dynamodb, table, return_raw=False):
 
 
 @dynamodb_resource_operation
-def create_new_archive(dynamodb, url, datetime, username):
+def create_new_archive(dynamodb, url, datetime, username, archive_md_url):
     '''
     Create a new archive entry.
     It is consisted of 2 items: main, archiveId. archiveId item is simply to make sure uniqueness of archiveId.
@@ -249,6 +249,7 @@ def create_new_archive(dynamodb, url, datetime, username):
                 'archiveUrl': url,
                 'archiveDatetime': datetime,
                 'archiveAccountId': username,
+                'archiveMDUrl': archive_md_url
             },
             ConditionExpression='attribute_not_exists(archiveUrl) OR attribute_not_exists(archiveDatetime)'
         )
@@ -301,7 +302,7 @@ def create_new_archive(dynamodb, url, datetime, username):
 @dynamodb_resource_operation
 def get_archive_info(dynamodb, url, datetime):
     '''
-    Return (archive_id, username) if found; otherwise None
+    Return (archive_id, username, archive_md_url) if found; otherwise None
     '''
     result = None
 
@@ -315,7 +316,7 @@ def get_archive_info(dynamodb, url, datetime):
     if response:
         item = response.get('Item')
         if item:
-            result = (item['archiveId'], item['archiveAccountId'])
+            result = (item['archiveId'], item['archiveAccountId'], item['archiveMDUrl'])
         return result
 
 

@@ -28,22 +28,17 @@ def archive_url(original_url):
         # Register the url and date to arkArchive
         utc_datetime = datetime.datetime.utcnow()
         utc_datetime_str = str(utc_datetime)
-        is_newly_created = dynamodb.create_new_archive(
-            url=url, datetime=utc_datetime_str, username=account.account_get_logged_in_username())
+        # Save it on archive website
+        initial_archive_md_url = archiveis.capture(url)
+        is_newly_created = dynamodb.create_new_archive(url=url, datetime=utc_datetime_str, username=account.account_get_logged_in_username(), archive_md_url=initial_archive_md_url)
         if is_newly_created:
             # Screenshot the url webpage
-            url_webpage_png, url_inner_html = webpage_snapshot.take_url_webpage_snapshot(
-                url)
-
-            # Save it on archive website
-            archivemd_url = archiveis.capture(url)
+            url_webpage_png, _url_inner_html = webpage_snapshot.take_url_webpage_snapshot(url)
 
             # Store the screenshot on S3
-            archive_id, username = dynamodb.get_archive_info(
-                url=url, datetime=utc_datetime_str)
+            archive_id, _, _ = dynamodb.get_archive_info(url=url, datetime=utc_datetime_str)
             url_webpage_png_s3_key = s3.WEBPAGE_SCREENSHOT_DIR + archive_id + '.png'
-            s3.upload_file_bytes_object(
-                key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
+            s3.upload_file_bytes_object(key=url_webpage_png_s3_key, file_bytes=url_webpage_png)
 
             # Store the text of the webpage on S3
             # url_webpage_text = clean_text(extract_text(url_inner_html)).encode()
@@ -52,13 +47,9 @@ def archive_url(original_url):
 
             # TESTING
             # Print the screenshot
-            screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
             return main.main(
                 user_welcome_args=main.UserWelcomeArgs(error_message=error_message,
-                                                       url_archive_info=main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url=archivemd_url,
-                                                                                                            screenshot_url=screenshot_url, query_url=original_url, adjusted_url=url,
-                                                                                                            created_timestamp=utc_datetime_str, created_username=username
-                                                                                                            )))
+                                                       url_archive_info=main.UserWelcomeArgs.UrlArchiveInfo(query_url=original_url, proper_url=url, created_timestamp=utc_datetime_str)))
         else:
             error_message = 'Error: The archive was already created for url(' + \
                 url + ') on (' + utc_datetime_str + ')!'
