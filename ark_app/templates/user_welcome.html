@@ -81,10 +81,9 @@
     <div class="col99p">
 
         <div class="col66p">
-
+            {% if url_archive_info %}
             <div class="image_content">
                 <h3 class="webpage_image_title">Achive Search Result</h3>
-                {% if url_archive_info %}
                 <div class="title_div">
                     <p>Webpage Info:<p>
                 </div>
@@ -99,8 +98,26 @@
                         </p>
                 </div>
                 <img class="webpage_image" src={{url_archive_info.screenshot_url}}>
-                {% endif %}
+                
             </div>
+            {% elif stats_info %}
+            <div class="image_content">
+                <h3 class="webpage_image_title">Welcome to Ark</h3>
+                <div class="title_div">
+                    <p>Ark Site Info:<p>
+                </div>
+                <p>Number Unique Archived URLs: {{stats_info.site.num_unique_archived_url}}</p>
+                <p>Number Archives: {{stats_info.site.num_archives}}</p>
+                <p>Number Users: {{stats_info.site.num_users}}</p>
+                <p>Number Contributing Users: {{stats_info.site.num_contributing_users}}</p>
+
+                <div class="title_div">
+                    <p>Your Contribution:<p>
+                </div>
+                <p>Number Unique Archived URLs: {{stats_info.user.num_unique_archived_url}}</p>
+                <p>Number Archives: {{stats_info.user.num_archives}}</p>
+            </div>
+            {% endif %}
 
         </div>
 
