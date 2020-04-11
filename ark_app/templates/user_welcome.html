@@ -37,8 +37,80 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-4">
-        <h3>History</h3>
-        <table class="table"></table>
+
+        <!-- <div class="row"> -->
+        <h3>Success</h3>
+        <div class="my_table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>URL</th>
+                <th>Date</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            {% for item in success_list %}
+            <tbody>
+              <td>{{item.query_url}}</td>
+              <td>{{item.created_timestamp}}</td>
+              <td>
+                <form action="/api/archive_url" method="GET">
+                  <button type="submit" id="archive_url_text" name="archive_url_text"
+                    value={{item.query_url}}>Go</button>
+                </form>
+              </td>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
+        <h3>Pending</h3>
+        <div class="my_table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>URL</th>
+                <th>Date</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            {% for item in pending_list %}
+            <tbody>
+              <td>{{item.query_url}}</td>
+              <td>{{item.created_timestamp}}</td>
+              <td>
+                <form action="/api/archive_url" method="GET">
+                  <button type="submit" id="archive_url_text" name="archive_url_text"
+                    value={{item.query_url}}>Go</button>
+                </form>
+              </td>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
+        <h3>Failed</h3>
+        <div class="my_table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>URL</th>
+                <th>Date</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            {% for item in failed_list %}
+            <tbody>
+              <td>{{item.query_url}}</td>
+              <td>{{item.created_timestamp}}</td>
+              <td>
+                <form action="/api/archive_url" method="GET">
+                  <button type="submit" id="archive_url_text" name="archive_url_text"
+                    value={{item.query_url}}>Go</button>
+                </form>
+              </td>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
       </div>
       <div class="col-sm-4">
         <h3>Calendar</h3>
@@ -62,45 +134,32 @@
         {% endif %}
       </div>
     </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <h3>Results</h3>
-            <div id="gallery_updaing_display">
-                    {% for notification in notifications %}
-                        <div class="notification">
-                            {{notification}} is succesfully processed
-                        </div>
-                    {% endfor %}
-            </div>
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-sm-4">
-            <h3>Pending</h3>
-        </div>
-    </div>
   </div>
 
 </body>
 
 <style>
-        .row {
-            height: 33%;
-            overflow: scroll;
-        }
-        
-        .notification {
-            height: 20%;
-        }
+  /* .row {
+    height: 33%;
+    overflow: scroll;
+  } */
 
-        .container {
-            height: 100%;
-        }
+  .my_table {
+    height: 15%;
+    overflow: scroll;
+  }
 
-        .body {
-            height: 100vh;
-        }
+  /* .notification {
+    height: 20%;
+  }
+
+  .container {
+    height: 100%;
+  }
+
+  .body {
+    height: 100vh;
+  } */
 </style>
 
 
