@@ -17,138 +17,215 @@
         <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
     </form>
 
-  <div class="jumbotron text-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-4">
-          <h2>Search For Your Achive:</h2>
-          <form action="/api/archive_url" method="GET">
-            <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-            <button type="submit">Search</button>
-          </form>
-        </div>
-        <div class="col-sm-4">
-          <h2>Achive A Webpage </h2>
-          <form action="/api/archive_url" method="GET">
-            <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
-            <button type="submit" name="action" value="archive_url_submit">Archive</button>
-          </form>
-        </div>
-      </div>
+    <div class="jumbotron text-center">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-4">
+                  <h2>Search For Your Achive:</h2>
+                  <form action="/api/archive_url" method="GET">
+                    <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+                    <button type="submit">Search</button>
+                  </form>
+                </div>
+                <div class="col-sm-4">
+                  <h2>Achive A Webpage </h2>
+                  <form action="/api/archive_url" method="GET">
+                    <input type="text" placeholder="URL" id="archive_url_text" name="archive_url_text">
+                    <button type="submit" name="action" value="archive_url_submit">Archive</button>
+                  </form>
+                </div>
+              </div>
+            </div>
     </div>
-  </div>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-4">
 
-        <!-- <div class="row"> -->
-        <h3>Success</h3>
-        <div class="my_table">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>URL</th>
-                <th>Date</th>
-                <th>Link</th>
-              </tr>
-            </thead>
-            {% for item in success_list %}
-            <tbody>
-              <td>{{item.query_url}}</td>
-              <td>{{item.created_timestamp}}</td>
-              <td>
-                <form action="/api/archive_url" method="GET">
-                  <button type="submit" id="archive_url_text" name="archive_url_text"
-                    value={{item.query_url}}>Go</button>
-                </form>
-              </td>
-            </tbody>
-            {% endfor %}
-          </table>
-        </div>
-        <h3>Pending</h3>
-        <div class="my_table">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>URL</th>
-              </tr>
-            </thead>
-            {% if pending_list %}
-            {% for item in pending_list %}
-            <tbody>
-              <td>{{item}}</td>
-            </tbody>
-            {% endfor %}
-            {% endif %}
-          </table>
-        </div>
-        <h3>Failed</h3>
-        <div class="my_table">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>URL</th>
-              </tr>
-            </thead>
-            {% if failed_list %}
-            {% for item in failed_list %}
-            <tbody>
-              <td>{{item}}</td>
-            </tbody>
-            {% endfor %}
-            {% endif %}
-          </table>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <h3>Calendar</h3>
-      </div>
-      <div class="col-sm-4">
-        <h3>Achive Request Summary</h3>
-        {% if url_archive_info %}
-        <br>
-        <br>
-        <br>
-        <img src={{url_archive_info.screenshot_url}}>
-        <br>
-        <br>
-        <br>
-        <p>Query URL: {{url_archive_info.query_url}}</p>
-        <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
-        <p>Created Username: {{url_archive_info.created_username}}</p>
-        <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
-        <br>
-        <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
-        {% endif %}
-      </div>
+    <div class="col">
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <h3>Success</h3>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>URL</th>
+                        <th>Date</th>
+                        <th>Link</th>
+                      </tr>
+                    </thead>
+                    {% for item in success_list %}
+                    <tbody>
+                      <td>{{item.query_url}}</td>
+                      <td>{{item.created_timestamp}}</td>
+                      <td>
+                        <form action="/api/archive_url" method="GET">
+                          <button type="submit" id="archive_url_text" name="archive_url_text"
+                            value={{item.query_url}}>Go</button>
+                        </form>
+                      </td>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <h3>Pending</h3>
+                    <table class="table">
+                            <thead>
+                              <tr>
+                                <th>URL</th>
+                              </tr>
+                            </thead>
+                            {% if pending_list %}
+                            {% for item in pending_list %}
+                            <tbody>
+                              <td>{{item}}</td>
+                            </tbody>
+                            {% endfor %}
+                            {% endif %}
+                          </table>
+                </div>
+
+
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <h3>Failed</h3>
+                    <table class="table">
+                            <thead>
+                              <tr>
+                                <th>URL</th>
+                              </tr>
+                            </thead>
+                            {% if failed_list %}
+                            {% for item in failed_list %}
+                            <tbody>
+                              <td>{{item}}</td>
+                            </tbody>
+                            {% endfor %}
+                            {% endif %}
+                          </table>
+                </div>
     </div>
+    
+    <div class="col">
+
+            <h3 class="calender_title" >Calendar</h3>
+            <div class="calender_content">
+                {% set count = namespace(value=1) %}
+                {% for timestamp in timestamp_with_archives %}
+                    <form class="calender_form">
+                        <input type="submit" class="calender_date_submit" value = "{{timestamp}}">{% if count.value !=  timestamp_with_archives|length %},{% endif %}</input>
+                        <input type="hidden" name= "date" value = "{{timestamp}}" >
+                    </form>
+                {% set count.value = count.value + 1 %}
+                {% endfor %}
+            </div>
+
+    </div>
+
+    <div class="col">
+
+            <h3 class= "webpage_image_title" >Achive Request Summary</h3>
+            {% if url_screenshot_info %}
+            <br>
+            <br>
+            <br>
+            <img src={{url_archive_info.screenshot_url}}>
+            <br>
+            <br>
+            <br>
+            <p>Query URL: {{url_archive_info.query_url}}</p>
+            <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
+            <p>Created Username: {{url_archive_info.created_username}}</p>
+            <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
+            <br>
+        <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
+            {% endif %}
+    </div>
+
+
   </div>
 
 </body>
 
 <style>
-  /* .row {
-    height: 33%;
-    overflow: scroll;
-  } */
 
   .my_table {
     height: 15%;
     overflow: scroll;
   }
 
-  /* .notification {
-    height: 20%;
-  }
 
+.col {
+        float:left;
+        height: 100%;
+        width: 33%
+    }
+
+    .row_of_list {
+        height: 33%;
+        width: 100%;
+        overflow: scroll;
+    }
+        
   .container {
     height: 100%;
   }
 
-  .body {
-    height: 100vh;
-  } */
+        .body {
+            height: 100vh;
+        }
+
+        .calender_title {
+            height: 20%;
+        }
+        .calender_content {
+            height: 80%;
+            overflow: scroll;
+        }
+        .calender_form {
+            float: left;
+            height: 20%;
+        }
+        .calender_date_submit {
+            background: none!important;
+            border: none;
+            padding: 0!important;
+            /*optional*/
+            font-family: arial, sans-serif;
+            /*input has OS specific font-family*/
+            color: #069;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .webpage_image_title {
+            height: 20%;
+        }
+
+        .webpage_image_content {
+            height: 40%;
+            overflow: scroll;
+        }
+
+        .webpage_image_div {
+            height: 100%;
+            width : 100%;
+        }
+
+        .webpage_image {
+            height: 100%;
+            width: 100%;
+        }
+
+        img {
+            height: inherit;
+            width: inherit;
+        }      
+
+        .my-custom-scrollbar {
+position: relative;
+height: 240px;
+overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
 </style>
 
 
