@@ -1,4 +1,5 @@
-from corelib import webpage_snapshot, dynamodb, s3, url_util
+from corelib import dynamodb, s3, url_util
+from archivelib import webpage_snapshot
 from bs4 import BeautifulSoup
 import datetime
 import archiveis

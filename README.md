@@ -57,7 +57,7 @@ python run_ark_app.py
 
 
 #### 1.2.2 chromedriver Setup
-Located in `corelib/chromedrivers`  
+Located in `archivelib/chromedrivers`  
 Win32: Chrome version 81  
 Mac64: Chrome version
 
@@ -77,8 +77,8 @@ aws_session_token= Your_session_token
 
 
 #### 1.3.1 Packages
-AWS Lambda for archive: ```corelib```  
-AWS Lambda for flask zappa: ```corelib``` and ```ark_app```
+AWS Lambda for archive: ```corelib``` and ```archivelib```  
+AWS Lambda for flask zappa (as_handler.RUNNING_LOCALLY == False): ```corelib``` and ```ark_app```
 
 
 ### 1.4 Management Script
