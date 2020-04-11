@@ -146,12 +146,19 @@
                     <thead>
                         <tr>
                             <th>URL</th>
+                            <th>Retry</th>
                         </tr>
                     </thead>
                     {% if failed_list %}
                     {% for item in failed_list %}
                     <tbody>
                         <td>{{item}}</td>
+                        <td>
+                            <form action="/api/archive_url" method="GET">
+                                <button type="submit" id="archive_url_text" name="archive_url_text"
+                                  value={{item}}>Retry</button>
+                            </form>
+                        </td>
                     </tbody>
                     {% endfor %}
                     {% endif %}
