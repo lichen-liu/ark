@@ -16,7 +16,7 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
         datetime_strs = dynamodb.search_archive_by_url(url)
         if datetime_strs is None or len(datetime_strs) == 0:
             return None
-        lastest_datetime_str = datetime_strs[-1]
+        lastest_datetime_str = datetime_strs[0]
         date_strs = list({str(datetime.datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S.%f').date()) for datetime_str in datetime_strs})
         archive_info = dynamodb.get_archive_info(url, lastest_datetime_str)
         return (lastest_datetime_str, archive_info, date_strs)
@@ -25,7 +25,7 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
         datetime_strs = dynamodb.search_archive_by_url(url, by_date)
         if datetime_strs is None or len(datetime_strs) == 0:
             return None
-        lastest_datetime_str = datetime_strs[-1]
+        lastest_datetime_str = datetime_strs[0]
         archive_info = dynamodb.get_archive_info(url, lastest_datetime_str)
         return (lastest_datetime_str, archive_info, datetime_strs)
     elif by_date is None and by_datetime is not None:
@@ -38,7 +38,7 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
 
 # print(search_url_archive_by_date(original_url='https://www.google.ca'))
 # print('\n')
-# print(search_url_archive_by_date(original_url='https://www.google.ca', by_date=datetime.date(2020, 4, 10)))
+# print(search_url_archive_by_date(original_url='https://www.google.ca', by_date=datetime.date(2020, 4, 11)))
 # print('\n')
-# print(search_url_archive_by_date(original_url='https://www.google.ca', by_datetime=datetime.datetime(2020, 4, 10, 23,11,48,192893)))
+# print(search_url_archive_by_date(original_url='https://www.google.ca', by_datetime=datetime.datetime(2020, 4, 11, 5, 30, 11, 754994)))
 # print('\n')
