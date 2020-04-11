@@ -28,7 +28,7 @@ class UserWelcomeArgs:
             self.created_username = created_username
             self.archivemd_url = archivemd_url
 
-    def __init__(self, error_message=None, title='Welcome!', url_archive_info=None, success_list=None, pending_list=None, failed_list=None):
+    def __init__(self, error_message=None, title='Welcome!', url_archive_info=None):
         self.error_message = error_message
         self.title = title
         self.username = account.account_get_logged_in_username()
