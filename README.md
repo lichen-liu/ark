@@ -73,6 +73,14 @@ aws_session_token= Your_session_token
 ```
 
 
+### 1.3 AWS
+
+
+#### 1.3.1 Packages
+AWS Lambda for archive: ```corelib```  
+AWS Lambda for flask zappa: ```corelib``` and ```ark_app```
+
+
 ### 1.4 Management Script
 
 
