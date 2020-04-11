@@ -21,6 +21,7 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
         archive_info = dynamodb.get_archive_info(url, lastest_datetime_str)
         return (lastest_datetime_str, archive_info, date_strs)
     elif by_date is not None and by_datetime is None:
+        # Date as constraint, return list of datetimes
         datetime_strs = dynamodb.search_archive_by_url(url, by_date)
         if datetime_strs is None or len(datetime_strs) == 0:
             return None
@@ -28,6 +29,7 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
         archive_info = dynamodb.get_archive_info(url, lastest_datetime_str)
         return (lastest_datetime_str, archive_info, datetime_strs)
     elif by_date is None and by_datetime is not None:
+        # Datetime as constraint, return itself
         datetime_str = str(by_datetime)
         archive_info = dynamodb.get_archive_info(url, datetime_str)
         return (datetime_str, archive_info, [datetime_str])
