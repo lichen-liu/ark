@@ -87,9 +87,6 @@
   </h3>
 
   {% endif %}
-  <!-- {{error_message if error_message}} -->
-  <!-- <div class="col">
-  </div> -->
 
   <div class="col99p">
 
@@ -160,7 +157,8 @@
       <div class="date_section">
         <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
           <input type="hidden" name="url_text" value="{{url_archive_info.query_url}}">
-          <input style="float:left" type="text" name="selected_date" id="datepicker-5" value="{{url_archive_info.created_date if url_archive_info}}">
+          <input style="float:left" type="text" name="selected_date" id="datepicker-5"
+            value="{{url_archive_info.created_date if url_archive_info}}">
           <input style="float:left" type="submit" value="Confirm">
         </form>
         <script>
@@ -185,7 +183,8 @@
             {% endfor %}
             {% elif url_archive_info %}
             <!-- In other mode, show and select the datetime that's currently printing as default if possible -->
-            <option value="{{url_archive_info.created_datetime}}" selected="selected">{{url_archive_info.created_datetime}}</option>
+            <option value="{{url_archive_info.created_datetime}}" selected="selected">
+              {{url_archive_info.created_datetime}}</option>
             {% endif %}
             <input type="hidden" name="url_text" value="{{url_archive_info.query_url}}">
           </select>

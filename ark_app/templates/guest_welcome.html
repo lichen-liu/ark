@@ -9,261 +9,260 @@
 
 
 <body>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <font face="Arial" id="modalMessage">Passwords do not match, please try again
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <font face="Arial" id="modalMessage">Passwords do not match, please try again
+    </div>
+  </div>
+
+  </div>
+
+  <div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+
+    <!-- <h1 class="title">Ark</h1> -->
+    <div class="w3-display-middle">
+      <form class="holderCommon form" id="login_user" action="/api/account_actions" method="POST">
+        <h1 class="title">Ark</h1>
+        <br>
+        <img class="login_icon" src="../static/icons/login_icon.png"></img>
+        <br>
+        <div class="input">
+          <input placeholder="Username" type="text" id="username_login" name="username" value={{username if username}}>
+          <br>
+          <input type="password" placeholder="Password" type="text" id="password_login" name="password"
+            value={{password if password}}>
+          <br>
+          <input type="checkbox" id="toggle_password_login" onclick="togglePassword('password_login')">
+          <label style="color:black" for="toggle_password_login">Show Password</label>
+          <br>
+          <input type="checkbox" name="rememberme" id="rememberme_cb" value="True">
+          <label style="color:black" for="rememberme_cb">Remember Me</label>
+          <br>
+          <button style="color:black" type="submit" name="action" value="login">Login</button>
+          <button style="color:black" type="button" onclick="openForm()">Register</button>
         </div>
-    </div>
+      </form>
 
-    </div>
-
-    <div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
-
-        <!-- <h1 class="title">Ark</h1> -->
-        <div class="w3-display-middle">
-            <form class="holderCommon form" id="login_user" action="/api/account_actions" method="POST">
-                <h1 class="title">Ark</h1>
-                <br>
-                <img class="login_icon" src="../static/icons/login_icon.png"></img>
-                <br>
-                <div class="input">
-                    <input placeholder="Username" type="text" id="username_login" name="username"
-                        value={{username if username}}>
-                    <br>
-                    <input type="password" placeholder="Password" type="text" id="password_login" name="password"
-                        value={{password if password}}>
-                    <br>
-                    <input type="checkbox" id="toggle_password_login" onclick="togglePassword('password_login')">
-                    <label style="color:black" for="toggle_password_login">Show Password</label>
-                    <br>
-                    <input type="checkbox" name="rememberme" id="rememberme_cb" value="True">
-                    <label style="color:black" for="rememberme_cb">Remember Me</label>
-                    <br>
-                    <button style="color:black" type="submit" name="action" value="login">Login</button>
-                    <button style="color:black" type="button" onclick="openForm()">Register</button>
-                </div>
-            </form>
-
-            <form class="holderCommon register_form" id="register_user" action="/api/account_actions"
-                onsubmit="return validateInput()" method="POST" display="none">
-                <img class="login_icon" src="../static/icons/login_icon.png"></img>
-                <br>
-                <div class="input">
-                    <input placeholder="Choose your username" type="text" id="username_pick" name="username">
-                    <br>
-                    <input type="password" id="password_pick" placeholder="Pick a password" type="text" name="password">
-                    <br>
-                    <input type="password" id="password_repeat" placeholder="Type your password again" type="text"
-                        name="password_validate">
-                    <br>
-                    <input type="checkbox" id="toggle_password_pick"
-                        onclick="togglePassword('password_pick');togglePassword('password_repeat');">
-                    <label for="toggle_password_pick">Show Password</label>
-                    <br>
-                    <button type="submit" name="action" value="register">Confirm</button>
-                    <button type="button" onclick="closeForm()">Cancel</button>
-                </div>
-            </form>
-            <!-- 
+      <form class="holderCommon register_form" id="register_user" action="/api/account_actions"
+        onsubmit="return validateInput()" method="POST" display="none">
+        <img class="login_icon" src="../static/icons/login_icon.png"></img>
+        <br>
+        <div class="input">
+          <input placeholder="Choose your username" type="text" id="username_pick" name="username">
+          <br>
+          <input type="password" id="password_pick" placeholder="Pick a password" type="text" name="password">
+          <br>
+          <input type="password" id="password_repeat" placeholder="Type your password again" type="text"
+            name="password_validate">
+          <br>
+          <input type="checkbox" id="toggle_password_pick"
+            onclick="togglePassword('password_pick');togglePassword('password_repeat');">
+          <label for="toggle_password_pick">Show Password</label>
+          <br>
+          <button type="submit" name="action" value="register">Confirm</button>
+          <button type="button" onclick="closeForm()">Cancel</button>
+        </div>
+      </form>
+      <!-- 
             <hr class="w3-border-grey" style="margin:auto;width:40%">
             <p class="w3-large w3-center">35 days left</p> -->
-            <div class="filler"></div>
-            <p style="color:red">{{error_message if error_message}}</p>
-        </div>
-        <!-- <div class="w3-display-bottomleft w3-padding-large">
+      <div class="filler"></div>
+      <p style="color:red">{{error_message if error_message}}</p>
+    </div>
+    <!-- <div class="w3-display-bottomleft w3-padding-large">
             Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>
         </div> -->
-    </div>
+  </div>
 
-    <!-- </div> -->
+  <!-- </div> -->
 
 
 </body>
 <script>
 
-    var modal = document.getElementById("myModal");
-    var span = document.getElementsByClassName("close")[0];
+  var modal = document.getElementById("myModal");
+  var span = document.getElementsByClassName("close")[0];
 
-    span.onclick = function () {
-        modal.style.display = "none";
+  span.onclick = function () {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
+  function openForm() {
+    document.getElementById("register_user").style.display = "block";
+    document.getElementById("login_user").style.display = "none";
+    document.getElementById("password_pick").value = document.getElementById("password_login").value;
+    document.getElementById("username_pick").value = document.getElementById("username_login").value;
+    document.getElementById("password_repeat").value = "";
+  }
+
+  function closeForm() {
+    document.getElementById("register_user").style.display = "none";
+    document.getElementById("login_user").style.display = "block";
+    document.getElementById("password_login").value = document.getElementById("password_pick").value;
+    document.getElementById("username_login").value = document.getElementById("username_pick").value;
+    document.getElementById("password_repeat").value = "";
+  }
+
+  function togglePassword(id) {
+    var ele = document.getElementById(id);
+    if (ele.type === "password") {
+      ele.type = "text";
+    } else {
+      ele.type = "password";
+    }
+  }
+
+  function validateInput() {
+    usernamePick = document.forms["register_user"]["username_pick"].value
+    modal = document.getElementById("myModal");
+    message = document.getElementById("modalMessage");
+    if (usernamePick == "") {
+      message.innerHTML = "You did not pick a username"
+      modal.style.display = "block";
+      return false;
     }
 
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+    passwordPick = document.forms["register_user"]["password_pick"].value
+    if (passwordPick == "") {
+      message.innerHTML = "You did not pick a password"
+      modal.style.display = "block";
+      return false;
     }
 
-    function openForm() {
-        document.getElementById("register_user").style.display = "block";
-        document.getElementById("login_user").style.display = "none";
-        document.getElementById("password_pick").value = document.getElementById("password_login").value;
-        document.getElementById("username_pick").value = document.getElementById("username_login").value;
-        document.getElementById("password_repeat").value = "";
+    passwordRepeat = document.forms["register_user"]["password_repeat"].value
+    if (passwordRepeat == "") {
+      message.innerHTML = "Please type your password again"
+      modal.style.display = "block";
+      return false;
     }
-
-    function closeForm() {
-        document.getElementById("register_user").style.display = "none";
-        document.getElementById("login_user").style.display = "block";
-        document.getElementById("password_login").value = document.getElementById("password_pick").value;
-        document.getElementById("username_login").value = document.getElementById("username_pick").value;
-        document.getElementById("password_repeat").value = "";
+    if (!(passwordPick == passwordRepeat)) {
+      message.innerHTML = "Passwords do not match, please try again"
+      modal.style.display = "block";
+      document.getElementById("password_repeat").value = "";
+      return false;
     }
-
-    function togglePassword(id) {
-        var ele = document.getElementById(id);
-        if (ele.type === "password") {
-            ele.type = "text";
-        } else {
-            ele.type = "password";
-        }
-    }
-
-    function validateInput() {
-        usernamePick = document.forms["register_user"]["username_pick"].value
-        modal = document.getElementById("myModal");
-        message = document.getElementById("modalMessage");
-        if (usernamePick == "") {
-            message.innerHTML = "You did not pick a username"
-            modal.style.display = "block";
-            return false;
-        }
-
-        passwordPick = document.forms["register_user"]["password_pick"].value
-        if (passwordPick == "") {
-            message.innerHTML = "You did not pick a password"
-            modal.style.display = "block";
-            return false;
-        }
-
-        passwordRepeat = document.forms["register_user"]["password_repeat"].value
-        if (passwordRepeat == "") {
-            message.innerHTML = "Please type your password again"
-            modal.style.display = "block";
-            return false;
-        }
-        if (!(passwordPick == passwordRepeat)) {
-            message.innerHTML = "Passwords do not match, please try again"
-            modal.style.display = "block";
-            document.getElementById("password_repeat").value = "";
-            return false;
-        }
-    }
+  }
 </script>
 
 
 <style>
-    body,
-    h1 {
-        font-family: "Raleway", sans-serif
-    }
+  body,
+  h1 {
+    font-family: "Raleway", sans-serif
+  }
 
-    body,
-    html {
-        height: 100%
-    }
+  body,
+  html {
+    height: 100%
+  }
 
-    .bgimg {
-        background-image: url('../static/icons/library.jpeg');
-        height: 100%;
-        background-position: center;
-        background-size: cover;
-    }
+  .bgimg {
+    background-image: url('../static/icons/library.jpeg');
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+  }
 
-    form input {
-        font-size: 1.1em;
-        background-color: #ffffff;
-        opacity: 0.6;
-        border-radius: 10px 10px 10px 10px;
-        padding: 1px;
-        padding-left: 3px;
-    }
+  form input {
+    font-size: 1.1em;
+    background-color: #ffffff;
+    opacity: 0.6;
+    border-radius: 10px 10px 10px 10px;
+    padding: 1px;
+    padding-left: 3px;
+  }
 
-    form button {
-        font-size: 0.9em;
-        background-color: #ffffff;
-        opacity: 0.6;
-        border-radius: 10px 10px 10px 10px;
-    }
+  form button {
+    font-size: 0.9em;
+    background-color: #ffffff;
+    opacity: 0.6;
+    border-radius: 10px 10px 10px 10px;
+  }
 
-    .title {
-        /* position: absolute; */
-        /* left: 50%; */
-        /* top: 20%; */
-        font-size: 130px;
-        font-weight: bold;
-        text-align: center;
-        transform: translate(0%, -100%);
-    }
+  .title {
+    /* position: absolute; */
+    /* left: 50%; */
+    /* top: 20%; */
+    font-size: 130px;
+    font-weight: bold;
+    text-align: center;
+    transform: translate(0%, -100%);
+  }
 
-    .login_icon {
-        position: absolute;
-        top: 10%;
-        height: 60px;
-        width: 60px;
-        -ms-transform: translate(-50%, 0%);
-        transform: translate(-50%, 0%);
-    }
+  .login_icon {
+    position: absolute;
+    top: 10%;
+    height: 60px;
+    width: 60px;
+    -ms-transform: translate(-50%, 0%);
+    transform: translate(-50%, 0%);
+  }
 
-    .form {
-        top: 5%;
-        left: 50%;
-        height: 220px;
-        width: 190px;
-        background-color: transparent;
-        text-align: center
-    }
+  .form {
+    top: 5%;
+    left: 50%;
+    height: 220px;
+    width: 190px;
+    background-color: transparent;
+    text-align: center
+  }
 
-    .register_form {
-        display: none;
-        top: 5%;
-        left: 50%;
-        height: 220px;
-        width: 190px;
-        background-color: transparent;
-        text-align: center
-    }
+  .register_form {
+    display: none;
+    top: 5%;
+    left: 50%;
+    height: 220px;
+    width: 190px;
+    background-color: transparent;
+    text-align: center
+  }
 
-    .input {
-        width: 190px;
-        height: 220px;
-        position: absolute;
-        top: 40%;
-    }
+  .input {
+    width: 190px;
+    height: 220px;
+    position: absolute;
+    top: 40%;
+  }
 
-    .filler {
-        height: 200px;
-        position: absolute;
-        background: #FAFAFA;
-        background-repeat: no-repeat;
-        z-index: -1;
-    }
+  .filler {
+    height: 200px;
+    position: absolute;
+    background: #FAFAFA;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
 
-    .modal {
-        display: none;
-        /* Hidden by default */
-        position: fixed;
-        /* Stay in place */
-        z-index: 1;
-        /* Sit on top */
-        /* padding-top: 100px; */
-        /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%;
-        /* Full width */
-        height: 100%;
-        /* Full height */
-        overflow: auto;
-        /* Enable scroll if needed */
-        background-color: rgb(0, 0, 0);
-        /* Fallback color */
-        background-color: rgba(0, 0, 0, 0.4);
-        /* Black w/ opacity */
-    }
+  .modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    /* padding-top: 100px; */
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+  }
 
-    /* .modal-content {
+  /* .modal-content {
         background-color: #fefefe;
         margin: auto;
         padding: 20px;
@@ -271,18 +270,18 @@
         width: 80%;
     } */
 
-    .close {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
 
-    .centre {
-        position: relative;
-        left: 40%;
-        top: 40%;
-    }
+  .centre {
+    position: relative;
+    left: 40%;
+    top: 40%;
+  }
 </style>
 
 </html>
