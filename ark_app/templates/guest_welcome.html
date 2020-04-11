@@ -20,9 +20,11 @@
 
     <div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
 
-        <h1 class="title">Ark</h1>
+        <!-- <h1 class="title">Ark</h1> -->
         <div class="w3-display-middle">
             <form class="holderCommon form" id="login_user" action="/api/account_actions" method="POST">
+                <h1 class="title">Ark</h1>
+                <br>
                 <img class="login_icon" src="../static/icons/login_icon.png"></img>
                 <br>
                 <div class="input">
@@ -186,11 +188,13 @@
     }
 
     .title {
-        position: relative;
-        left: 47%;
-        top: 20%;
-        font-size: 60px;
+        /* position: absolute; */
+        /* left: 50%; */
+        /* top: 20%; */
+        font-size: 130px;
         font-weight: bold;
+        text-align: center;
+        transform: translate(0%, -100%);
     }
 
     .login_icon {
