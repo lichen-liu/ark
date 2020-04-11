@@ -1,6 +1,3 @@
-# Don't touch dynamodb.py, modification in progress for user-notification support
-
-
 # ark
 [Requirements](http://www.cs.toronto.edu/~delara/courses/ece1779/projects/ECE1779-a3.pdf)
 
