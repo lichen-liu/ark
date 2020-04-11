@@ -1,7 +1,21 @@
 #from ark_app import dynamodb, url_util
 import dynamodb, url_util
 import datetime
+from flask import request
+from ark_app import webapp
 
+@webapp.route('/api/search_url_by_date', methods=['POST'])
+def search_url_by_date_handler():
+    url = request.form.get('url')
+    calender_date = request.form.get('calender_date')
+    precise_date = request.form.get('precise_date')
+    
+    if calender_date is not None :
+        search_url_archive_by_date(url, by_date = calender_date)
+    elif precise_date is not None :
+        search_url_archive_by_date(url, by_datetime = precise_date)
+    else :
+        search_url_archive_by_date(url)
 
 def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
     '''
