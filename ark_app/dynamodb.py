@@ -382,11 +382,13 @@ def search_archive_by_url(dynamodb, url, by_date=None):
 
 
 @dynamodb_client_operation
-def search_archive_by_username(dynamodb, username):
+def search_archive_by_username(dynamodb, username, num_latest_archive=None):
     '''
-    TODO: use LastEvaluatedKey to load all
-    [(url, datetime)]
+    if num_latest_archive is None, return all matching archives
+    [(url, datetime)], sorted from latest to oldest
     '''
+    result = list()
+    response = None
 
     response = dynamodb.query(
         TableName=ARCHIVE_TABLE,
@@ -395,11 +397,14 @@ def search_archive_by_username(dynamodb, username):
         ExpressionAttributeValues={
             ':username': {'S': username}
         },
-        ProjectionExpression='archiveUrl, archiveDatetime'
+        ProjectionExpression='archiveUrl, archiveDatetime',
+        ScanIndexForward=False
     )
-    if response:
-        items = response.get('Items')
-        return list(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+
+    items = response.get('Items')
+    result.extend(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+
+    return result
 
 
 @dynamodb_resource_operation
@@ -429,7 +434,7 @@ def create_archive_table(dynamodb):
                             'KeyType': 'HASH'
                         },
                         {
-                            'AttributeName': 'archiveUrl',
+                            'AttributeName': 'archiveDatetime',
                             'KeyType': 'RANGE'
                         },
                     ],
