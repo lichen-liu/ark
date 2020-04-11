@@ -19,8 +19,13 @@ def print_dynamodb_response(response):
     print(json.dumps(response, indent=4, cls=DecimalEncoder))
 
 
+# Table names
 ACCOUNT_TABLE = 'arkAccount'
 ARCHIVE_TABLE = 'arkArchive'
+
+# archive Request Lists
+ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST = 'archivePendingRequestList'
+ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST = 'archiveFailedRequestList'
 
 
 def dynamodb_resource_operation(func):
@@ -84,10 +89,6 @@ def get_account_credential(dynamodb, username):
         if item:
             result = (item['passwordHash'], item['passwordSalt'])
         return result
-
-
-ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST = 'archivePendingRequestList'
-ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST = 'archiveFailedRequestList'
 
 
 @dynamodb_client_operation
