@@ -115,7 +115,7 @@
 
   </div>
 
-  <div class="col66p">
+  <div class="col99p">
 
     <!-- <div class="image_content">
       <h3 class="webpage_image_title">Achive Request Summary</h3>
@@ -177,47 +177,40 @@
         <h3>Search By Date</h3>
       </div>
       <div class="date_section">
-        <p>Enter Date: <input type="text" id="datepicker-5"></p>
-      </div>
-
-
-      <div class="title_div">
-        <h3>Search By Date</h3>
-      </div>
-      <div class="date_section">
         <form action='/api/decrease_pool'>
           <p>Enter Date: <input type="text" id="datepicker-5"></p>
           <input type="submit" value="Confirm">
         </form>
       </div>
 
-
+      
+      <div class="title_div">
+        <h3>Failed</h3>
+      </div>
       <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
         <table class="table">
           <thead>
             <tr>
               <th>URL</th>
-              <th>Date</th>
-              <th>Link</th>
             </tr>
           </thead>
-          {% for item in success_list %}
+          {% if failed_list %}
+          {% for item in failed_list %}
           <tbody>
-            <td>{{item.query_url}}</td>
-            <td>{{item.created_timestamp}}</td>
-            <td>
-              <form action="/api/archive_url" method="GET">
-                <button type="submit" id="archive_url_text" name="archive_url_text" value={{item.query_url}}>Go</button>
-              </form>
-            </td>
+            <td>{{item}}</td>
           </tbody>
           {% endfor %}
+          {% endif %}
         </table>
       </div>
+      <br>
+      <br>
 
+
+      <div class="title_div">
+        <h3>Successful</h3>
+      </div>
       <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
         <table class="table">
           <thead>
             <tr>
@@ -250,9 +243,14 @@
           {% endif %}
         </table>
       </div>
+      <br>
+      <br>
 
+
+      <div class="title_div">
+        <h3>Pending</h3>
+      </div>
       <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
         <table class="table">
           <thead>
             <tr>
@@ -269,28 +267,7 @@
         </table>
       </div>
 
-      <div class="title_div">
-        <h3>Failed</h3>
-      </div>
-      <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th>URL</th>
-            </tr>
-          </thead>
-          {% if failed_list %}
-          {% for item in failed_list %}
-          <tbody>
-            <td>{{item}}</td>
-          </tbody>
-          {% endfor %}
-          {% endif %}
-        </table>
-      </div>
     </div>
-
 
   </div>
 
@@ -299,6 +276,13 @@
 <style>
   .jumbotron {
     margin-bottom: 10px;
+  }
+
+  .col99p {
+    float: left;
+    height: 100%;
+    margin-left: 1%;
+    width: 99%
   }
 
   .col66p {
