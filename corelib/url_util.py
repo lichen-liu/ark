@@ -45,7 +45,7 @@ def test_url(url):
 
     for request_func in [requests.head, requests.get]:
         try:
-            r = request_func(url, timeout=5)
+            r = request_func(url, timeout=2)
             if r.status_code == 200:
                 return True
         except Exception:
