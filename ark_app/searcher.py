@@ -1,4 +1,4 @@
-from ark_app import dynamodb, url_util, s3
+from ark_app import dynamodb, url_util, s3, main
 import datetime
 from flask import request
 from ark_app import webapp
@@ -16,21 +16,29 @@ class UrlArchiveInfo:
         self.screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
 
 
-@webapp.route('/api/search_url_by_date', methods=['POST'])
-def search_url_by_date_handler():
+@webapp.route('/api/search_archive_by_url_datetimes', methods=['POST'])
+def search_archive_by_url_datetimes_handler():
     url = request.form.get('url')
-    calender_date = request.form.get('calender_date')
-    precise_date = request.form.get('precise_date')
+    calender_date = request.form.get('calender_date') #can rename it to 'exact_date'
+    precise_date = request.form.get('precise_date') #can rename it to 'exact_datetime'
     
     if calender_date is not None :
-        search_url_archive_by_date(url, by_date = calender_date)
+        search_archive_by_url_datetimes(url, by_date = calender_date)
     elif precise_date is not None :
-        search_url_archive_by_date(url, by_datetime = precise_date)
+        search_archive_by_url_datetimes(url, by_datetime = precise_date)
     else :
-        search_url_archive_by_date(url)
+        search_archive_by_url_datetimes(url)
 
 
-def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
+@webapp.route('/api/search_archive_by_exact', methods=['GET'])
+def search_archive_by_exact_handler():
+    exact_proper_url = request.args.get('proper_url')
+    exact_datetime = request.args.get('datetime')
+    print('exact_proper_url', exact_proper_url, 'exact_datetime', exact_datetime)
+    return main.main(user_welcome_args=main.UserWelcomeArgs(url_archive_info=UrlArchiveInfo(proper_url=exact_proper_url, created_timestamp=exact_datetime)))
+
+
+def search_archive_by_url_datetimes(original_url, by_date=None, by_datetime=None):
     '''
     by_date = datetime.date()
     by_datetime = datetime.datetime()
@@ -62,11 +70,3 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
         return (datetime_str, archive_info, [datetime_str])
     else:
         assert False
-
-
-# print(search_url_archive_by_date(original_url='https://www.google.ca'))
-# print('\n')
-# print(search_url_archive_by_date(original_url='https://www.google.ca', by_date=datetime.date(2020, 4, 11)))
-# print('\n')
-# print(search_url_archive_by_date(original_url='https://www.google.ca', by_datetime=datetime.datetime(2020, 4, 11, 5, 30, 11, 754994)))
-# print('\n')

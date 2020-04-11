@@ -184,11 +184,11 @@
                             </form>
                         </td>
                         <td>
-                            EMPTY
-                            <!-- <form action="/api/archive_url" method="GET">
-                            <button type="submit" id="archive_url_text" name="archive_url_text"
-                                value={{url}}>Archive Again</button>
-                            </form> -->
+                            <form action="/api/search_archive_by_exact" method="GET">
+                            <button type="submit">View</button>
+                            <input type="hidden" name="proper_url" value="{{url}}"/>
+                            <input type="hidden" name="datetime" value="{{datetime}}"/>
+                            </form>
                         </td>
                     </tbody>
                     {% endfor %}
