@@ -16,7 +16,8 @@ def archive_url_handler():
     elif request.method == 'GET':
         original_url = request.args.get('archive_url_text')
 
-    dynamodb.push_account_archive_request(username=account.account_get_logged_in_username(), original_url=original_url)
+    dynamodb.push_account_archive_request(
+        username=account.account_get_logged_in_username(), original_url=original_url)
     return archive_url(original_url)
 
 
@@ -132,32 +133,38 @@ def clean_text(text):
     return re.sub(r'[^\w!.]', ' ', text)
 
 
-# THe following functions are dummy functions 
-def give_me_success_list():
+# THe following functions are dummy functions
+def give_me_success_list(num=3):
     'Return a list of main.UserWelcomeArgs.UrlArchiveInfo'
 
     result = []
-    for i in range(3):
+    for i in range(num):
         result.append(main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url='success_{}.com'.format(str(i)),
-                                                          screenshot_url='a', query_url='b', adjusted_url='c',
+                                                          screenshot_url='a', query_url='success_{}.com'.format(str(i)), adjusted_url='c',
                                                           created_timestamp=str(datetime.datetime.utcnow()), created_username=account.account_get_logged_in_username()
                                                           ))
-def give_me_pending_list():
+    return result
+
+
+def give_me_pending_list(num=3):
     'Return a list of main.UserWelcomeArgs.UrlArchiveInfo'
 
     result = []
-    for i in range(3):
+    for i in range(num):
         result.append(main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url='pending_{}.com'.format(str(i)),
-                                                          screenshot_url='a', query_url='b', adjusted_url='c',
+                                                          screenshot_url='a', query_url='pending_{}.com'.format(str(i)), adjusted_url='c',
                                                           created_timestamp=str(datetime.datetime.utcnow()), created_username=account.account_get_logged_in_username()
                                                           ))
+    return result
 
-def give_me_failed_list():
+
+def give_me_failed_list(num=3):
     'Return a list of main.UserWelcomeArgs.UrlArchiveInfo'
 
     result = []
-    for i in range(3):
+    for i in range(num):
         result.append(main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url='failed_{}.com'.format(str(i)),
-                                                          screenshot_url='a', query_url='b', adjusted_url='c',
+                                                          screenshot_url='a', query_url='failed_{}.com'.format(str(i)), adjusted_url='c',
                                                           created_timestamp=str(datetime.datetime.utcnow()), created_username=account.account_get_logged_in_username()
                                                           ))
+    return result
