@@ -64,8 +64,8 @@
       <form action="/api/search_or_archive_url" method="GET">
         <input type="text" width=60 placeholder="URL" id="url_text" name="url_text">
         <p class="w3-padding-16">
-          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Archive</button>
           <button class="w3-button w3-black" type="submit" name="action" value="search_url_submit">Search</button>
+          <button class="w3-button w3-black" type="submit" name="action" value="archive_url_submit">Archive</button>
         </p>
       </form>
     </div>
@@ -149,39 +149,39 @@
         <h3>Search By Date</h3>
       </div>
       <div class="date_section">
-            <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
-                <input type="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
-                <input style="float:left" type="text" name="selected_date" id="datepicker-5">
-                <input style="float:left" type="submit" value="Confirm">
-            </form>
-            <script>
-                function validateDate(){
-                    if(document.getElementById('datepicker-5').value){
-                        return true;
-                    }
-                    return false;
-                }
-            </script>
+        <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
+          <input type="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
+          <input style="float:left" type="text" name="selected_date" id="datepicker-5">
+          <input style="float:left" type="submit" value="Confirm">
+        </form>
+        <script>
+          function validateDate() {
+            if (document.getElementById('datepicker-5').value) {
+              return true;
+            }
+            return false;
+          }
+        </script>
 
-          <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDateTime()" method="POST">
-                    <select id="selected_datetime_id" name="selected_datetime" class="datetime_dropdown">
-                        {% if datetime_with_archives%}
-                            {%for datetime_str in datetime_with_archives%}
-                                <option value="{{datetime_str}}">{{datetime_str}}</option>
-                            {% endfor %}
-                        {% endif %}
-                        <input type ="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
-                    </select>
-                    <input style="float:left" type="submit" value="Confirm">
-                </form>
-                <script>
-                    function validateDateTime(){
-                        if(document.getElementById('selected_datetime_id').value){
-                            return true;
-                        }
-                        return false;
-                    }
-                </script>
+        <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDateTime()" method="POST">
+          <select id="selected_datetime_id" name="selected_datetime" class="datetime_dropdown">
+            {% if datetime_with_archives%}
+            {%for datetime_str in datetime_with_archives%}
+            <option value="{{datetime_str}}">{{datetime_str}}</option>
+            {% endfor %}
+            {% endif %}
+            <input type="hidden" name="url_text" value="{{url_archive_info.proper_url}}">
+          </select>
+          <input style="float:left" type="submit" value="Confirm">
+        </form>
+        <script>
+          function validateDateTime() {
+            if (document.getElementById('selected_datetime_id').value) {
+              return true;
+            }
+            return false;
+          }
+        </script>
 
       </div>
 
