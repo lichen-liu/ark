@@ -1,8 +1,20 @@
-#from ark_app import dynamodb, url_util
-import dynamodb, url_util
+from ark_app import dynamodb, url_util, s3
 import datetime
 from flask import request
 from ark_app import webapp
+
+
+class UrlArchiveInfo:
+    def __init__(self, proper_url, created_timestamp, query_url=None):
+        self.query_url = query_url if query_url else proper_url
+
+        self.proper_url = proper_url
+        self.created_timestamp = created_timestamp
+
+        archive_id, self.created_username, self.archive_md_url = dynamodb.get_archive_info(url=self.proper_url, datetime=self.created_timestamp)
+        url_webpage_png_s3_key = s3.WEBPAGE_SCREENSHOT_DIR + archive_id + '.png'
+        self.screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
+
 
 @webapp.route('/api/search_url_by_date', methods=['POST'])
 def search_url_by_date_handler():
@@ -16,6 +28,7 @@ def search_url_by_date_handler():
         search_url_archive_by_date(url, by_datetime = precise_date)
     else :
         search_url_archive_by_date(url)
+
 
 def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
     '''
@@ -49,6 +62,7 @@ def search_url_archive_by_date(original_url, by_date=None, by_datetime=None):
         return (datetime_str, archive_info, [datetime_str])
     else:
         assert False
+
 
 # print(search_url_archive_by_date(original_url='https://www.google.ca'))
 # print('\n')

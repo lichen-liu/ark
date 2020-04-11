@@ -1,4 +1,4 @@
-from ark_app import webapp, webpage_snapshot, dynamodb, s3, main, account, url_util
+from ark_app import webapp, webpage_snapshot, dynamodb, s3, main, account, url_util, searcher
 from flask import request
 from bs4 import BeautifulSoup
 import datetime
@@ -49,10 +49,9 @@ def archive_url(original_url):
             # Print the screenshot
             return main.main(
                 user_welcome_args=main.UserWelcomeArgs(error_message=error_message,
-                                                       url_archive_info=main.UserWelcomeArgs.UrlArchiveInfo(query_url=original_url, proper_url=url, created_timestamp=utc_datetime_str)))
+                                                       url_archive_info=searcher.UrlArchiveInfo(query_url=original_url, proper_url=url, created_timestamp=utc_datetime_str)))
         else:
-            error_message = 'Error: The archive was already created for url(' + \
-                url + ') on (' + utc_datetime_str + ')!'
+            error_message = 'Error: The archive was already created for url(' + url + ') on (' + utc_datetime_str + ')!'
     else:
         dynamodb.push_account_archive_request(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST,
                                               username=account.account_get_logged_in_username(), original_url=original_url)
