@@ -1,73 +1,83 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html>
+<title>Ark</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 
 
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <font face="Arial" id="modalMessage">Passwords do not match, please try again</div>
-    </div>
 
-</div>
-
-<div class="base">
-    <div class="holderCommon holder1">
-        <img class="title_icon" src="../static/icons/title_icon2.png"></img>
-        <font class="title" size="6">Accurate.</font>
-    </div>
-    <div class="holderCommon holder2">
-        <img class="title_icon" src="../static/icons/title_icon.png"></img>
-        <font class="title" size="6">Intelligent.</font>
-    </div>
-    <div class="holderCommon holder3">
-        <img class="title_icon" src="../static/icons/title_icon3.png"></img>
-        <font class="title" size="6">Massive Storage.</font>
-    </div>
-    <form class="holderCommon form" id="login_user" action="/api/account_actions" method="POST">
-        <img class="login_icon" src="../static/icons/login_icon.png"></img>
-        <br>
-        <div class="input">
-            <input placeholder="Username" type="text" id="username_login" name="username"
-                value={{username if username}}>
-            <br>
-            <input type="password" placeholder="Password" type="text" id="password_login" name="password"
-                value={{password if password}}>
-            <br>
-            <input type="checkbox" id="toggle_password_login" onclick="togglePassword('password_login')">
-            <label for="toggle_password_login">Show Password</label>
-            <br>
-            <input type="checkbox" name="rememberme" id="rememberme_cb" value="True">
-            <label for="rememberme_cb">Remember Me</label>
-            <br>
-            <button type="submit" name="action" value="login">Login</button>
-            <button type="button" onclick="openForm()">Register</button>
+<body>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <font face="Arial" id="modalMessage">Passwords do not match, please try again
         </div>
-    </form>
+    </div>
 
-    <form class="holderCommon register_form" id="register_user" action="/api/account_actions"
-        onsubmit="return validateInput()" method="POST" display="none">
-        <img class="login_icon" src="../static/icons/login_icon.png"></img>
-        <br>
-        <div class="input">
-            <input placeholder="Choose your username" type="text" id="username_pick" name="username">
-            <br>
-            <input type="password" id="password_pick" placeholder="Pick a password" type="text" name="password">
-            <br>
-            <input type="password" id="password_repeat" placeholder="Type your password again" type="text"
-                name="password_validate">
-            <br>
-            <input type="checkbox" id="toggle_password_pick"
-                onclick="togglePassword('password_pick');togglePassword('password_repeat');">
-            <label for="toggle_password_pick">Show Password</label>
-            <br>
-            <button type="submit" name="action" value="register">Confirm</button>
-            <button type="button" onclick="closeForm()">Cancel</button>
+    </div>
+
+    <div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+
+        <h1 class="title">Ark</h1>
+        <div class="w3-display-middle">
+            <form class="holderCommon form" id="login_user" action="/api/account_actions" method="POST">
+                <img class="login_icon" src="../static/icons/login_icon.png"></img>
+                <br>
+                <div class="input">
+                    <input placeholder="Username" type="text" id="username_login" name="username"
+                        value={{username if username}}>
+                    <br>
+                    <input type="password" placeholder="Password" type="text" id="password_login" name="password"
+                        value={{password if password}}>
+                    <br>
+                    <input type="checkbox" id="toggle_password_login" onclick="togglePassword('password_login')">
+                    <label style="color:black" for="toggle_password_login">Show Password</label>
+                    <br>
+                    <input type="checkbox" name="rememberme" id="rememberme_cb" value="True">
+                    <label style="color:black" for="rememberme_cb">Remember Me</label>
+                    <br>
+                    <button style="color:black" type="submit" name="action" value="login">Login</button>
+                    <button style="color:black" type="button" onclick="openForm()">Register</button>
+                </div>
+            </form>
+
+            <form class="holderCommon register_form" id="register_user" action="/api/account_actions"
+                onsubmit="return validateInput()" method="POST" display="none">
+                <img class="login_icon" src="../static/icons/login_icon.png"></img>
+                <br>
+                <div class="input">
+                    <input placeholder="Choose your username" type="text" id="username_pick" name="username">
+                    <br>
+                    <input type="password" id="password_pick" placeholder="Pick a password" type="text" name="password">
+                    <br>
+                    <input type="password" id="password_repeat" placeholder="Type your password again" type="text"
+                        name="password_validate">
+                    <br>
+                    <input type="checkbox" id="toggle_password_pick"
+                        onclick="togglePassword('password_pick');togglePassword('password_repeat');">
+                    <label for="toggle_password_pick">Show Password</label>
+                    <br>
+                    <button type="submit" name="action" value="register">Confirm</button>
+                    <button type="button" onclick="closeForm()">Cancel</button>
+                </div>
+            </form>
+            <!-- 
+            <hr class="w3-border-grey" style="margin:auto;width:40%">
+            <p class="w3-large w3-center">35 days left</p> -->
+            <div class="filler"></div>
+            <p style="color:red">{{error_message if error_message}}</p>
         </div>
-    </form>
-</div>
-<div class="filler"></div>
-<p style="color:red">{{error_message if error_message}}</p>
+        <!-- <div class="w3-display-bottomleft w3-padding-large">
+            Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>
+        </div> -->
+    </div>
 
+    <!-- </div> -->
+
+
+</body>
 <script>
 
     var modal = document.getElementById("myModal");
@@ -139,38 +149,48 @@
         }
     }
 </script>
+
+
 <style>
+    body,
+    h1 {
+        font-family: "Raleway", sans-serif
+    }
 
-    form input{
-    font-size: 1.1em;
-    background-color: #ffffff;
-    opacity: 0.6;
-    border-radius: 10px 10px 10px 10px;
-    padding: 1px;
-    padding-left: 3px;
+    body,
+    html {
+        height: 100%
     }
-    form button{
-    font-size: 0.9em;
-    background-color: #ffffff;
-    opacity: 0.6;
-    border-radius: 10px 10px 10px 10px;
+
+    .bgimg {
+        background-image: url('../static/icons/library.jpeg');
+        height: 100%;
+        background-position: center;
+        background-size: cover;
     }
-    .base {
-        height: 300px;
+
+    form input {
+        font-size: 1.1em;
+        background-color: #ffffff;
+        opacity: 0.6;
+        border-radius: 10px 10px 10px 10px;
+        padding: 1px;
+        padding-left: 3px;
+    }
+
+    form button {
+        font-size: 0.9em;
+        background-color: #ffffff;
+        opacity: 0.6;
+        border-radius: 10px 10px 10px 10px;
+    }
+
+    .title {
         position: relative;
-        background: #A9A9A9;
-        background-image: url("../static/icons/guest_welcome_background.png");
-        background-repeat: no-repeat;
-    }
-
-    .title_icon {
-        position: absolute;
-        height: 80px;
-        width: 80px;
-        left: 50%;
-        top: 10%;
-        -ms-transform: translate(-50%, 0%);
-        transform: translate(-50%, 0%);
+        left: 47%;
+        top: 20%;
+        font-size: 60px;
+        font-weight: bold;
     }
 
     .login_icon {
@@ -180,40 +200,6 @@
         width: 60px;
         -ms-transform: translate(-50%, 0%);
         transform: translate(-50%, 0%);
-    }
-
-    .title {
-        position: absolute;
-        left: 50%;
-        top: 60%;
-        -ms-transform: translate(-50%, 0%);
-        transform: translate(-50%, 0%);
-    }
-
-    .holderCommon {
-        position: absolute;
-        top: 80%;
-        height: 220px;
-        width: 190px;
-        -ms-transform: translate(-50%, 0%);
-        transform: translate(-50%, 0%);
-        background: white;
-        text-align: center
-    }
-
-    .holder1 {
-        box-shadow: 5px 5px 5px #D3D3D3;
-        left: 25%;
-    }
-
-    .holder2 {
-        box-shadow: 5px 5px 5px #D3D3D3;
-        left: 50%;
-    }
-
-    .holder3 {
-        box-shadow: 5px 5px 5px #D3D3D3;
-        left: 75%;
     }
 
     .form {
@@ -244,7 +230,7 @@
 
     .filler {
         height: 200px;
-        position: relative;
+        position: absolute;
         background: #FAFAFA;
         background-repeat: no-repeat;
         z-index: -1;
@@ -257,7 +243,7 @@
         /* Stay in place */
         z-index: 1;
         /* Sit on top */
-        padding-top: 100px;
+        /* padding-top: 100px; */
         /* Location of the box */
         left: 0;
         top: 0;
@@ -273,13 +259,13 @@
         /* Black w/ opacity */
     }
 
-    .modal-content {
+    /* .modal-content {
         background-color: #fefefe;
         margin: auto;
         padding: 20px;
         border: 1px solid #888;
         width: 80%;
-    }
+    } */
 
     .close {
         color: #aaaaaa;
@@ -295,4 +281,4 @@
     }
 </style>
 
-{% endblock %}
+</html>
