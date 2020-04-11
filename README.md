@@ -57,7 +57,7 @@ python run_ark_app.py
 
 
 #### 1.2.2 chromedriver Setup
-Located in `ark_app/chromedrivers`  
+Located in `corelib/chromedrivers`  
 Win32: Chrome version 81  
 Mac64: Chrome version
 
@@ -79,5 +79,5 @@ aws_session_token= Your_session_token
 #### 1.4.1 Helper
 Manage DynamoDB and S3 contents locally.
 ```
-python ark_app/helper.py --help
+python helper.py --help
 ```
