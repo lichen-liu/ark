@@ -119,23 +119,17 @@
     </div>
 
     <div class="col">
-
+        <div class="image_content">
             <h3 class= "webpage_image_title" >Achive Request Summary</h3>
             {% if url_archive_info %}
-            <br>
-            <br>
-            <br>
-            <img src={{url_archive_info.screenshot_url}}>
-            <br>
-            <br>
-            <br>
+            <img class = "webpage_image" src={{url_archive_info.screenshot_url}}>
             <p>Query URL: {{url_archive_info.query_url}}</p>
             <p>Adjusted URL: {{url_archive_info.adjusted_url}}</p>
             <p>Created Username: {{url_archive_info.created_username}}</p>
             <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
-            <br>
         <p>Archive.md URL: {{url_archive_info.archivemd_url}}</p>
             {% endif %}
+        </div>
     </div>
 
 
@@ -191,11 +185,6 @@
             overflow: scroll;
         }
 
-        .webpage_image_div {
-            height: 100%;
-            width : 100%;
-        }
-
         .webpage_image {
             height: 100%;
             width: 100%;
@@ -206,9 +195,19 @@
             height: 240px;
             overflow: auto;
         }
-.table-wrapper-scroll-y {
-display: block;
-}
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+        .image_content {
+          height: 50%;
+          width: 100%;
+        }
+
+        .webpage_image {
+            height: 50%;
+            width: 50%;
+        }
 </style>
 
 
