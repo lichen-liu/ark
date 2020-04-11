@@ -104,7 +104,7 @@
     
     <div class="col">
 
-            <h3 class="calender_title" >Calendar</h3>
+            <h3 class="calender_title" >Calendar ({{time_stamp_type}})</h3>
             <div class="calender_content">
                 {% set count = namespace(value=1) %}
                 {% for timestamp in timestamp_with_archives %}
@@ -121,7 +121,7 @@
     <div class="col">
 
             <h3 class= "webpage_image_title" >Achive Request Summary</h3>
-            {% if url_screenshot_info %}
+            {% if url_archive_info %}
             <br>
             <br>
             <br>
@@ -145,26 +145,14 @@
 
 <style>
 
-  .my_table {
-    height: 15%;
-    overflow: scroll;
-  }
-
-
 .col {
         float:left;
         height: 100%;
         width: 33%
     }
 
-    .row_of_list {
-        height: 33%;
-        width: 100%;
-        overflow: scroll;
-    }
-        
   .container {
-    height: 100%;
+    height: 100%; 
   }
 
         .body {
@@ -213,16 +201,11 @@
             width: 100%;
         }
 
-        img {
-            height: inherit;
-            width: inherit;
-        }      
-
         .my-custom-scrollbar {
-position: relative;
-height: 240px;
-overflow: auto;
-}
+            position: relative;
+            height: 240px;
+            overflow: auto;
+        }
 .table-wrapper-scroll-y {
 display: block;
 }
