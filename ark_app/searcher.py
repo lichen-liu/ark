@@ -1,6 +1,6 @@
-from ark_app import dynamodb, url_util, s3, main
+from ark_app import dynamodb, url_util, s3, main, account
 import datetime
-from flask import request
+from flask import request, redirect
 from ark_app import webapp
 
 
@@ -18,6 +18,9 @@ class UrlArchiveInfo:
 
 @webapp.route('/api/search_archive_by_url_datetimes', methods=['POST'])
 def search_archive_by_url_datetimes_handler():
+    if not account.account_is_logged_in():
+        return redirect('/')
+
     url = request.form.get('url')
     calender_date = request.form.get('calender_date') #can rename it to 'exact_date'
     precise_date = request.form.get('precise_date') #can rename it to 'exact_datetime'
@@ -32,10 +35,21 @@ def search_archive_by_url_datetimes_handler():
 
 @webapp.route('/api/search_archive_by_exact', methods=['GET'])
 def search_archive_by_exact_handler():
+    if not account.account_is_logged_in():
+        return redirect('/')
+
     exact_proper_url = request.args.get('proper_url')
     exact_datetime = request.args.get('datetime')
     print('exact_proper_url', exact_proper_url, 'exact_datetime', exact_datetime)
     return main.main(user_welcome_args=main.UserWelcomeArgs(url_archive_info=UrlArchiveInfo(proper_url=exact_proper_url, created_timestamp=exact_datetime)))
+
+
+@webapp.route('/api/search_all_archives_by_current_user', methods=['GET'])
+def search_all_archives_by_current_user_handler():
+    if not account.account_is_logged_in():
+        return redirect('/')
+
+    return main.main(user_welcome_args=main.UserWelcomeArgs(show_all_user_archive_list=True))
 
 
 def search_archive_by_url_datetimes(original_url, by_date=None, by_datetime=None):

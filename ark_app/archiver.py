@@ -1,5 +1,5 @@
 from ark_app import webapp, webpage_snapshot, dynamodb, s3, main, account, url_util, searcher
-from flask import request
+from flask import request, redirect
 from bs4 import BeautifulSoup
 import datetime
 import archiveis
@@ -8,6 +8,9 @@ import re
 
 @webapp.route('/api/archive_url', methods=['GET', 'POST'])
 def archive_url_handler():
+    if not account.account_is_logged_in():
+        return redirect('/')
+
     if request.method == 'POST':
         original_url = request.form.get('archive_url_text')
     elif request.method == 'GET':
@@ -31,8 +34,14 @@ def archive_url(original_url):
         # Register the url and date to arkArchive
         utc_datetime = datetime.datetime.utcnow()
         utc_datetime_str = str(utc_datetime)
+
         # Save it on archive website
-        initial_archive_md_url = archiveis.capture(url)
+        try:
+            initial_archive_md_url = archiveis.capture(url)
+        except Exception as e:
+            print('Unexpected exception: ' + str(e))
+            initial_archive_md_url = None
+
         is_newly_created = dynamodb.create_new_archive(url=url, datetime=utc_datetime_str, username=account.account_get_logged_in_username(), archive_md_url=initial_archive_md_url)
         if is_newly_created:
             # Screenshot the url webpage

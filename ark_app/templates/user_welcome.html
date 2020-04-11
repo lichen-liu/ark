@@ -161,9 +161,19 @@
             <br>
 
 
+            {% set show_all_user_archive_list, user_archive_list = user_archive_list_pair %}
             <div class="title_div">
-                <h3>Your Latest Archives</h3>
+                {% if show_all_user_archive_list %}
+                <h3>Your {{user_archive_list | length}} Archives</h3>
+                {% else %}
+                <h3>Your {{user_archive_list | length}} Latest Archives</h3>
+                {% endif %}
             </div>
+            {% if not show_all_user_archive_list %}
+            <form action="/api/search_all_archives_by_current_user" method="GET">
+                <button type="submit">Show All</button>
+            </form>
+            {% endif %}
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
                 <table class="table">
                     <thead>
@@ -173,8 +183,7 @@
                             <th>View</th>
                         </tr>
                     </thead>
-                    {% if lastest_archive_list %}
-                    {% for item in lastest_archive_list %}
+                    {% for item in user_archive_list %}
                     <tbody>
                         {% set url, datetime = item%}
                         <td>{{url}}</td>
@@ -188,7 +197,6 @@
                         </td>
                     </tbody>
                     {% endfor %}
-                    {% endif %}
                 </table>
             </div>
             <br>

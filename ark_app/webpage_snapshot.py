@@ -64,7 +64,12 @@ class Snapshoter:
 
     def get_screenshot_as_png(self):
         self._driver.set_window_size(1000, self._height)
-        return self._driver.get_screenshot_as_png()
+        try:
+            png = self._driver.get_screenshot_as_png()
+        except Exception as e:
+            print('Unexpected exception: ' + str(e))
+            return b''
+        return png
 
 
     def get_webpage_inner_html(self):
