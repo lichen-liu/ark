@@ -19,7 +19,7 @@ def main_clear_failed_message_handler():
 
 
 class GuestWelcomeArgs:
-    def __init__(self, username=None, password=None, error_message=None, title='Welcome to Image Gallery!'):
+    def __init__(self, username=None, password=None, error_message=None, title='Welcome to Ark!'):
         self.username = username
         self.password = password
         self.error_message = error_message
@@ -36,7 +36,7 @@ class StatsInfo:
     class UserInfo:
         def __init__(self):
             archives = dynamodb.search_archive_by_username(username=account.account_get_logged_in_username())
-            self.num_unique_archived_url = str(len(set(next(zip(*archives)))))
+            self.num_unique_archived_url = str(len(set(next(zip(*archives))))) if len(archives) > 0 else 0
             self.num_archives = str(len(archives))
 
     def __init__(self):
@@ -60,7 +60,7 @@ class UserWelcomeArgs:
             # If url_archive_info is not available, show stats_info
             self.stats_info = StatsInfo()
         
-        self.success_list = dynamodb.search_archive_by_username(username=self.username, num_latest_archive=10)
+        self.lastest_archive_list = dynamodb.search_archive_by_username(username=self.username, num_latest_archive=20)
         self.pending_list = dynamodb.get_account_archive_request_list(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST, username=self.username)
         self.failed_list = dynamodb.get_account_archive_request_list(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST, username=self.username)
 
@@ -84,5 +84,5 @@ def main_user_welcome(args):
     return render_template('user_welcome.html', title=args.title, error_message=args.error_message,
     url_archive_info=args.url_archive_info, stats_info=args.stats_info,
     username=args.username,
-    success_list=args.success_list, pending_list=args.pending_list, failed_list=args.failed_list,
+    lastest_archive_list=args.lastest_archive_list, pending_list=args.pending_list, failed_list=args.failed_list,
     timestamp_with_archives = ["2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019","2014","2015","2016","2017","2018","2019"], time_stamp_type = "year", dates_with_archives = ["2020-09-01","2020-09-02"])

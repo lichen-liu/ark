@@ -2,6 +2,15 @@ import requests
 import urllib.parse
 
 
+def precheck_url(original_url):
+    '''
+    Performs a quick precheck on the format of the url
+    '''
+    if original_url is None or len(original_url) == 0:
+        return False
+    return True
+
+
 def adjust_url(original_url):
     '''
     Return adjusted url if the url is reachable; otherwise None

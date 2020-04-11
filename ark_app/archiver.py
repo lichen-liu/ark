@@ -13,6 +13,9 @@ def archive_url_handler():
     elif request.method == 'GET':
         original_url = request.args.get('archive_url_text')
 
+    if not url_util.precheck_url(original_url):
+        return main.main(user_welcome_args=main.UserWelcomeArgs(error_message='Invalid URL: ' + (original_url if original_url else '')))
+
     dynamodb.push_account_archive_request(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST,
                                           username=account.account_get_logged_in_username(), original_url=original_url)
     assert dynamodb.pop_account_archive_request_by(

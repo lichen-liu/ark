@@ -73,6 +73,9 @@
     <form action="/api/logout" method="POST">
         <input type="submit" value="Logout" onclick="return confirm('{{ username }}, you are logging out!');">
     </form>
+    <form action="/" method="POST">
+        <input type="submit" value="Home">
+    </form>
 
     <div class="col">
 
@@ -159,7 +162,7 @@
 
 
             <div class="title_div">
-                <h3>Successful</h3>
+                <h3>Your Latest Archives</h3>
             </div>
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
                 <table class="table">
@@ -167,22 +170,15 @@
                         <tr>
                             <th>URL</th>
                             <th>Date</th>
-                            <th>Archive Again</th>
                             <th>View</th>
                         </tr>
                     </thead>
-                    {% if success_list %}
-                    {% for item in success_list %}
+                    {% if lastest_archive_list %}
+                    {% for item in lastest_archive_list %}
                     <tbody>
                         {% set url, datetime = item%}
                         <td>{{url}}</td>
                         <td>{{datetime}}</td>
-                        <td>
-                            <form action="/api/archive_url" method="GET">
-                                <button type="submit" id="archive_url_text" name="archive_url_text"
-                                    value={{url}}>Archive</button>
-                            </form>
-                        </td>
                         <td>
                             <form action="/api/search_archive_by_exact" method="GET">
                             <button type="submit">View</button>
