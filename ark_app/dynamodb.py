@@ -138,6 +138,9 @@ def pop_account_archive_request_by(dynamodb, list_name, username, original_url):
 
 @dynamodb_resource_operation
 def get_account_archive_request_list(dynamodb, list_name, username):
+    '''
+    Return [original_url] if found; otherwise None
+    '''
     try:
         response=dynamodb.Table(ACCOUNT_TABLE).get_item(
             Key={
@@ -145,10 +148,9 @@ def get_account_archive_request_list(dynamodb, list_name, username):
             },
             ProjectionExpression=list_name
         )
-        if response:
-            item = response.get('Item')
-            if item:
-                return item[list_name]
+        item = response.get('Item')
+        if item:
+            return item[list_name]
 
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
@@ -382,24 +384,47 @@ def search_archive_by_url(dynamodb, url, by_date=None):
 
 
 @dynamodb_client_operation
-def search_archive_by_username(dynamodb, username):
+def search_archive_by_username(dynamodb, username, num_latest_archive=None):
     '''
-    TODO: use LastEvaluatedKey to load all
-    [(url, datetime)]
+    if num_latest_archive is None, return all matching archives
+    [(url, datetime)], sorted from latest to oldest
     '''
+    result = list()
+    response = None
 
-    response = dynamodb.query(
-        TableName=ARCHIVE_TABLE,
-        IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
-        KeyConditionExpression='archiveAccountId = :username',
-        ExpressionAttributeValues={
-            ':username': {'S': username}
-        },
-        ProjectionExpression='archiveUrl, archiveDatetime'
-    )
-    if response:
+    while response is None or 'LastEvaluatedKey' in response:
+        if response is not None and 'LastEvaluatedKey' in response:
+            response = dynamodb.query(
+                TableName=ARCHIVE_TABLE,
+                IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
+                KeyConditionExpression='archiveAccountId = :username',
+                ExpressionAttributeValues={
+                    ':username': {'S': username}
+                },
+                ProjectionExpression='archiveUrl, archiveDatetime',
+                ScanIndexForward=False,
+                ExclusiveStartKey=response['LastEvaluatedKey']
+            )
+        else:
+            response = dynamodb.query(
+                TableName=ARCHIVE_TABLE,
+                IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
+                KeyConditionExpression='archiveAccountId = :username',
+                ExpressionAttributeValues={
+                    ':username': {'S': username}
+                },
+                ProjectionExpression='archiveUrl, archiveDatetime',
+                ScanIndexForward=False
+            )
+
         items = response.get('Items')
-        return list(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+        result.extend(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+
+        if num_latest_archive:
+            if len(result) >= num_latest_archive:
+                return result[:num_latest_archive]
+
+    return result
 
 
 @dynamodb_resource_operation
@@ -429,7 +454,7 @@ def create_archive_table(dynamodb):
                             'KeyType': 'HASH'
                         },
                         {
-                            'AttributeName': 'archiveUrl',
+                            'AttributeName': 'archiveDatetime',
                             'KeyType': 'RANGE'
                         },
                     ],

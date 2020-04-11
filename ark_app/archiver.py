@@ -88,16 +88,3 @@ def extract_text(raw_html):
 
 def clean_text(text):
     return re.sub(r'[^\w!.]', ' ', text)
-
-
-# THe following functions are dummy functions
-def give_me_success_list(num=3):
-    'Return a list of main.UserWelcomeArgs.UrlArchiveInfo'
-
-    result = []
-    for i in range(num):
-        result.append(main.UserWelcomeArgs.UrlArchiveInfo(archivemd_url='success_{}.com'.format(str(i)),
-                                                          screenshot_url='a', query_url='success_{}.com'.format(str(i)), adjusted_url='c',
-                                                          created_timestamp=str(datetime.datetime.utcnow()), created_username=account.account_get_logged_in_username()
-                                                          ))
-    return result
