@@ -138,6 +138,9 @@ def pop_account_archive_request_by(dynamodb, list_name, username, original_url):
 
 @dynamodb_resource_operation
 def get_account_archive_request_list(dynamodb, list_name, username):
+    '''
+    Return [original_url] if found; otherwise None
+    '''
     try:
         response=dynamodb.Table(ACCOUNT_TABLE).get_item(
             Key={
@@ -145,10 +148,9 @@ def get_account_archive_request_list(dynamodb, list_name, username):
             },
             ProjectionExpression=list_name
         )
-        if response:
-            item = response.get('Item')
-            if item:
-                return item[list_name]
+        item = response.get('Item')
+        if item:
+            return item[list_name]
 
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
@@ -232,7 +234,7 @@ def get_table(dynamodb, table, return_raw=False):
 
 
 @dynamodb_resource_operation
-def create_new_archive(dynamodb, url, datetime, username):
+def create_new_archive(dynamodb, url, datetime, username, archive_md_url):
     '''
     Create a new archive entry.
     It is consisted of 2 items: main, archiveId. archiveId item is simply to make sure uniqueness of archiveId.
@@ -247,6 +249,7 @@ def create_new_archive(dynamodb, url, datetime, username):
                 'archiveUrl': url,
                 'archiveDatetime': datetime,
                 'archiveAccountId': username,
+                'archiveMDUrl': archive_md_url
             },
             ConditionExpression='attribute_not_exists(archiveUrl) OR attribute_not_exists(archiveDatetime)'
         )
@@ -299,7 +302,7 @@ def create_new_archive(dynamodb, url, datetime, username):
 @dynamodb_resource_operation
 def get_archive_info(dynamodb, url, datetime):
     '''
-    Return (archive_id, username) if found; otherwise None
+    Return (archive_id, username, archive_md_url) if found; otherwise None
     '''
     result = None
 
@@ -313,7 +316,7 @@ def get_archive_info(dynamodb, url, datetime):
     if response:
         item = response.get('Item')
         if item:
-            result = (item['archiveId'], item['archiveAccountId'])
+            result = (item['archiveId'], item['archiveAccountId'], item['archiveMDUrl'])
         return result
 
 
@@ -390,19 +393,37 @@ def search_archive_by_username(dynamodb, username, num_latest_archive=None):
     result = list()
     response = None
 
-    response = dynamodb.query(
-        TableName=ARCHIVE_TABLE,
-        IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
-        KeyConditionExpression='archiveAccountId = :username',
-        ExpressionAttributeValues={
-            ':username': {'S': username}
-        },
-        ProjectionExpression='archiveUrl, archiveDatetime',
-        ScanIndexForward=False
-    )
+    while response is None or 'LastEvaluatedKey' in response:
+        if response is not None and 'LastEvaluatedKey' in response:
+            response = dynamodb.query(
+                TableName=ARCHIVE_TABLE,
+                IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
+                KeyConditionExpression='archiveAccountId = :username',
+                ExpressionAttributeValues={
+                    ':username': {'S': username}
+                },
+                ProjectionExpression='archiveUrl, archiveDatetime',
+                ScanIndexForward=False,
+                ExclusiveStartKey=response['LastEvaluatedKey']
+            )
+        else:
+            response = dynamodb.query(
+                TableName=ARCHIVE_TABLE,
+                IndexName=ARCHIVE_TABLE_GSI_ARCHIVE_ACCOUNT_ID_ARCHIVE_URL,
+                KeyConditionExpression='archiveAccountId = :username',
+                ExpressionAttributeValues={
+                    ':username': {'S': username}
+                },
+                ProjectionExpression='archiveUrl, archiveDatetime',
+                ScanIndexForward=False
+            )
 
-    items = response.get('Items')
-    result.extend(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+        items = response.get('Items')
+        result.extend(map(lambda item: (item['archiveUrl']['S'], item['archiveDatetime']['S']), items))
+
+        if num_latest_archive:
+            if len(result) >= num_latest_archive:
+                return result[:num_latest_archive]
 
     return result
 

@@ -136,7 +136,29 @@
       {% endif %}
     </div>
 
-    <!--  <h3 class="calender_title" >Calendar ({{time_stamp_type}})</h3>
+    <div class="col66p">
+
+      <div class="image_content">
+        <h3 class="webpage_image_title">Achive Search Result</h3>
+        {% if url_archive_info %}
+        <div class="title_div">
+          <p>Webpage Info:<p>
+        </div>
+        <p>Query URL: {{url_archive_info.query_url}}</p>
+        <p>Proper URL: {{url_archive_info.proper_url}}</p>
+        <p>Created Timestamp: {{url_archive_info.created_timestamp}}</p>
+        <p>Created Username: {{url_archive_info.created_username}}</p>
+        <p>Archive.md URL: {{url_archive_info.archive_md_url}}</p>
+
+        <div class="title_div">
+          <p>Webpage Screenshot:<p>
+            </p>
+        </div>
+        <img class="webpage_image" src={{url_archive_info.screenshot_url}}>
+        {% endif %}
+      </div>
+
+      <!--  <h3 class="calender_title" >Calendar ({{time_stamp_type}})</h3>
             <div class="calender_content">
                 {% set count = namespace(value=1) %}
                 {% for timestamp in timestamp_with_archives %}
@@ -147,89 +169,127 @@
                 {% set count.value = count.value + 1 %}
                 {% endfor %}
             </div> -->
-  </div>
-
-  <div class="col33p">
-
-    <div class="title_div">
-      <h3>Search By Date</h3>
-    </div>
-    <div class="date_section">
-      <p>Enter Date: <input type="text" id="datepicker-5"></p>
     </div>
 
+    <div class="col33p">
 
-    <div class="title_div">
-      <h3>Success</h3>
+      <div class="title_div">
+        <h3>Search By Date</h3>
+      </div>
+      <div class="date_section">
+        <p>Enter Date: <input type="text" id="datepicker-5"></p>
+      </div>
+
+
+      <div class="title_div">
+        <h3>Search By Date</h3>
+      </div>
+      <div class="date_section">
+        <form action='/api/decrease_pool'>
+          <p>Enter Date: <input type="text" id="datepicker-5"></p>
+          <input type="submit" value="Confirm">
+        </form>
+      </div>
+
+
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>URL</th>
+              <th>Date</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          {% for item in success_list %}
+          <tbody>
+            <td>{{item.query_url}}</td>
+            <td>{{item.created_timestamp}}</td>
+            <td>
+              <form action="/api/archive_url" method="GET">
+                <button type="submit" id="archive_url_text" name="archive_url_text" value={{item.query_url}}>Go</button>
+              </form>
+            </td>
+          </tbody>
+          {% endfor %}
+        </table>
+      </div>
+
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>URL</th>
+              <th>Date</th>
+              <th>Archive Again</th>
+              <th>View</th>
+            </tr>
+          </thead>
+          {% if success_list %}
+          {% for item in success_list %}
+          <tbody>
+            {% set url, datetime = item%}
+            <td>{{url}}</td>
+            <td>{{datetime}}</td>
+            <td>
+              <form action="/api/archive_url" method="GET">
+                <button type="submit" id="archive_url_text" name="archive_url_text" value={{url}}>Archive</button>
+              </form>
+            </td>
+            <td>
+              EMPTY
+              <!-- <form action="/api/archive_url" method="GET">
+                      <button type="submit" id="archive_url_text" name="archive_url_text"
+                        value={{url}}>Archive Again</button>
+                    </form> -->
+            </td>
+          </tbody>
+          {% endfor %}
+          {% endif %}
+        </table>
+      </div>
+
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>URL</th>
+            </tr>
+          </thead>
+          {% if pending_list %}
+          {% for item in pending_list %}
+          <tbody>
+            <td>{{item}}</td>
+          </tbody>
+          {% endfor %}
+          {% endif %}
+        </table>
+      </div>
+
+      <div class="title_div">
+        <h3>Failed</h3>
+      </div>
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>URL</th>
+            </tr>
+          </thead>
+          {% if failed_list %}
+          {% for item in failed_list %}
+          <tbody>
+            <td>{{item}}</td>
+          </tbody>
+          {% endfor %}
+          {% endif %}
+        </table>
+      </div>
     </div>
-
-    <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th>URL</th>
-            <th>Date</th>
-            <th>Link</th>
-          </tr>
-        </thead>
-        {% for item in success_list %}
-        <tbody>
-          <td>{{item.query_url}}</td>
-          <td>{{item.created_timestamp}}</td>
-          <td>
-            <form action="/api/archive_url" method="GET">
-              <button type="submit" id="archive_url_text" name="archive_url_text" value={{item.query_url}}>Go</button>
-            </form>
-          </td>
-        </tbody>
-        {% endfor %}
-      </table>
-    </div>
-
-    <div class="title_div">
-      <h3>Pending</h3>
-    </div>
-
-    <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th>URL</th>
-          </tr>
-        </thead>
-        {% if pending_list %}
-        {% for item in pending_list %}
-        <tbody>
-          <td>{{item}}</td>
-        </tbody>
-        {% endfor %}
-        {% endif %}
-      </table>
-    </div>
-
-    <div class="title_div">
-      <h3>Failed</h3>
-    </div>
-    <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th>URL</th>
-          </tr>
-        </thead>
-        {% if failed_list %}
-        {% for item in failed_list %}
-        <tbody>
-          <td>{{item}}</td>
-        </tbody>
-        {% endfor %}
-        {% endif %}
-      </table>
-    </div>
-  </div>
 
 
   </div>
