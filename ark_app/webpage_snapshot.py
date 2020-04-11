@@ -12,8 +12,6 @@ import pathlib
 import platform
 
 
-
-
 _SUPPORTED_BROWERS = {"chrome", "firefox"}
 _DEFAULT_BROWSER = "chrome"
 class Snapshoter:
