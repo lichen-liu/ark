@@ -137,6 +137,23 @@ def pop_account_archive_request_by(dynamodb, list_name, username, original_url):
 
 
 @dynamodb_resource_operation
+def clear_account_archive_request_by(dynamodb, list_name, username):
+    try:
+        dynamodb.Table(ACCOUNT_TABLE).update_item(
+            Key={
+                'accountId': username
+            },
+            UpdateExpression='remove ' + list_name,
+            ConditionExpression='attribute_exists(accountId) AND attribute_exists(' + list_name + ')'
+        )
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            pass
+        else:
+            raise
+
+
+@dynamodb_resource_operation
 def get_account_archive_request_list(dynamodb, list_name, username):
     '''
     Return [original_url] if found; otherwise None

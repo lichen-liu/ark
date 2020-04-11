@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, redirect
 from ark_app import account, webapp, dynamodb, searcher
 
 
@@ -8,6 +8,14 @@ from ark_app import account, webapp, dynamodb, searcher
 # Display an HTML page with links
 def main_handler():
     return main()
+
+
+@webapp.route('/api/clear_failed_message', methods=['POST'])
+def main_clear_failed_message_handler():
+    if account.account_is_logged_in():
+        dynamodb.clear_account_archive_request_by(
+            list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST, username=account.account_get_logged_in_username())
+    return redirect('/')
 
 
 class GuestWelcomeArgs:
