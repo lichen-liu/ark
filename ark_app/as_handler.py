@@ -194,12 +194,10 @@ def search_archive_by_url_datetimes(original_url, by_date=None, by_datetime=None
         if datetime_strs is None or len(datetime_strs) == 0:
             return None
         lastest_datetime_str = datetime_strs[0]
-        archive_info = dynamodb.get_archive_info(url, lastest_datetime_str)
         return (url, lastest_datetime_str, datetime_strs)
     elif by_date is None and by_datetime is not None:
         # Datetime as constraint, return itself
         datetime_str = str(by_datetime)
-        archive_info = dynamodb.get_archive_info(url, datetime_str)
         return (url, datetime_str, [datetime_str])
     else:
         assert False
