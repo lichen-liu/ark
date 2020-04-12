@@ -7,6 +7,7 @@ import argparse
 import time
 from corelib import dynamodb, utility, s3, static_resources
 from zipfile import ZipFile
+import zappa
 
 
 def wait_for_countdown(seconds):
@@ -16,6 +17,34 @@ def wait_for_countdown(seconds):
         time.sleep(1)
         countdown -= 1
     print('    Done')
+
+
+def clear_archive():
+    print('Clearing', dynamodb.ARCHIVE_TABLE, '...')
+    dynamodb.clear_archive_table()
+    print('    Succeeded')
+
+    print('Deleting', s3.get_s3_path_in_string(key='', bucket_name=s3.BUCKET), '...')
+    s3.delete_directory_content(directory='', bucket_name=s3.BUCKET)
+    print('    Succeeded')
+
+    print('\n')
+
+
+def clear_all():
+    print('Clearing', dynamodb.ARCHIVE_TABLE, '...')
+    dynamodb.clear_archive_table()
+    print('    Succeeded')
+
+    print('Clearing', dynamodb.ACCOUNT_TABLE, '...')
+    dynamodb.clear_account_table()
+    print('    Succeeded')
+
+    print('Deleting', s3.get_s3_path_in_string(key='', bucket_name=s3.BUCKET), '...')
+    s3.delete_directory_content(directory='', bucket_name=s3.BUCKET)
+    print('    Succeeded')
+
+    print('\n')
 
 
 ARK_ARCHIVER_LAMBDA = 'ark-archiver-lambda'
@@ -100,11 +129,41 @@ def update_lambda():
     print('\n')
 
 
+def reset():
+    print('Warning: Resetting everything!')
+    print('\n')
+
+    print('Deleting', dynamodb.ARCHIVE_TABLE, '...')
+    dynamodb.delete_table(dynamodb.ARCHIVE_TABLE)
+    print('    Succeeded')
+
+    print('Deleting', dynamodb.ACCOUNT_TABLE, '...')
+    dynamodb.delete_table(dynamodb.ACCOUNT_TABLE)
+    print('    Succeeded')
+
+    print('Deleting', s3.get_s3_path_in_string(key='', bucket_name=s3.BUCKET), '...')
+    s3.delete_directory_content(directory='', bucket_name=s3.BUCKET)
+    print('    Succeeded')
+
+    wait_for_countdown(10)
+
+    print('Creating', dynamodb.ARCHIVE_TABLE, '...')
+    dynamodb.create_archive_table()
+    print('    Succeeded')
+
+    print('Creating', dynamodb.ACCOUNT_TABLE, '...')
+    dynamodb.create_account_table()
+    print('    Succeeded')
+
+    print('\n')
+
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--update_resources', help='Update all static resources to S3', action='store_true')
     parser.add_argument('--clear_archive', help='Clear all Archive Data (DynamoDB + S3)', action='store_true')
     parser.add_argument('--clear_all', help='Clear all Account and Archive Data (DynamoDB + S3)', action='store_true')
+    parser.add_argument('--update_resources', help='Update all static resources to S3', action='store_true')
     parser.add_argument('--update_lambda', help='Update Lambda Function(' + ARK_ARCHIVER_LAMBDA + ')', action='store_true')
 
     parser.add_argument('--account_table', help='Print ' + dynamodb.ACCOUNT_TABLE + ' from DynamoDB‎', action='store_true')
@@ -117,45 +176,25 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
-    if args.update_resources:
-        print('Updating Resources to ' + static_resources.S3_BUCKET, '...')
-        static_resources.update_resources_to_s3()
-        print('    Succeeded')
-        print('\n')
-
-
     if s3.create_bucket_if_necessary(bucket_name=s3.BUCKET):
         print('Created S3 Bucket', s3.BUCKET)
         print('\n')
 
 
     if args.clear_archive:
-        print('Clearing', dynamodb.ARCHIVE_TABLE, '...')
-        dynamodb.clear_archive_table()
-        print('    Succeeded')
-
-        print('Deleting', s3.get_s3_path_in_string(key='', bucket_name=s3.BUCKET), '...')
-        s3.delete_directory_content(directory='', bucket_name=s3.BUCKET)
-        print('    Succeeded')
-
-        print('\n')
+        clear_archive()
 
 
     if args.clear_all:
-        print('Clearing', dynamodb.ARCHIVE_TABLE, '...')
-        dynamodb.clear_archive_table()
-        print('    Succeeded')
+        clear_all()
 
-        print('Clearing', dynamodb.ACCOUNT_TABLE, '...')
-        dynamodb.clear_account_table()
-        print('    Succeeded')
 
-        print('Deleting', s3.get_s3_path_in_string(key='', bucket_name=s3.BUCKET), '...')
-        s3.delete_directory_content(directory='', bucket_name=s3.BUCKET)
+    if args.update_resources:
+        print('Updating Resources to ' + static_resources.S3_BUCKET, '...')
+        static_resources.update_resources_to_s3()
         print('    Succeeded')
-
         print('\n')
-
+    
 
     if args.update_lambda:
         update_lambda()
@@ -187,29 +226,4 @@ if __name__ == '__main__':
 
     # Must be the last one to execute
     if args.reset and args.confirm:
-        print('Warning: Resetting everything!')
-        print('\n')
-
-        print('Deleting', dynamodb.ARCHIVE_TABLE, '...')
-        dynamodb.delete_table(dynamodb.ARCHIVE_TABLE)
-        print('    Succeeded')
-
-        print('Deleting', dynamodb.ACCOUNT_TABLE, '...')
-        dynamodb.delete_table(dynamodb.ACCOUNT_TABLE)
-        print('    Succeeded')
-
-        print('Deleting', s3.get_s3_path_in_string(key='', bucket_name=s3.BUCKET), '...')
-        s3.delete_directory_content(directory='', bucket_name=s3.BUCKET)
-        print('    Succeeded')
-
-        wait_for_countdown(10)
-
-        print('Creating', dynamodb.ARCHIVE_TABLE, '...')
-        dynamodb.create_archive_table()
-        print('    Succeeded')
-
-        print('Creating', dynamodb.ACCOUNT_TABLE, '...')
-        dynamodb.create_account_table()
-        print('    Succeeded')
-
-        print('\n')
+        reset()
