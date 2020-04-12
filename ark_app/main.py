@@ -44,7 +44,7 @@ class StatsInfo:
 
 
 class UserWelcomeArgs:
-    def __init__(self, error_message=None, prefill_url_text = None, url_archive_info = None,show_all_user_archive_list=False, date_strs = [], datetime_strs = []):
+    def __init__(self, other_message=None, error_message=None, prefill_url_text = None, url_archive_info = None,show_all_user_archive_list=False, date_strs = [], datetime_strs = []):
         '''
         url_archive_info = as_handler.UrlArchiveInfo
         '''
@@ -55,6 +55,7 @@ class UserWelcomeArgs:
         self.url_archive_info = url_archive_info
         self.date_strs = date_strs
         self.datetime_strs = datetime_strs
+        self.other_message = other_message
         
         self.stats_info = None
         if self.url_archive_info is None:
@@ -90,6 +91,7 @@ def main_guest_welcome(args):
 def main_user_welcome(args):
     return render_template('user_welcome.html', static_icons_dir_path=static_resources.get_static_icons_dir(config.RUNNING_LOCALLY),
         error_message=args.error_message,
+        other_message=args.other_message,
         prefill_url_text=args.prefill_url_text,
         url_archive_info=args.url_archive_info, stats_info=args.stats_info,
         username=args.username,

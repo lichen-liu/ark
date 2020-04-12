@@ -55,12 +55,14 @@
 </script>
 
 <body class="body">
-  <header class="w3-opacity w3-display-container w3-content w3-wide header" style="max-width:2500px;" id="home">
-    <img class="w3-image" src="{{static_icons_dir_path}}library_long.jpeg" height="400">
+  <header class="w3-display-container w3-content w3-wide header" style="max-width:2500px;" id="home">
+    <div class="w3-opacity ">
+      <img class="w3-image" src="{{static_icons_dir_path}}library_long.jpeg" height="400">
+    </div>
     <div class="w3-display-middle w3-margin-top w3-center">
       <!-- <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>BR</b></span> <span class="w3-hide-small w3-text-light-grey">Architects</span></h1> -->
       <p>
-        <font size="14"><b>Ark</b></font>
+        <font size="14" style="color:#000000"><b>Ark</b></font>
       </p>
       <form action={{url_for("main_search_or_archive_url_handler")}} method="GET">
         {% if url_archive_info %}
@@ -70,7 +72,7 @@
         {% else %}
         {% set value = None %}
         {% endif %}
-        <input type="text" width=60 placeholder="URL" id="url_text" name="url_text" value="{{value if value}}">
+        <input type="text" size=30 placeholder="URL" id="url_text" name="url_text" value="{{value if value}}">
 
         <p class="w3-padding-16">
           <button class="w3-button w3-black" type="submit" name="action" value="search_url_submit">Search</button>
@@ -87,6 +89,16 @@
   </h3>
 
   {% endif %}
+
+  {% if other_message %}
+  <h3>
+    <p class="text-primary">
+      {{other_message}}
+    </p>
+  </h3>
+
+  {% endif %}
+
 
   <div class="col99p">
 
@@ -155,11 +167,12 @@
         <h3>Search By Date</h3>
       </div>
       <div class="date_section">
-        <form action={{url_for("search_archive_by_url_datetimes_handler")}} onsubmit="return validateDate()" method="POST">
+        <form action={{url_for("search_archive_by_url_datetimes_handler")}} onsubmit="return validateDate()"
+          method="POST">
           <input type="hidden" name="url_text" value="{{url_archive_info.query_url}}">
           <input style="float:left" type="text" name="selected_date" id="datepicker-5"
             value="{{url_archive_info.created_date if url_archive_info}}">
-          <input style="float:left" type="submit" value="Confirm">
+          <input style="float:left" type="submit" value="Confirm Date">
         </form>
         <script>
           function validateDate() {
@@ -170,7 +183,8 @@
           }
         </script>
 
-        <form action={{url_for("search_archive_by_url_datetimes_handler")}} onsubmit="return validateDateTime()" method="POST">
+        <form action={{url_for("search_archive_by_url_datetimes_handler")}} onsubmit="return validateDateTime()"
+          method="POST">
           <select id="selected_datetime_id" name="selected_datetime" class="datetime_dropdown">
             {% if datetime_with_archives%}
             <!-- In search_by_datetime mode, show all available options, select the datetime that's currently printing as default if possible -->
@@ -188,7 +202,7 @@
             {% endif %}
             <input type="hidden" name="url_text" value="{{url_archive_info.query_url}}">
           </select>
-          <input style="float:left" type="submit" value="Confirm">
+          <input type="submit" value="Confirm Archive">
         </form>
         <script>
           function validateDateTime() {

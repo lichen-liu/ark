@@ -57,7 +57,10 @@ def archive_url_handler():
                     url_archive_info=UrlArchiveInfo(
                         query_url=original_url, proper_url=proper_url, created_datetime=datetime), date_strs=date_strs))  
     else:
-        return redirect(url_for('main_handler'))
+        # return redirect(url_for('main_handler'))
+        return main.main(
+                user_welcome_args=main.UserWelcomeArgs(
+                    other_message='URL: ' + (original_url if original_url else '')+' is in the queue. Please check back later.')  
 
 
 @webapp.route('/api/retry_archive_request', methods=['POST'])
