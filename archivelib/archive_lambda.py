@@ -16,7 +16,7 @@ def archive_url(original_url, username, running_locally):
         list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST, username=username, original_url=original_url)
 
     if found:
-        print('adjust_url', original_url)
+        print('adjust_url(' + original_url + ')')
         url = url_util.adjust_url(original_url)
         if url is not None:
             # Register the url and date to arkArchive
@@ -25,7 +25,7 @@ def archive_url(original_url, username, running_locally):
 
             # Save it on archive website
             try:
-                print('archiveis.capture', url)
+                print('archiveis.capture(' + url + ')')
                 initial_archive_md_url = archiveis.capture(url)
             except Exception as e:
                 print('Unexpected exception: ' + str(e))
@@ -34,7 +34,7 @@ def archive_url(original_url, username, running_locally):
             is_newly_created = dynamodb.create_new_archive(url=url, datetime=utc_datetime_str, username=username, archive_md_url=initial_archive_md_url)
             if is_newly_created:
                 # Screenshot the url webpage
-                print('take_url_webpage_snapshot', url)
+                print('take_url_webpage_snapshot(' + url + ')')
                 url_webpage_png, _url_inner_html = webpage_snapshot.take_url_webpage_snapshot(url=url, running_locally=running_locally)
 
                 # Store the screenshot on S3

@@ -36,10 +36,7 @@ def lambda_handler(event, lambda_context):
     print(result)
 
     if len(result) == 0:
-        return {
-            'statusCode': 200,
-            'body': json.dumps('Nothing to handle!')
-        }
+        print('Nothing to handle!')
     else:
         error_count = 0
         for account_id, original_url in result:
@@ -47,10 +44,7 @@ def lambda_handler(event, lambda_context):
             if error_message:
                 error_count += 1
         
-        return {
-            'statusCode': 200,
-            'body': json.dumps('Handled ' + str(len(result)) + ' items, ' + str(error_count) + ' items failed!')
-        }
+        print('Handled ' + str(len(result)) + ' items, ' + str(error_count) + ' items failed!')
 
 
 def dynamodb_event_filter(event):
