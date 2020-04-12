@@ -60,7 +60,7 @@ def archive_url_handler():
         # return redirect(url_for('main_handler'))
         return main.main(
                 user_welcome_args=main.UserWelcomeArgs(
-                    other_message='URL: ' + (original_url if original_url else '')+' is in the queue. Please check back later.')  
+                    other_message='URL: ' + (original_url if original_url else '')+' is in the queue. Please check back later.'))
 
 
 @webapp.route('/api/retry_archive_request', methods=['POST'])
