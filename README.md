@@ -157,13 +157,3 @@ Update all local static/icons to S3
 ```
 python helper.py --update_resources
 ```
-
-
-### 1.4 Management Script
-
-
-#### 1.4.1 Helper
-Manage DynamoDB and S3 contents locally.
-```
-python helper.py --help
-```
