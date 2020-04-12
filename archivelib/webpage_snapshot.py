@@ -38,7 +38,7 @@ class Snapshoter:
             chrome_options.add_argument('--headless')
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-gpu')
-            chrome_options.add_argument('--window-size=1920,1080')
+            #chrome_options.add_argument('--window-size=1920,1080')
             chrome_options.add_argument('--user-data-dir=/tmp/user-data')
             chrome_options.add_argument('--hide-scrollbars')
             chrome_options.add_argument('--enable-logging')

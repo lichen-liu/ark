@@ -65,7 +65,7 @@ def update_lambda():
     dst_archivelib_cache_path = os.path.join(os.path.join(build_src_path, archivelib_dir), cache_dir)
     dst_corelib_cache_path = os.path.join(os.path.join(build_src_path, corelib_dir), cache_dir)
 
-    print('Updateing Lambda Function Code for', ARK_ARCHIVER_LAMBDA, '...')
+    print('Updating Lambda Function Code for', ARK_ARCHIVER_LAMBDA, '...')
 
     if not os.path.exists(build_base_zip_file):
         print('Error: No', build_base_zip_file, 'file found!')
