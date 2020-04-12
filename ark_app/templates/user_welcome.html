@@ -215,40 +215,6 @@
 
       </div>
 
-      <div class="title_div">
-        <h3 class="user_control_form" style="float:left;"> Failed</h3>
-        <form class="user_control_form" action={{url_for("main_clear_failed_message_handler")}} method="POST">
-          <button class="w3-button w3-black" type="submit">Clear</button>
-        </form>
-      </div>
-
-      <div class="table-wrapper-scroll-y my-custom-scrollbar">
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>URL</th>
-              <th>Retry</th>
-            </tr>
-          </thead>
-          {% if failed_list %}
-          {% for item in failed_list %}
-          <tbody>
-            <td>{{item}}</td>
-            <td>
-              <form action={{url_for("retry_archive_request_handler")}} method="POST">
-                <button type="submit" name="url_text" value="{{item}}">Retry</button>
-                <input type="hidden" name="request_list_name" value="failed">
-              </form>
-            </td>
-          </tbody>
-          {% endfor %}
-          {% endif %}
-        </table>
-      </div>
-      <br>
-      <br>
-
-
       {% set show_all_user_archive_list, user_archive_list = user_archive_list_pair %}
       <div class="title_div">
         {% if show_all_user_archive_list %}
@@ -291,6 +257,43 @@
       </div>
       <br>
       <br>
+
+
+      <div class="title_div">
+        <h3 class="user_control_form" style="float:left;"> Failed</h3>
+        <form class="user_control_form" action={{url_for("main_clear_failed_message_handler")}} method="POST">
+          <button class="w3-button w3-black" type="submit">Clear</button>
+        </form>
+      </div>
+
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>URL</th>
+              <th>Retry</th>
+            </tr>
+          </thead>
+          {% if failed_list %}
+          {% for item in failed_list %}
+          <tbody>
+            <td>{{item}}</td>
+            <td>
+              <form action={{url_for("retry_archive_request_handler")}} method="POST">
+                <button type="submit" name="url_text" value="{{item}}">Retry</button>
+                <input type="hidden" name="request_list_name" value="failed">
+              </form>
+            </td>
+          </tbody>
+          {% endfor %}
+          {% endif %}
+        </table>
+      </div>
+      <br>
+      <br>
+
+
+
 
 
       <div class="title_div">
