@@ -22,7 +22,7 @@
 
     <!-- <h1 class="title">Ark</h1> -->
     <div class="w3-display-middle">
-      <form class="holderCommon form" id="login_user" action="/api/account_actions" method="POST">
+      <form class="holderCommon form" id="login_user" action={{url_for("account_actions_handler")}} method="POST">
         <h1 class="title">Ark</h1>
         <br>
         <img class="login_icon" src="{{static_icons_dir_path}}login_icon.png"></img>
@@ -44,7 +44,7 @@
         </div>
       </form>
 
-      <form class="holderCommon register_form" id="register_user" action="/api/account_actions"
+      <form class="holderCommon register_form" id="register_user" action={{url_for("account_actions_handler")}}
         onsubmit="return validateInput()" method="POST" display="none">
         <img class="login_icon" src="{{static_icons_dir_path}}login_icon.png"></img>
         <br>

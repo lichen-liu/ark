@@ -1,0 +1,12 @@
+{
+    "dev": {
+        "app_function": "ark_app.webapp",
+        "aws_region": "us-east-1",
+        "profile_name": "default",
+        "project_name": "ark",
+        "runtime": "python3.7",
+        "s3_bucket": "clr-ark-zappa",
+        "keep_warm": false,
+        "manage_roles": true
+    }
+}

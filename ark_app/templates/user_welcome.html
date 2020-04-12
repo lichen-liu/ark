@@ -62,7 +62,7 @@
       <p>
         <font size="14"><b>Ark</b></font>
       </p>
-      <form action="/api/search_or_archive_url" method="GET">
+      <form action={{url_for("main_search_or_archive_url_handler")}} method="GET">
         {% if url_archive_info %}
         {% set value = url_archive_info.query_url %}
         {% elif prefill_url_text %}
@@ -95,11 +95,11 @@
       <div class="image_content">
         <div class="webpage_image_title">
           <h3 class="user_control_form" style="float:left;">Achive Search Result</h3>
-          <form class="user_control_form" action="/api/logout" method="POST">
+          <form class="user_control_form" action={{url_for("account_logout_handler")}} method="POST">
             <input class="w3-button w3-black" type="submit" value="Logout"
               onclick="return confirm('{{ username }}, you are logging out!');">
           </form>
-          <form class="user_control_form" action="/" method="POST">
+          <form class="user_control_form" action={{url_for("main_handler")}} method="POST">
             <input class="w3-button w3-black" type="submit" value="Home">
           </form>
         </div>
@@ -123,11 +123,11 @@
       <div class="image_content">
         <div class="webpage_image_title">
           <h3 class="user_control_form" style="float:left;">Welcome to Ark</h3>
-          <form class="user_control_form" action="/api/logout" method="POST">
+          <form class="user_control_form" action={{url_for("account_logout_handler")}} method="POST">
             <input class="w3-button w3-black" type="submit" value="Logout"
               onclick="return confirm('{{ username }}, you are logging out!');">
           </form>
-          <form class="user_control_form" action="/" method="POST">
+          <form class="user_control_form" action={{url_for("main_handler")}} method="POST">
             <input class="w3-button w3-black" type="submit" value="Home">
           </form>
 
@@ -155,7 +155,7 @@
         <h3>Search By Date</h3>
       </div>
       <div class="date_section">
-        <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDate()" method="POST">
+        <form action={{url_for("search_archive_by_url_datetimes_handler")}} onsubmit="return validateDate()" method="POST">
           <input type="hidden" name="url_text" value="{{url_archive_info.query_url}}">
           <input style="float:left" type="text" name="selected_date" id="datepicker-5"
             value="{{url_archive_info.created_date if url_archive_info}}">
@@ -170,7 +170,7 @@
           }
         </script>
 
-        <form action="/api/search_archive_by_url_datetimes" onsubmit="return validateDateTime()" method="POST">
+        <form action={{url_for("search_archive_by_url_datetimes_handler")}} onsubmit="return validateDateTime()" method="POST">
           <select id="selected_datetime_id" name="selected_datetime" class="datetime_dropdown">
             {% if datetime_with_archives%}
             <!-- In search_by_datetime mode, show all available options, select the datetime that's currently printing as default if possible -->
@@ -203,7 +203,7 @@
 
       <div class="title_div">
         <h3 class="user_control_form" style="float:left;"> Failed</h3>
-        <form class="user_control_form" action="/api/clear_failed_message" method="POST">
+        <form class="user_control_form" action={{url_for("main_clear_failed_message_handler")}} method="POST">
           <button class="w3-button w3-black" type="submit">Clear</button>
         </form>
       </div>
@@ -221,7 +221,7 @@
           <tbody>
             <td>{{item}}</td>
             <td>
-              <form action="/api/archive_url" method="GET">
+              <form action={{url_for("archive_url_handler")}} method="GET">
                 <button type="submit" id="archive_url_text" name="archive_url_text" value={{item}}>Retry</button>
               </form>
             </td>
@@ -242,7 +242,7 @@
         <h3 class="user_control_form" style="float:left;">Your {{user_archive_list | length}} Latest Archives</h3>
         {% endif %}
         {% if not show_all_user_archive_list %}
-        <form class="user_control_form" action="/api/search_all_archives_by_current_user" method="GET">
+        <form class="user_control_form" action={{url_for("search_all_archives_by_current_user_handler")}} method="GET">
           <button class="w3-button w3-black" type="submit">Show All</button>
         </form>
         {% endif %}
@@ -264,7 +264,7 @@
             <td>{{url}}</td>
             <td>{{datetime}}</td>
             <td>
-              <form action="/api/search_archive_by_exact" method="GET">
+              <form action={{url_for("search_archive_by_exact_handler")}} method="GET">
                 <button type="submit">View</button>
                 <input type="hidden" name="proper_url" value="{{url}}" />
                 <input type="hidden" name="datetime" value="{{datetime}}" />

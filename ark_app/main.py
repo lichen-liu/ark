@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, url_for
 from ark_app import account, webapp, config
 from corelib import dynamodb, static_resources
 
@@ -16,7 +16,7 @@ def main_clear_failed_message_handler():
     if account.account_is_logged_in():
         dynamodb.clear_account_archive_request_by(
             list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST, username=account.account_get_logged_in_username())
-    return redirect('/')
+    return redirect(url_for('main_handler'))
 
 
 class GuestWelcomeArgs:

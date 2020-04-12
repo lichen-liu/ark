@@ -1,5 +1,5 @@
 from ark_app import webapp, main, account, config
-from flask import request, redirect
+from flask import request, redirect, url_for
 import datetime
 from corelib import dynamodb, url_util, s3, utility
 
@@ -9,7 +9,7 @@ if config.RUNNING_LOCALLY:
 
 
 @webapp.route('/api/search_or_archive_url', methods=['POST', 'GET'])
-def main_search_or_archive_url():
+def main_search_or_archive_url_handler():
     if request.method == 'POST':
         action = request.form.get('action')
     elif request.method == 'GET':
@@ -28,7 +28,7 @@ def archive_url_handler():
     print('archive_url_handler')
 
     if not account.account_is_logged_in():
-        return redirect('/')
+        return redirect(url_for('main_handler'))
 
     if request.method == 'POST':
         original_url = request.form.get('url_text')
@@ -56,7 +56,7 @@ def archive_url_handler():
                     url_archive_info=UrlArchiveInfo(
                         query_url=original_url, proper_url=proper_url, created_datetime=datetime), date_strs=date_strs))  
     else:
-        return redirect('/')
+        return redirect(url_for('main_handler'))
 
 
 class UrlArchiveInfo:
@@ -77,7 +77,7 @@ def search_archive_by_url_datetimes_handler():
     print('search_archive_by_url_datetimes_handler')
 
     if not account.account_is_logged_in():
-        return redirect('/')
+        return redirect(url_for('main_handler'))
 
     if request.method == 'POST':
         original_url = request.form.get('url_text')
@@ -130,7 +130,7 @@ def search_archive_by_url_datetimes_handler():
 @webapp.route('/api/search_archive_by_exact', methods=['GET'])
 def search_archive_by_exact_handler():
     if not account.account_is_logged_in():
-        return redirect('/')
+        return redirect(url_for('main_handler'))
 
     exact_proper_url = request.args.get('proper_url')
     exact_datetime = request.args.get('datetime')
@@ -141,7 +141,7 @@ def search_archive_by_exact_handler():
 @webapp.route('/api/search_all_archives_by_current_user', methods=['GET'])
 def search_all_archives_by_current_user_handler():
     if not account.account_is_logged_in():
-        return redirect('/')
+        return redirect(url_for('main_handler'))
 
     return main.main(user_welcome_args=main.UserWelcomeArgs(show_all_user_archive_list=True))
 

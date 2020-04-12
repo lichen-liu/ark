@@ -1,7 +1,7 @@
 import hashlib
 import random
 
-from flask import redirect, request, session, abort
+from flask import redirect, request, session, abort, url_for
 
 from ark_app import main, webapp
 from corelib import dynamodb
@@ -25,7 +25,7 @@ def account_actions_handler():
     if err_msg:
         return main.main(guest_welcome_args=main.GuestWelcomeArgs(username=username, password=password, error_message=err_msg))
     else:
-        return redirect('/')
+        return redirect(url_for('main_handler'))
 
 
 @webapp.route('/api/register', methods=['POST'])
@@ -47,7 +47,7 @@ def account_register_handler():
 # Web handler for logout
 def account_logout_handler():
     account_logout()
-    return redirect('/')
+    return redirect(url_for('main_handler'))
 
 
 def account_is_logged_in():
