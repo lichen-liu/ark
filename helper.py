@@ -7,7 +7,6 @@ import argparse
 import time
 from corelib import dynamodb, utility, s3, static_resources
 from zipfile import ZipFile
-import zappa
 
 
 def wait_for_countdown(seconds):
@@ -65,6 +64,8 @@ def update_lambda():
     dst_corelib_path = os.path.join(build_src_path, corelib_dir)
     dst_archivelib_cache_path = os.path.join(os.path.join(build_src_path, archivelib_dir), cache_dir)
     dst_corelib_cache_path = os.path.join(os.path.join(build_src_path, corelib_dir), cache_dir)
+
+    print('Updateing Lambda Function Code for', ARK_ARCHIVER_LAMBDA, '...')
 
     if not os.path.exists(build_base_zip_file):
         print('Error: No', build_base_zip_file, 'file found!')
@@ -163,8 +164,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--clear_archive', help='Clear all Archive Data (DynamoDB + S3)', action='store_true')
     parser.add_argument('--clear_all', help='Clear all Account and Archive Data (DynamoDB + S3)', action='store_true')
+   
     parser.add_argument('--update_resources', help='Update all static resources to S3', action='store_true')
     parser.add_argument('--update_lambda', help='Update Lambda Function(' + ARK_ARCHIVER_LAMBDA + ')', action='store_true')
+    parser.add_argument('--update_zappa', help='Update Flask with Zappa', action='store_true')
 
     parser.add_argument('--account_table', help='Print ' + dynamodb.ACCOUNT_TABLE + ' from DynamoDB‎', action='store_true')
     parser.add_argument('--archive_table', help='Print ' + dynamodb.ARCHIVE_TABLE + ' from DynamoDB', action='store_true')
@@ -198,6 +201,15 @@ if __name__ == '__main__':
 
     if args.update_lambda:
         update_lambda()
+
+    
+    if args.update_zappa:
+        print("Forwarding 'zappa update dev'", '...')
+        from zappa import cli
+        zappa_cli = cli.ZappaCLI()
+        zappa_cli.handle(argv=['update', 'dev'])
+        print('    Succeeded')
+        print('\n')
 
 
     if args.account_table:

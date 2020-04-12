@@ -100,11 +100,12 @@ AWS Lambda for flask zappa: ```corelib``` and ```ark_app```
 #### 1.3.2 Deployment
 Use the helper script to do all AWS deployment automatically.
 ```
-python helper.py --help
+python helper.py --update_resources --update_lambda --update_zappa
 ```
 
 
 #### 1.3.3 Zappa
+*Currently, only `dev` branch is deployed*
 To deploy
 ```
 zappa deploy dev
