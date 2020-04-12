@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
     if args.account_table:
         print(dynamodb.ACCOUNT_TABLE)
-        table = dynamodb.get_table(dynamodb.ACCOUNT_TABLE)
+        table = dynamodb.get_table(dynamodb.ACCOUNT_TABLE, return_raw=True)
         for row in table:
             print(row)
         print('\n')
@@ -222,7 +222,7 @@ if __name__ == '__main__':
 
     if args.archive_table:
         print(dynamodb.ARCHIVE_TABLE)
-        table = dynamodb.get_table(dynamodb.ARCHIVE_TABLE)
+        table = dynamodb.get_table(dynamodb.ARCHIVE_TABLE, return_raw=True)
         for row in table:
             print(row)
         print('\n')
@@ -239,3 +239,9 @@ if __name__ == '__main__':
     # Must be the last one to execute
     if args.reset and args.confirm:
         reset()
+
+    
+    
+    ###########################################
+    # PLACE TEMPROARY UNCONDITIONAL CODE HERE #
+    ###########################################
