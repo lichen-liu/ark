@@ -46,7 +46,7 @@ class Snapshoter:
                     chrome_options.add_argument('user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
                     chrome_options.binary_location = os.getcwd() + "/bin/headless-chromium"
 
-                    driver = webdriver.Chrome(options=options)
+                    driver = webdriver.Chrome(options=chrome_options)
             elif _DEFAULT_BROWSER == "firefox":
                 options = webdriver.FirefoxOptions()
                 options.add_argument("--headless")
