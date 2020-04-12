@@ -161,15 +161,16 @@ def create_directory_if_necessary(directory, bucket_name=BUCKET):
     return False
 
 
-def upload_file_bytes_object(key, file_bytes, bucket_name=BUCKET):
+def upload_file_bytes_object(key, file_bytes, bucket_name=BUCKET, public=False):
     '''Upload file bytes to an S3 bucket
 
     :param bucket_name: Bucket to upload to
     :param key: S3 object name
     :param file_bytes: file bytes object to upload
+    :param public: Whether makes the uploaded object public
     :return: True if file was uploaded, else False
     '''
-    return upload_file_object(key=key, file=io.BytesIO(file_bytes), bucket_name=bucket_name)
+    return upload_file_object(key=key, file=io.BytesIO(file_bytes), bucket_name=bucket_name, public=public)
 
 
 def upload_file_object(key, file, bucket_name=BUCKET, public=False):
@@ -187,6 +188,27 @@ def upload_file_object(key, file, bucket_name=BUCKET, public=False):
             boto3.client('s3').upload_fileobj(file, bucket_name, key, ExtraArgs={'ACL':'public-read'})
         else:
             boto3.client('s3').upload_fileobj(file, bucket_name, key)
+    except botocore.exceptions.ClientError as e:
+        print(str(e))
+        return False
+    return True
+
+
+def upload_file(key, filename, bucket_name=BUCKET, public=False):
+    '''Upload a file to an S3 bucket
+
+    :param bucket_name: Bucket to upload to
+    :param key: S3 object name
+    :param filename: Filename to upload
+    :param public: Whether makes the uploaded object public
+    :return: True if file was uploaded, else False
+    '''
+
+    try:
+        if public:
+            boto3.client('s3').upload_file(filename, bucket_name, key, ExtraArgs={'ACL':'public-read'})
+        else:
+            boto3.client('s3').upload_file(filename, bucket_name, key)
     except botocore.exceptions.ClientError as e:
         print(str(e))
         return False

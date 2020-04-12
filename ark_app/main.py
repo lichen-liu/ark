@@ -83,12 +83,12 @@ def main(guest_welcome_args=None, user_welcome_args=None):
 
 
 def main_guest_welcome(args):
-    return render_template('guest_welcome.html', static_icons_dir_path=static_resources.get_static_icons_dir_path(config.RUNNING_LOCALLY),
+    return render_template('guest_welcome.html', static_icons_dir_path=static_resources.get_static_icons_dir(config.RUNNING_LOCALLY),
         username=args.username, password=args.password, error_message=args.error_message)
 
 
 def main_user_welcome(args):
-    return render_template('user_welcome.html', static_icons_dir_path=static_resources.get_static_icons_dir_path(config.RUNNING_LOCALLY),
+    return render_template('user_welcome.html', static_icons_dir_path=static_resources.get_static_icons_dir(config.RUNNING_LOCALLY),
         error_message=args.error_message,
         prefill_url_text=args.prefill_url_text,
         url_archive_info=args.url_archive_info, stats_info=args.stats_info,

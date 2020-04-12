@@ -1,5 +1,6 @@
 #!venv/bin/python
 
+import boto3
 import shutil
 import os
 import argparse
@@ -17,7 +18,8 @@ def wait_for_countdown(seconds):
     print('    Done')
 
 
-ARK_ARCHIVER_LAMBDA = 'arc-archiver-lambda'
+ARK_ARCHIVER_LAMBDA = 'ark-archiver-lambda'
+ARK_ARCHIVER_LAMBDA_S3_BUCKET = 'clr-ark-archiver-lambda'
 
 def update_lambda():
     build_path = 'build'
@@ -77,6 +79,22 @@ def update_lambda():
     
     print('Deleting temporary dir', build_path)
     shutil.rmtree(build_path)
+
+    if s3.create_bucket_if_necessary(bucket_name=ARK_ARCHIVER_LAMBDA_S3_BUCKET):
+        print('Created S3 Bucket', ARK_ARCHIVER_LAMBDA_S3_BUCKET)
+    
+    print('Uploading', build_zip_file, 'to S3', ARK_ARCHIVER_LAMBDA_S3_BUCKET)
+    s3.upload_file(key=build_zip_file, filename=build_zip_file, bucket_name=ARK_ARCHIVER_LAMBDA_S3_BUCKET, public=True)
+
+    print('Updating Lambda Function Code for', ARK_ARCHIVER_LAMBDA)
+    boto3.client('lambda').update_function_code(
+        FunctionName=ARK_ARCHIVER_LAMBDA,
+        S3Bucket=ARK_ARCHIVER_LAMBDA_S3_BUCKET,
+        S3Key=build_zip_file)
+
+    print('Deleting', build_zip_file)
+    if os.path.exists(build_zip_file):
+        os.remove(build_zip_file)
 
     print('    Succeeded')
     print('\n')

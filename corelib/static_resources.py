@@ -28,15 +28,10 @@ def update_resources_to_s3():
 
     static_icons_dir_path, files = get_local_static_icon_files()
     for file in files:
-        with open(join(static_icons_dir_path, file), 'rb') as data:
-            s3.upload_file_object(key=S3_ICONS_DIR + file, file=data, bucket_name=S3_BUCKET, public=True)
+        s3.upload_file(key=S3_ICONS_DIR + file, filename=join(static_icons_dir_path, file), bucket_name=S3_BUCKET, public=True)
 
 
-def get_s3_static_icons_dir_path():
-    return '{}/{}/{}'.format(boto3.client('s3').meta.endpoint_url, S3_BUCKET, S3_ICONS_DIR)
-
-
-def get_static_icons_dir_path(local=True):
+def get_static_icons_dir(local=True):
     if local:
         return '{}/{}'.format('..', S3_ICONS_DIR)
     else:
