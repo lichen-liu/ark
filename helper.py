@@ -167,7 +167,7 @@ if __name__ == '__main__':
    
     parser.add_argument('--update_resources', help='Update all static resources to S3', action='store_true')
     parser.add_argument('--update_lambda', help='Update Lambda Function(' + ARK_ARCHIVER_LAMBDA + ')', action='store_true')
-    parser.add_argument('--update_zappa', help='Update Flask with Zappa', action='store_true')
+    parser.add_argument('--update_flask', help='Update Flask with Zappa', action='store_true')
 
     parser.add_argument('--account_table', help='Print ' + dynamodb.ACCOUNT_TABLE + ' from DynamoDB‎', action='store_true')
     parser.add_argument('--archive_table', help='Print ' + dynamodb.ARCHIVE_TABLE + ' from DynamoDB', action='store_true')
@@ -203,7 +203,7 @@ if __name__ == '__main__':
         update_lambda()
 
     
-    if args.update_zappa:
+    if args.update_flask:
         print("Forwarding 'zappa update dev'", '...')
         from zappa import cli
         zappa_cli = cli.ZappaCLI()
