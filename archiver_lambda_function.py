@@ -1,4 +1,5 @@
 from corelib import dynamodb
+from archivelib import archive_lambda
 import json
 
 
@@ -13,9 +14,15 @@ def lambda_handler(event, lambda_context):
             'body': json.dumps('Nothing to handle!')
         }
     else:
+        error_count = 0
+        for account_id, original_url in result:
+            error_message = archive_lambda.archive_url(original_url=original_url, username=account_id, running_locally=False)
+            if error_message:
+                error_count += 1
+        
         return {
             'statusCode': 200,
-            'body': json.dumps('Handled ' + str(len(result)) + ' items !')
+            'body': json.dumps('Handled ' + str(len(result)) + ' items, ' + str(error_count) + ' items failed!')
         }
 
 
@@ -55,20 +62,8 @@ def dynamodb_event_filter(event):
         if new_image is None or old_image is None:
             continue
 
-        new_pending_list_pair = new_image.get(dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST)
-        old_pending_list_pair = old_image.get(dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST)
-
-        if new_pending_list_pair is None or old_pending_list_pair is None:
-            continue
-        
-        new_pending_list = new_pending_list_pair.get('SS')
-        old_pending_list = old_pending_list_pair.get('SS')
-
-        if new_pending_list is None or old_pending_list is None:
-            continue
-
-        new_pending_set = set(new_pending_list)
-        old_pending_set = set(old_pending_list)
+        new_pending_set = set(new_image.get(dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST, {'SS':list()})['SS'])
+        old_pending_set = set(old_image.get(dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST, {'SS':list()})['SS'])
 
         difference_set = new_pending_set.difference(old_pending_set)
         if len(difference_set) == 0:
