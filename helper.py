@@ -25,6 +25,7 @@ if __name__ == '__main__':
     parser.add_argument('--archive_table', help='Print ' + dynamodb.ARCHIVE_TABLE + ' from DynamoDB', action='store_true')
     parser.add_argument('--s3', help='Print ' + s3.BUCKET + ' from S3', action ='store_true')
     parser.add_argument('--reset', help='Reset everything', action='store_true')
+    parser.add_argument('--confirm', help='Confirm', action='store_true')
 
     args = parser.parse_args()
 
@@ -94,7 +95,10 @@ if __name__ == '__main__':
 
 
     # Must be the last one to execute
-    if args.reset:
+    if args.reset and args.confirm:
+        print('Warning: Resetting everything!')
+        print('\n')
+
         print('Deleting', dynamodb.ARCHIVE_TABLE, '...')
         dynamodb.delete_table(dynamodb.ARCHIVE_TABLE)
         print('    Succeeded')
