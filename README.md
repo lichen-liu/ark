@@ -35,16 +35,21 @@ Flask: Upon user login, arkAccount.archiveFailedRequestList, arkAccount.archiveP
 the latest several submitted histories are shown.
 
 
-### 1.2 Local
+### 1.2 Local Testing
 
 
 #### 1.2.1 Python Setup
 Use: Python 3.7.3
 ```
 python -m venv venv
+
 venv\Scripts\activate
 source venv/bin/activate
+
+# Not required for corelib and archivelib
 pip install Flask
+
+# Required for all
 pip install boto3
 pip install Pillow
 pip install selenium
@@ -73,12 +78,17 @@ aws_session_token= Your_session_token
 ```
 
 
-### 1.3 AWS
+### 1.3 AWS Deployment
 https://ahiptn0b0k.execute-api.us-east-1.amazonaws.com/dev/main
 
 Set the following in ```ark_app/config.py```
 ```
 config.RUNNING_LOCALLY = False
+```
+
+Requires the following packages
+```
+pip install zappa
 ```
 
 
@@ -87,7 +97,14 @@ AWS Lambda for archive: ```corelib``` and ```archivelib```
 AWS Lambda for flask zappa: ```corelib``` and ```ark_app```
 
 
-#### 1.3.2 Zappa
+#### 1.3.2 Deployment
+Use the helper script to do all AWS deployment automatically.
+```
+python helper.py --help
+```
+
+
+#### 1.3.3 Zappa
 To deploy
 ```
 zappa deploy dev
@@ -102,7 +119,40 @@ zappa undeploy dev
 ```
 
 
-#### 1.3.3 Static Resources
+#### 1.3.4 Lambda
+Uses ```serverless-chrome```: https://github.com/adieuadieu/serverless-chrome
+
+
+To upload Lambda Function Code, upload build.zip to S3, and update in Lambda
+```
+build.zip
+    src - (corelib, archivelib, lambda_function_archiver.py)
+    lib - Python Libraries
+    bin - Executables (serverless-chrome, chromedriver)
+```
+
+
+To get `lib`, Use Python 3.7.3 and do the following
+```
+pip install boto3 -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
+pip install Pillow -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
+pip install selenium -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
+pip install requests -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
+pip install archiveis -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
+pip install bs4 -t . --no-compile
+```
+
+
+Set the following environment variable:
+```
+PYTHONPATH	/var/task/src:/var/task/lib
+```
+
+
+Properly set triggers, permissions, restrictions.
+
+
+#### 1.3.5 Static Resources
 Update all local static/icons to S3
 ```
 python helper.py --update_resources

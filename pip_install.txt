@@ -1,6 +1,0 @@
-pip install boto3 -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
-pip install Pillow -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
-pip install selenium -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
-pip install requests -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
-pip install archiveis -t . --no-compile --platform=manylinux1_x86_64 --only-binary=:all:
-pip install bs4 -t . --no-compile
