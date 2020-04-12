@@ -221,8 +221,9 @@
           <tbody>
             <td>{{item}}</td>
             <td>
-              <form action={{url_for("archive_url_handler")}} method="GET">
-                <button type="submit" id="archive_url_text" name="archive_url_text" value={{item}}>Retry</button>
+              <form action={{url_for("retry_archive_request_handler")}} method="POST">
+                <button type="submit" name="url_text" value="{{item}}">Retry</button>
+                <input type="hidden" name="request_list_name" value="failed">
               </form>
             </td>
           </tbody>
@@ -286,12 +287,19 @@
           <thead>
             <tr>
               <th>URL</th>
+              <th>Retry</th>
             </tr>
           </thead>
           {% if pending_list %}
           {% for item in pending_list %}
           <tbody>
             <td>{{item}}</td>
+            <td>
+              <form action={{url_for("retry_archive_request_handler")}} method="POST">
+                <button type="submit" name="url_text" value="{{item}}">Retry</button>
+                <input type="hidden" name="request_list_name" value="pending">
+              </form>
+            </td>
           </tbody>
           {% endfor %}
           {% endif %}

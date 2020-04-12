@@ -60,6 +60,28 @@ def archive_url_handler():
         return redirect(url_for('main_handler'))
 
 
+@webapp.route('/api/retry_archive_request', methods=['POST'])
+def retry_archive_request_handler():
+    if not account.account_is_logged_in():
+        return redirect(url_for('main_handler'))
+    
+    original_url = request.form.get('url_text')
+    request_list_short_name = request.form.get('request_list_name')
+    print('retry_archive_request_handler(' + str(request_list_short_name) + ', ' + original_url + ')')
+    
+    if request_list_short_name == 'pending':
+        list_name = dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST
+    elif request_list_short_name == 'failed':
+        list_name = dynamodb.ACCOUNT_TABLE_ARCHIVE_FAILED_REQUEST_LIST
+
+    # Regardless whether it actually exists in the list,
+    # archive the url again
+    dynamodb.pop_account_archive_request_by(
+        list_name=list_name, username=account.account_get_logged_in_username(), original_url=original_url)
+
+    return redirect(url_for('archive_url_handler', url_text=original_url))
+
+
 class UrlArchiveInfo:
     def __init__(self, proper_url, created_datetime, query_url=None):
         self.query_url = query_url if query_url else proper_url
