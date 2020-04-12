@@ -7,9 +7,15 @@ def lambda_handler(event, lambda_context):
     print(result)
 
     if len(result) == 0:
-        return 'nogoodnogood'
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Nothing to handle!')
+        }
     else:
-        return 'goodgood'
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Handled ' + str(len(result)) + ' items !')
+        }
 
 
 def dynamodb_event_filter(event):
