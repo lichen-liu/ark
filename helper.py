@@ -130,6 +130,42 @@ def update_lambda():
     print('\n')
 
 
+def update_flask():
+    print('Updating Flask onto Lambda via Zappa', '...')
+        
+    ark_app_dir = 'ark_app'
+    config_file = 'config.py'
+    config_file_bak = config_file + '.bak'
+    config_file_path = os.path.join(ark_app_dir, config_file)
+    config_file_bak_path = os.path.join(ark_app_dir, config_file_bak)
+
+    running_nonlocally_code = 'RUNNING_LOCALLY = False'
+
+    if os.path.exists(config_file_bak_path):
+        print('Deleting', config_file_bak_path)
+        os.remove(config_file_bak_path)
+
+    print('Copying', config_file_path, 'to', config_file_bak_path)
+    shutil.copy2(config_file_path, config_file_bak_path)
+    print('Appending', running_nonlocally_code, 'to end of', config_file_path)
+    with open(config_file_path, 'a') as f:
+        f.write(running_nonlocally_code)
+        f.write('\n')
+
+    print("Forwarding 'zappa update dev'", '...')
+    from zappa import cli
+    zappa_cli = cli.ZappaCLI()
+    zappa_cli.handle(argv=['update', 'dev'])
+
+    print('Deleting', config_file_path)
+    os.remove(config_file_path)
+    print('Moving', config_file_bak_path, 'to', config_file_path)
+    shutil.move(config_file_bak_path, config_file_path)
+
+    print('    Succeeded')
+    print('\n')
+
+
 def reset():
     print('Warning: Resetting everything!')
     print('\n')
@@ -204,12 +240,7 @@ if __name__ == '__main__':
 
     
     if args.update_flask:
-        print("Forwarding 'zappa update dev'", '...')
-        from zappa import cli
-        zappa_cli = cli.ZappaCLI()
-        zappa_cli.handle(argv=['update', 'dev'])
-        print('    Succeeded')
-        print('\n')
+        update_flask()
 
 
     if args.account_table:

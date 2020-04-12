@@ -1,7 +1,12 @@
 from datetime import timedelta
 
 
-RUNNING_LOCALLY = False
+#############################
+# DON'T TOUCH THIS CONSTANT #
+#############################
+# This value will be overwritten to False during
+# helper.py --update_flask
+RUNNING_LOCALLY = True
 
 
 class Config(object):
@@ -13,3 +18,4 @@ class Config(object):
 ################################
 # AUTO-GENERATED SETTINGS HERE #
 ################################
+RUNNING_LOCALLY = False
