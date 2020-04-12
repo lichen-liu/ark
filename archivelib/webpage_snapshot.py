@@ -15,21 +15,24 @@ import platform
 _SUPPORTED_BROWERS = {"chrome", "firefox"}
 _DEFAULT_BROWSER = "chrome"
 class Snapshoter:
-    def __init__(self):
-        def get_default_driver():
+    def __init__(self, running_locally):
+        def get_default_driver(running_locally):
             if _DEFAULT_BROWSER == "chrome":
                 options = webdriver.ChromeOptions()
                 options.add_argument("--headless")
                 
-                chromedrivers_path = os.path.join(str(pathlib.Path(__file__).parent.absolute()), 'chromedrivers')
-                
-                operating_system = platform.system()
-                if operating_system == 'Windows':
-                    chromedriver_path = os.path.join(chromedrivers_path, 'chromedriver.exe')
-                elif operating_system == 'Darwin':
-                    chromedriver_path = os.path.join(chromedrivers_path, 'chromedriver')
+                if running_locally:
+                    chromedrivers_path = os.path.join(str(pathlib.Path(__file__).parent.absolute()), 'chromedrivers')
+                    
+                    operating_system = platform.system()
+                    if operating_system == 'Windows':
+                        chromedriver_path = os.path.join(chromedrivers_path, 'chromedriver.exe')
+                    elif operating_system == 'Darwin':
+                        chromedriver_path = os.path.join(chromedrivers_path, 'chromedriver')
 
-                driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
+                    driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
+                else:
+                    driver = webdriver.Chrome(options=options)
             elif _DEFAULT_BROWSER == "firefox":
                 options = webdriver.FirefoxOptions()
                 options.add_argument("--headless")
@@ -41,7 +44,7 @@ class Snapshoter:
 
             return driver
 
-        self._driver = get_default_driver()
+        self._driver = get_default_driver(running_locally)
         self._driver.maximize_window()
         self._height = 0
 
@@ -76,10 +79,12 @@ class Snapshoter:
         return self._driver.page_source
 
 
-def take_url_webpage_snapshot(url, snapshoter=Snapshoter()):
+def take_url_webpage_snapshot(url, running_locally, snapshoter=None):
     '''
     (png, text)
     '''
+    if snapshoter is None:
+        snapshoter = Snapshoter(running_locally=running_locally)
     snapshoter.open_url(url)
     snapshoter.force_render()
 

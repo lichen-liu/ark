@@ -6,7 +6,7 @@ import archiveis
 import re
 
 
-def archive_url(original_url, username):
+def archive_url(original_url, username, running_locally):
     '''
     Return error_message if failed; otherwise None.
     '''
@@ -31,7 +31,7 @@ def archive_url(original_url, username):
         is_newly_created = dynamodb.create_new_archive(url=url, datetime=utc_datetime_str, username=username, archive_md_url=initial_archive_md_url)
         if is_newly_created:
             # Screenshot the url webpage
-            url_webpage_png, _url_inner_html = webpage_snapshot.take_url_webpage_snapshot(url)
+            url_webpage_png, _url_inner_html = webpage_snapshot.take_url_webpage_snapshot(url=url, running_locally=running_locally)
 
             # Store the screenshot on S3
             archive_id, _, _ = dynamodb.get_archive_info(url=url, datetime=utc_datetime_str)
