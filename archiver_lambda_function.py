@@ -1,4 +1,5 @@
 from corelib import dynamodb
+import json
 
 
 def lambda_handler(event, lambda_context):
