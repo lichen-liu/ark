@@ -74,11 +74,15 @@ aws_session_token= Your_session_token
 
 
 ### 1.3 AWS
+Set the following in ```ark_app/config.py```
+```
+config.RUNNING_LOCALLY = False
+```
 
 
 #### 1.3.1 Packages
 AWS Lambda for archive: ```corelib``` and ```archivelib```  
-AWS Lambda for flask zappa (as_handler.RUNNING_LOCALLY == False): ```corelib``` and ```ark_app```
+AWS Lambda for flask zappa: ```corelib``` and ```ark_app```
 
 
 #### 1.3.2 Zappa
@@ -93,6 +97,13 @@ zappa update dev
 To undeploy
 ```
 zappa undeploy dev
+```
+
+
+#### 1.3.3 Static Resources
+Update all local static/icons to S3
+```
+python helper.py --update_resources
 ```
 
 
