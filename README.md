@@ -81,6 +81,21 @@ AWS Lambda for archive: ```corelib``` and ```archivelib```
 AWS Lambda for flask zappa (as_handler.RUNNING_LOCALLY == False): ```corelib``` and ```ark_app```
 
 
+#### 1.3.2 Zappa
+To deploy
+```
+zappa deploy dev
+```
+To update
+```
+zappa update dev
+```
+To undeploy
+```
+zappa undeploy dev
+```
+
+
 ### 1.4 Management Script
 
 
