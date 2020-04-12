@@ -18,4 +18,3 @@ class Config(object):
 ################################
 # AUTO-GENERATED SETTINGS HERE #
 ################################
-RUNNING_LOCALLY = False
