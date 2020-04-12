@@ -81,6 +81,7 @@ aws_session_token= Your_session_token
 ### 1.3 AWS Deployment
 https://ahiptn0b0k.execute-api.us-east-1.amazonaws.com/dev/main
 
+If not using ```helper.py```  
 Set the following in ```ark_app/config.py```
 ```
 config.RUNNING_LOCALLY = False
