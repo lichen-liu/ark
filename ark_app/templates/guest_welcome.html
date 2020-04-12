@@ -25,7 +25,7 @@
       <form class="holderCommon form" id="login_user" action="/api/account_actions" method="POST">
         <h1 class="title">Ark</h1>
         <br>
-        <img class="login_icon" src="../static/icons/login_icon.png"></img>
+        <img class="login_icon" src="{{static_icons_dir_path}}login_icon.png"></img>
         <br>
         <div class="input">
           <input placeholder="Username" type="text" id="username_login" name="username" value={{username if username}}>
@@ -46,7 +46,7 @@
 
       <form class="holderCommon register_form" id="register_user" action="/api/account_actions"
         onsubmit="return validateInput()" method="POST" display="none">
-        <img class="login_icon" src="../static/icons/login_icon.png"></img>
+        <img class="login_icon" src="{{static_icons_dir_path}}login_icon.png"></img>
         <br>
         <div class="input">
           <input placeholder="Choose your username" type="text" id="username_pick" name="username">
@@ -164,7 +164,7 @@
   }
 
   .bgimg {
-    background-image: url('../static/icons/library.jpeg');
+    background-image: url('{{static_icons_dir_path}}library.jpeg');
     height: 100%;
     background-position: center;
     background-size: cover;

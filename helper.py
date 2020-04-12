@@ -4,7 +4,7 @@ import shutil
 import os
 import argparse
 import time
-from corelib import dynamodb, utility, s3
+from corelib import dynamodb, utility, s3, static_resources
 
 
 def wait_for_countdown(seconds):
@@ -18,6 +18,7 @@ def wait_for_countdown(seconds):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--update_resources', help='Update all static resources to S3', action='store_true')
     parser.add_argument('--clear_archive', help='Clear all Archive Data (DynamoDB + S3)', action='store_true')
     parser.add_argument('--clear_all', help='Clear all Account and Archive Data (DynamoDB + S3)', action='store_true')
     parser.add_argument('--account_table', help='Print ' + dynamodb.ACCOUNT_TABLE + ' from DynamoDB‎', action='store_true')
@@ -26,6 +27,13 @@ if __name__ == '__main__':
     parser.add_argument('--reset', help='Reset everything', action='store_true')
 
     args = parser.parse_args()
+
+
+    if args.update_resources:
+        print('Updating Resources to ' + static_resources.S3_BUCKET, '...')
+        static_resources.update_resources_to_s3()
+        print('    Succeeded')
+        print('\n')
 
 
     if s3.create_bucket_if_necessary(bucket_name=s3.BUCKET):

@@ -1,10 +1,10 @@
-from ark_app import webapp, main, account
+from ark_app import webapp, main, account, config
 from flask import request, redirect
 import datetime
 from corelib import dynamodb, url_util, s3, utility
 
-RUNNING_LOCALLY = True
-if RUNNING_LOCALLY:
+
+if config.RUNNING_LOCALLY:
     from archivelib import archive_lambda
 
 
@@ -41,7 +41,7 @@ def archive_url_handler():
     dynamodb.push_account_archive_request(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST,
                                           username=account.account_get_logged_in_username(), original_url=original_url)
 
-    if RUNNING_LOCALLY:
+    if config.RUNNING_LOCALLY:
         # Only for local
         error_message = archive_lambda.archive_url(original_url=original_url, username=account.account_get_logged_in_username())
         if error_message:

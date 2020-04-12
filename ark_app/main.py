@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request
-from ark_app import account, webapp
-from corelib import dynamodb
+from ark_app import account, webapp, config
+from corelib import dynamodb, static_resources
 
 
 @webapp.route('/', methods=['GET', 'POST'])
@@ -83,15 +83,17 @@ def main(guest_welcome_args=None, user_welcome_args=None):
 
 
 def main_guest_welcome(args):
-    return render_template('guest_welcome.html', username=args.username, password=args.password, error_message=args.error_message)
+    return render_template('guest_welcome.html', static_icons_dir_path=static_resources.get_static_icons_dir_path(config.RUNNING_LOCALLY),
+        username=args.username, password=args.password, error_message=args.error_message)
 
 
 def main_user_welcome(args):
-    return render_template('user_welcome.html', error_message=args.error_message,
-    prefill_url_text=args.prefill_url_text,
-    url_archive_info=args.url_archive_info, stats_info=args.stats_info,
-    username=args.username,
-    user_archive_list_pair=(args.show_all_user_archive_list, args.user_archive_list),
-    pending_list=args.pending_list, failed_list=args.failed_list, 
-    dates_with_archives = args.date_strs,
-    datetime_with_archives = args.datetime_strs)
+    return render_template('user_welcome.html', static_icons_dir_path=static_resources.get_static_icons_dir_path(config.RUNNING_LOCALLY),
+        error_message=args.error_message,
+        prefill_url_text=args.prefill_url_text,
+        url_archive_info=args.url_archive_info, stats_info=args.stats_info,
+        username=args.username,
+        user_archive_list_pair=(args.show_all_user_archive_list, args.user_archive_list),
+        pending_list=args.pending_list, failed_list=args.failed_list, 
+        dates_with_archives = args.date_strs,
+        datetime_with_archives = args.datetime_strs)

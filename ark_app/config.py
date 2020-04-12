@@ -1,6 +1,9 @@
 from datetime import timedelta
 
 
+RUNNING_LOCALLY = False
+
+
 class Config(object):
     SECRET_KEY = 'NIDEMAMAMASHANGJIUYAOBAOZHALE'
     PERMANENT_SESSION_LIFETIME = timedelta(minutes= 60 * 24)
