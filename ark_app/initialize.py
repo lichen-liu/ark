@@ -1,4 +1,5 @@
 from corelib import dynamodb, s3
+from ark_app import config
 
 
 def init():
@@ -7,6 +8,7 @@ def init():
     '''
     
     print('INITIALIZE')
+    print('RUNNING_LOCALLY', config.RUNNING_LOCALLY)
 
     # Create arkAccount Table if necessary
     if dynamodb.create_account_table():
