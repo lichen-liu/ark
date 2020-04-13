@@ -1,5 +1,5 @@
 # Ark
-An place for you to screenshot and store your favourite websites like a charm.
+A place for you to screenshot and store your favourite websites like a charm.
 
 ~~[Requirements](http://www.cs.toronto.edu/~delara/courses/ece1779/projects/ECE1779-a3.pdf)~~
 
