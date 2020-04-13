@@ -20,12 +20,13 @@ def archive_url(original_url, username, running_locally):
         utc_datetime_str = str(utc_datetime)
 
         # Save it on archive website
-        try:
-            print('archiveis.capture(' + url + ')')
-            initial_archive_md_url = archiveis.capture(url)
-        except Exception as e:
-            print('Unexpected exception: ' + str(e))
-            initial_archive_md_url = None
+        initial_archive_md_url = None
+        if running_locally:
+            try:
+                print('archiveis.capture(' + url + ')')
+                initial_archive_md_url = archiveis.capture(url)
+            except Exception as e:
+                print('Unexpected exception: ' + str(e))
         
         # Screenshot the url webpage
         print('take_url_webpage_snapshot(' + url + ')')
