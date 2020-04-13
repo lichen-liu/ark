@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import os
 import pathlib
-
+import time
 import platform
 
 
@@ -32,7 +32,6 @@ class Snapshoter:
 
         if running_locally:
             chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("--headless")
         else:
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument('--headless')
@@ -43,7 +42,7 @@ class Snapshoter:
             chrome_options.add_argument('--hide-scrollbars')
             chrome_options.add_argument('--enable-logging')
             #chrome_options.add_argument('--log-level=0')
-            chrome_options.add_argument('--v=99')
+            #chrome_options.add_argument('--v=99')
             chrome_options.add_argument('--single-process')
             chrome_options.add_argument('--data-path=/tmp/data-path')
             chrome_options.add_argument('--ignore-certificate-errors')
@@ -58,11 +57,21 @@ class Snapshoter:
 
 
     def open_url(self, url):
+        start = time.clock()
+
         self._driver.get(url)
+
+        elapsed = time.clock() - start
+        print('open_url(' + url + ')' + ' ready in ' + str(elapsed) + 's.')
     
 
     def force_render(self):
+        start = time.clock()
+
         self._height = self._driver.execute_script("return document.body.scrollHeight")
+        
+        elapsed = time.clock() - start
+        print('force_render' + ' ready in ' + str(elapsed) + 's.')
         #Scroll the page to make sure everything is loaded
         #driver.set_window_size(1000, height - 700)
         #driver.execute_script("window.scrollTo(0, 700)")
@@ -93,10 +102,15 @@ def take_url_webpage_snapshot(url, running_locally, snapshoter=None):
     '''
     if snapshoter is None:
         snapshoter = Snapshoter(running_locally=running_locally)
+    
+    start = time.clock()
+
     snapshoter.open_url(url)
     snapshoter.force_render()
-
     image = snapshoter.get_screenshot_as_png()
-    text = snapshoter.get_webpage_inner_html() 
+    text = snapshoter.get_webpage_inner_html()
+
+    elapsed = time.clock() - start
+    print('take_url_webpage_snapshot(' + url + ')' + ' ready in ' + str(elapsed) + 's.')
 
     return image, text
