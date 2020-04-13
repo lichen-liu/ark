@@ -42,7 +42,7 @@ class Snapshoter:
             chrome_options.add_argument('--user-data-dir=/tmp/user-data')
             chrome_options.add_argument('--hide-scrollbars')
             chrome_options.add_argument('--enable-logging')
-            chrome_options.add_argument('--log-level=0')
+            #chrome_options.add_argument('--log-level=0')
             chrome_options.add_argument('--v=99')
             chrome_options.add_argument('--single-process')
             chrome_options.add_argument('--data-path=/tmp/data-path')

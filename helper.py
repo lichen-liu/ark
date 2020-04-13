@@ -48,7 +48,7 @@ def clear_all():
 ARK_ARCHIVER_LAMBDA = 'ark-archiver-lambda'
 ARK_ARCHIVER_LAMBDA_S3_BUCKET = 'clr-ark-archiver-lambda'
 
-def update_lambda(local_ops):
+def update_archiver(local_ops):
     build_path = 'build'
     build_src_path = os.path.join(build_path, 'src')
     
@@ -201,7 +201,7 @@ if __name__ == '__main__':
     parser.add_argument('--clear_all', help='Clear all Account and Archive Data (DynamoDB + S3)', action='store_true')
    
     parser.add_argument('--update_resources', help='Update all static resources to S3', action='store_true')
-    parser.add_argument('--update_lambda', help='Update Lambda Function(' + ARK_ARCHIVER_LAMBDA + ')', action='store_true')
+    parser.add_argument('--update_archiver', help='Update Lambda Function(' + ARK_ARCHIVER_LAMBDA + ')', action='store_true')
     parser.add_argument('--update_flask', help='Update Flask with Zappa', action='store_true')
 
     parser.add_argument('--account_table', help='Print ' + dynamodb.ACCOUNT_TABLE + ' from DynamoDB‎', action='store_true')
@@ -235,8 +235,8 @@ if __name__ == '__main__':
         print('\n')
     
 
-    if args.update_lambda:
-        update_lambda(local_ops=args.local)
+    if args.update_archiver:
+        update_archiver(local_ops=args.local)
 
     
     if args.update_flask:
