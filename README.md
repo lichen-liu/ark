@@ -1,6 +1,7 @@
-# ark
-[Requirements](http://www.cs.toronto.edu/~delara/courses/ece1779/projects/ECE1779-a3.pdf)
-
+# Ark
+An place for you to screenshot and store your favourite website like a charm.
+~~[Requirements](http://www.cs.toronto.edu/~delara/courses/ece1779/projects/ECE1779-a3.pdf)~~
+Try it [here](https://ahiptn0b0k.execute-api.us-east-1.amazonaws.com/dev/main)
 
 ## 1.0 Ark App
 
