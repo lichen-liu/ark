@@ -7,6 +7,7 @@ import argparse
 import time
 from corelib import dynamodb, utility, s3, static_resources
 from zipfile import ZipFile
+import tarfile
 
 
 def wait_for_countdown(seconds):
@@ -53,7 +54,7 @@ def update_lambda():
     build_path = 'build'
     build_src_path = os.path.join(build_path, 'src')
     
-    build_base_zip_file = 'build_base.zip'
+    build_base_zip_file = 'build_base.tar.bz2'
     build_zip_file = 'build.zip'
     archivelib_dir = 'archivelib'
     corelib_dir = 'corelib'
@@ -81,8 +82,13 @@ def update_lambda():
         os.remove(build_zip_file)
 
     print('Extracting all files in ' + build_base_zip_file + ' to ' + build_path)
-    with ZipFile(build_base_zip_file, 'r') as zipObj:
-        zipObj.extractall(build_path)
+    ext = utility.get_file_extension(build_base_zip_file)
+    if ext == '.zip':
+        with ZipFile(build_base_zip_file, 'r') as zipObj:
+            zipObj.extractall(build_path)
+    else:
+        with tarfile.open(build_base_zip_file, 'r:bz2') as tar:
+            tar.extractall(build_path)
 
     print('Deleting all files in ' + build_src_path)
     if os.path.exists(build_src_path):

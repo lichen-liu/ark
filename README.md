@@ -130,7 +130,7 @@ To upload Lambda Function Code, upload build.zip to S3, and update in Lambda
 build.zip
     src - (corelib, archivelib, lambda_function_archiver.py)
     lib - Python Libraries
-    bin - Executables (serverless-chrome, chromedriver)
+    bin - Executables (serverless-chrome, chromedriver, .font)
 ```
 
 
@@ -145,9 +145,14 @@ pip install bs4 -t . --no-compile
 ```
 
 
+Fonts are stored in ```bin/.font```, downloaded from https://github.com/googlefonts/noto-cjk   
+Currently, only ```.otf``` fonts are tested.
+
+
 Set the following environment variable:
 ```
 PYTHONPATH	/var/task/src:/var/task/lib
+HOME	/var/task/bin
 ```
 
 
