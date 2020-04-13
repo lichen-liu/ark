@@ -42,13 +42,19 @@ def test_url(url):
     Return True if url is reachable; otherwise False
     Try head request first; if failed, then try get request
     '''
-
+    header_list = [{'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36'}, 
+                    dict()]
+    
     for request_func in [requests.head, requests.get]:
-        try:
-            r = request_func(url, timeout=2)
-            if r.status_code == 200:
-                return True
-        except Exception:
-            pass
+        for header in header_list:
+            try:
+                r = request_func(url=url, timeout=2, headers=header)
+                
+                # print(r, url, request_func.__name__, header)
+                
+                if r.status_code == 200:
+                    return True
+            except Exception:
+                pass
 
     return False
