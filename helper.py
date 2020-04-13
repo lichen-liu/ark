@@ -6,8 +6,6 @@ import os
 import argparse
 import time
 from corelib import dynamodb, utility, s3, static_resources
-from zipfile import ZipFile
-import tarfile
 
 
 def wait_for_countdown(seconds):
@@ -50,7 +48,7 @@ def clear_all():
 ARK_ARCHIVER_LAMBDA = 'ark-archiver-lambda'
 ARK_ARCHIVER_LAMBDA_S3_BUCKET = 'clr-ark-archiver-lambda'
 
-def update_lambda():
+def update_lambda(local_ops):
     build_path = 'build'
     build_src_path = os.path.join(build_path, 'src')
     
@@ -66,7 +64,7 @@ def update_lambda():
     dst_archivelib_cache_path = os.path.join(os.path.join(build_src_path, archivelib_dir), cache_dir)
     dst_corelib_cache_path = os.path.join(os.path.join(build_src_path, corelib_dir), cache_dir)
 
-    print('Updating Lambda Function Code for', ARK_ARCHIVER_LAMBDA, '...')
+    print('Updating Lambda Function Code for', ARK_ARCHIVER_LAMBDA, 'locally' if local_ops else str(), '...')
 
     if not os.path.exists(build_base_zip_file):
         print('Error: No', build_base_zip_file, 'file found!')
@@ -82,13 +80,7 @@ def update_lambda():
         os.remove(build_zip_file)
 
     print('Extracting all files in ' + build_base_zip_file + ' to ' + build_path)
-    ext = utility.get_file_extension(build_base_zip_file)
-    if ext == '.zip':
-        with ZipFile(build_base_zip_file, 'r') as zipObj:
-            zipObj.extractall(build_path)
-    else:
-        with tarfile.open(build_base_zip_file, 'r:bz2') as tar:
-            tar.extractall(build_path)
+    shutil.unpack_archive(build_base_zip_file, build_path)
 
     print('Deleting all files in ' + build_src_path)
     if os.path.exists(build_src_path):
@@ -116,17 +108,18 @@ def update_lambda():
     print('Deleting temporary dir', build_path)
     shutil.rmtree(build_path)
 
-    if s3.create_bucket_if_necessary(bucket_name=ARK_ARCHIVER_LAMBDA_S3_BUCKET):
-        print('Created S3 Bucket', ARK_ARCHIVER_LAMBDA_S3_BUCKET)
-    
-    print('Uploading', build_zip_file, 'to S3', ARK_ARCHIVER_LAMBDA_S3_BUCKET)
-    s3.upload_file(key=build_zip_file, filename=build_zip_file, bucket_name=ARK_ARCHIVER_LAMBDA_S3_BUCKET, public=True)
+    if not local_ops:
+        if s3.create_bucket_if_necessary(bucket_name=ARK_ARCHIVER_LAMBDA_S3_BUCKET):
+            print('Created S3 Bucket', ARK_ARCHIVER_LAMBDA_S3_BUCKET)
+        
+        print('Uploading', build_zip_file, 'to S3', ARK_ARCHIVER_LAMBDA_S3_BUCKET)
+        s3.upload_file(key=build_zip_file, filename=build_zip_file, bucket_name=ARK_ARCHIVER_LAMBDA_S3_BUCKET, public=True)
 
-    print('Updating Lambda Function Code for', ARK_ARCHIVER_LAMBDA)
-    boto3.client('lambda').update_function_code(
-        FunctionName=ARK_ARCHIVER_LAMBDA,
-        S3Bucket=ARK_ARCHIVER_LAMBDA_S3_BUCKET,
-        S3Key=build_zip_file)
+        print('Updating Lambda Function Code for', ARK_ARCHIVER_LAMBDA)
+        boto3.client('lambda').update_function_code(
+            FunctionName=ARK_ARCHIVER_LAMBDA,
+            S3Bucket=ARK_ARCHIVER_LAMBDA_S3_BUCKET,
+            S3Key=build_zip_file)
 
     print('Deleting', build_zip_file)
     if os.path.exists(build_zip_file):
@@ -217,6 +210,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--reset', help='Reset everything', action='store_true')
     parser.add_argument('--confirm', help='Confirm', action='store_true')
+    parser.add_argument('--local', help='Do not commit the action to AWS. Only supported for few operations', action='store_true')
 
     args = parser.parse_args()
 
@@ -242,7 +236,7 @@ if __name__ == '__main__':
     
 
     if args.update_lambda:
-        update_lambda()
+        update_lambda(local_ops=args.local)
 
     
     if args.update_flask:
