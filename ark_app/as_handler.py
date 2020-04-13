@@ -95,7 +95,10 @@ class UrlArchiveInfo:
 
         archive_id, self.created_username, self.archive_md_url = dynamodb.get_archive_info(url=self.proper_url, datetime=self.created_datetime)
         url_webpage_png_s3_key = s3.WEBPAGE_SCREENSHOT_DIR + archive_id + '.png'
-        self.screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
+        if s3.is_object_existed(key=url_webpage_png_s3_key):
+            self.screenshot_url = s3.get_object_url(key=url_webpage_png_s3_key)
+        else:
+            self.screenshot_url = None
 
 
 @webapp.route('/api/search_archive_by_url_datetimes', methods=['POST'])

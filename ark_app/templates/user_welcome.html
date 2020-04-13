@@ -125,10 +125,13 @@
         <p>Archive.md URL: {{url_archive_info.archive_md_url}}</p>
 
         <div class="title_div">
-          <p>Webpage Screenshot:<p>
-            </p>
+          <p>Webpage Screenshot:</p>
         </div>
+        {% if url_archive_info.screenshot_url %}
         <img class="webpage_image" src={{url_archive_info.screenshot_url}}>
+        {% else %}
+        <p>The screenshot is not available yet. Please try again later!</p>
+        {% endif %}
 
       </div>
       {% elif stats_info %}
