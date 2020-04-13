@@ -7,6 +7,22 @@
         "runtime": "python3.7",
         "s3_bucket": "clr-ark-zappa",
         "keep_warm": false,
-        "manage_roles": true
+        "manage_roles": true,
+        "exclude": [
+            "archivelib*",
+            "*chromedriver",
+            "build*",
+            "*.zip",
+            "*.tar.bz2",
+            "*__pycache__*",
+            "lambda_function_archiver.py",
+            "run_ark_app.py",
+            "helper.py",
+            ".vscode*",
+            ".gitignore",
+            "README.md",
+            "*bak"
+        ],
+        "delete_local_zip": true
     }
 }
