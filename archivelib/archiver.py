@@ -15,6 +15,10 @@ def archive_url(original_url, username, running_locally):
     print('adjust_url(' + original_url + ')')
     url = url_util.adjust_url(original_url)
     if url is not None:
+        # Pop from pending
+        dynamodb.pop_account_archive_request_by(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST,
+            username=username, original_url=original_url)
+        
         # Record the current datetime
         utc_datetime = datetime.datetime.utcnow()
         utc_datetime_str = str(utc_datetime)
@@ -31,10 +35,6 @@ def archive_url(original_url, username, running_locally):
         # Screenshot the url webpage
         print('take_url_webpage_snapshot(' + url + ')')
         url_webpage_png, _url_inner_html = webpage_snapshot.take_url_webpage_snapshot(url=url, running_locally=running_locally)
-
-        # Pop from pending
-        dynamodb.pop_account_archive_request_by(list_name=dynamodb.ACCOUNT_TABLE_ARCHIVE_PENDING_REQUEST_LIST,
-            username=username, original_url=original_url)
 
         # Create new archive entry on DynamoDB
         dynamodb.create_new_archive(url=url, datetime=utc_datetime_str, username=username, archive_md_url=initial_archive_md_url)

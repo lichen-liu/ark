@@ -5,7 +5,7 @@ from corelib import dynamodb, url_util, s3, utility
 
 
 if config.RUNNING_LOCALLY:
-    from archivelib import archive_lambda
+    from archivelib import archiver
 
 
 @webapp.route('/api/search_or_archive_url', methods=['POST', 'GET'])
@@ -43,7 +43,7 @@ def archive_url_handler():
 
     if config.RUNNING_LOCALLY:
         # Only for local
-        error_message = archive_lambda.archive_url(
+        error_message = archiver.archive_url(
             original_url=original_url, username=account.account_get_logged_in_username(), running_locally=True)
         if error_message:
             return main.main(user_welcome_args=main.UserWelcomeArgs(error_message=error_message))

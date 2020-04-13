@@ -1,5 +1,5 @@
 from corelib import dynamodb
-from archivelib import archive_lambda
+from archivelib import archiver
 import json
 import os
 import subprocess
@@ -40,7 +40,7 @@ def lambda_handler(event, lambda_context):
     else:
         error_count = 0
         for account_id, original_url in result:
-            error_message = archive_lambda.archive_url(original_url=original_url, username=account_id, running_locally=False)
+            error_message = archiver.archive_url(original_url=original_url, username=account_id, running_locally=False)
             if error_message:
                 error_count += 1
         
