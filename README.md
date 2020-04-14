@@ -5,13 +5,20 @@ A place for you to screenshot and store your favourite websites like a charm.
 
 Try it [here](https://ahiptn0b0k.execute-api.us-east-1.amazonaws.com/dev/main)
 
-## 1.0 Ark App
+
+# 1. Architecture
 
 
-### 1.1 Business Logics
+## 1.1 Overview
+The project makes use of various AWS services for execution and backend data storage.
+* AWS S3: URL Website screenshot storage
+* AWS DynamoDB: Database
+* AWS Lambda:
+- Flask HTTP Server
+- Archiver Lambda Function
 
 
-### 1.1.1 Frontend
+## 1.2 Frontend UI Logics
 The behaviour of the application follows the following two rules:
 1. Searches by URL, followed with gradually fine-grained timestamp prompt. The latest
 result from each timestamp-granualarity is shown
@@ -22,7 +29,7 @@ Currently: users must login to be able to use the application.
 Planning: users that are not logged in can only do searchings, but not any archivings.
 
 
-### 1.1.2 Backend
+## 1.3 Main Business Logics Implementation Logics
 Flask: Users must login to do archivings. Once the http request is received by the flask server,
 it stores the original url request into arkAccount.archivePendingRequestList.
 
@@ -38,10 +45,10 @@ Flask: Upon user login, arkAccount.archiveFailedRequestList, arkAccount.archiveP
 the latest several submitted histories are shown.
 
 
-### 1.2 Local Testing
+# 2. Local Deployment
 
 
-#### 1.2.1 Python Setup
+## 2.1 Python Setup
 Use: Python 3.7.3
 ```
 python -m venv venv
@@ -64,13 +71,13 @@ python run_ark_app.py
 ```
 
 
-#### 1.2.2 chromedriver Setup
+## 2.2 chromedriver Setup
 Located in `archivelib/chromedrivers`  
 Win32: Chrome version 81  
 Mac64: Chrome version
 
 
-#### 1.2.3 AWS Credential Setup
+## 2.3 AWS Credential Setup
 Set ~/.aws/credentials following this format:
 
 ```
@@ -81,7 +88,7 @@ aws_session_token= Your_session_token
 ```
 
 
-### 1.3 AWS Deployment
+# 3. AWS Deployment
 https://ahiptn0b0k.execute-api.us-east-1.amazonaws.com/dev/main
 
 **If not using ```helper.py``` to deploy,**  
@@ -96,19 +103,19 @@ pip install zappa
 ```
 
 
-#### 1.3.1 Packages
+## 3.1 Packages
 AWS Lambda for archive: ```corelib``` and ```archivelib```  
 AWS Lambda for flask zappa: ```corelib``` and ```ark_app```
 
 
-#### 1.3.2 Deployment
+## 3.2 Deployment
 Use the helper script to do all AWS deployment automatically.
 ```
 python helper.py --update_resources --update_archiver --update_flask
 ```
 
 
-#### 1.3.3 Zappa
+## 3.3 Zappa
 *Currently, only `dev` branch is deployed*
 To deploy
 ```
@@ -124,7 +131,7 @@ zappa undeploy dev
 ```
 
 
-#### 1.3.4 Lambda
+## 3.4 Lambda
 Uses ```serverless-chrome```: https://github.com/adieuadieu/serverless-chrome
 
 
@@ -162,7 +169,7 @@ HOME	/var/task/bin
 Properly set triggers, permissions, restrictions.
 
 
-#### 1.3.5 Static Resources
+## 3.5 Static Resources
 Update all local static/icons to S3
 ```
 python helper.py --update_resources
