@@ -14,8 +14,8 @@ The project makes use of various AWS services for execution and backend data sto
 * AWS S3: URL Website screenshot storage
 * AWS DynamoDB: Database
 * AWS Lambda:
-- Flask HTTP Server
-- Archiver Lambda Function
+  - Flask HTTP Server
+  - Archiver Lambda Function
 
 
 ## 1.2 Frontend UI Logics
